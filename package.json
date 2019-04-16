@@ -10,6 +10,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "prettier:base": "prettier --write --config .prettierrc",
+    "prettier": "yarn run prettier:base \"src/**/*.{js,jsx,json}\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -17,14 +19,20 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
+  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"],
   "devDependencies": {
+    "husky": ">=1",
+    "lint-staged": ">=8",
+    "prettier": "1.17.0",
     "react-router-dom": "^5.0.0",
     "styled-components": "^4.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": ["prettier --write", "git add"]
   }
 }
