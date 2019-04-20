@@ -19,7 +19,7 @@ const Background = styled.img`
 const Home = () => (
   <HomeContainer>
     <Background src={background} />
-    <Title>Tube is coming</Title>
+    <Title>Tube.</Title>
   </HomeContainer>
 );
 export default Home;
