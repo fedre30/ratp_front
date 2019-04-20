@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import background from "images/background.jpg";
 
+import { Title } from "components/atoms";
+
 const HomeContainer = styled.div`
   width: 100vw;
   height: 100vh;
@@ -17,7 +19,7 @@ const Background = styled.img`
 const Home = () => (
   <HomeContainer>
     <Background src={background} />
-    <h1>Tube is coming</h1>
+    <Title>Tube is coming</Title>
   </HomeContainer>
 );
 export default Home;
