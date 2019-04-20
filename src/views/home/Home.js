@@ -1,30 +1,23 @@
 import React from "react";
 import styled from "styled-components";
-import { colors } from "styles/const";
+import background from "images/background.jpg";
 
 const HomeContainer = styled.div`
-  width: 100%;
+  width: 100vw;
   height: 100vh;
-  background-color: ${colors.background};
   position: relative;
-  overflow: hidden;
-  .Home-title {
-    font-size: 3rem;
-    color: ${colors.text};
-    text-align: center;
-    margin: 2rem 0;
-    font-weight: 900;
-  }
-  a {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-  }
+`;
+const Background = styled.img`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
 `;
 
 const Home = () => (
   <HomeContainer>
-    <h1 className="Home-title">Tube is coming</h1>
+    <Background src={background} />
+    <h1>Tube is coming</h1>
   </HomeContainer>
 );
 export default Home;
