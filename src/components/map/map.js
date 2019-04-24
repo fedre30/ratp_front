@@ -12,7 +12,7 @@ class MapComponent extends Component {
     this.state = {
       markers: [],
       center: [0, 0],
-      zoom: 0,
+      zoom: 1,
       modal: "",
       show: false,
       currentID: undefined,
@@ -41,59 +41,44 @@ class MapComponent extends Component {
   render() {
     return (
       <MapWrapper>
-        <Motion
-          defaultStyle={{
-            zoom: 1,
-            x: 0,
-            y: 20,
+        <ComposableMap
+          projectionConfig={{
+            scale: 200,
           }}
-          style={{
-            zoom: spring(this.state.zoom, { stiffness: 310, damping: 30 }),
-            x: spring(this.state.center[0], { stiffness: 310, damping: 30 }),
-            y: spring(this.state.center[1], { stiffness: 310, damping: 30 }),
-          }}
+          width={500}
+          height={300}
+          projection="robinson"
         >
-          {({ zoom, x, y }) => (
-            <ComposableMap
-              projectionConfig={{
-                scale: 250,
-              }}
-              width={1200}
-              height={800}
-              projection="robinson"
-            >
-              <ZoomableGroup center={[x, y]} zoom={zoom}>
-                <Geographies geography={geography}>
-                  {(geographies, projection) =>
-                    geographies.map(geography => (
-                      <Geography
-                        key={geography.properties.commune.concat("-", geography.properties.date)}
-                        geography={geography}
-                        projection={projection}
-                        style={{
-                          default: {
-                            fill: "#000",
-                            stroke: "#000",
-                            strokeWidth: 1,
-                            outline: "none",
-                          },
-                          hover: {
-                            fill: "#000",
-                            stroke: "#000",
-                            strokeWidth: 0.3,
-                          },
-                          pressed: {
-                            fill: "#CEA6E9",
-                          },
-                        }}
-                      />
-                    ))
-                  }
-                </Geographies>
-              </ZoomableGroup>
-            </ComposableMap>
-          )}
-        </Motion>
+          <ZoomableGroup center={this.state.center} zoom={this.state.zoom}>
+            <Geographies geography={geography}>
+              {(geographies, projection) =>
+                geographies.map(geography => (
+                  <Geography
+                    key={geography.properties.commune.concat("-", geography.properties.date)}
+                    geography={geography}
+                    projection={projection}
+                    style={{
+                      default: {
+                        fill: "#000",
+                        stroke: "#000",
+                        strokeWidth: 1,
+                        outline: "none",
+                      },
+                      hover: {
+                        fill: "#000",
+                        stroke: "#000",
+                        strokeWidth: 0.3,
+                      },
+                      pressed: {
+                        fill: "#CEA6E9",
+                      },
+                    }}
+                  />
+                ))
+              }
+            </Geographies>
+          </ZoomableGroup>
+        </ComposableMap>
       </MapWrapper>
     );
   }
