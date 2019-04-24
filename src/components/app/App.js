@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import HomeContainer from "../../views/home/HomeContainer";
+import MapContainer from "../../views/map/MapContainer";
 
 class App extends Component {
   render() {
@@ -10,6 +11,7 @@ class App extends Component {
         <Router>
           <Switch>
             <Route exact path="/" component={HomeContainer} />
+            <Route exact path="/map" component={MapContainer} />
           </Switch>
         </Router>
       </div>
