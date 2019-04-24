@@ -3,8 +3,8 @@ import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 
 import { ComposableMap, ZoomableGroup, Geographies, Geography } from "react-simple-maps";
-import geography from "../../scripts/citeair.json";
-import { Motion, spring } from "react-motion";
+import geography from "scripts/citeair.json";
+// import { Motion, spring } from "react-motion";
 
 class MapComponent extends Component {
   constructor(props) {
@@ -24,18 +24,6 @@ class MapComponent extends Component {
     this.handleReset = this.handleReset.bind(this);
   }
 
-  componentDidMount() {
-    for (let i = 0; i < document.querySelectorAll(".rsm-marker").length; i++) {
-      document.querySelectorAll(".rsm-marker")[i].setAttribute("data-id", i);
-      document.querySelectorAll(".rsm-marker")[i].addEventListener("mouseover", e => {
-        if (e.target.parentNode.getAttribute("class") === "rsm-marker rsm-marker--hover") {
-          this.setState({ currentID: e.target.parentNode.getAttribute("data-id") });
-          this.showModal(e.target.parentNode.getAttribute("data-id"));
-        }
-      });
-    }
-  }
-
   // RENDER
 
   render() {
@@ -43,29 +31,33 @@ class MapComponent extends Component {
       <MapWrapper>
         <ComposableMap
           projectionConfig={{
-            scale: 200,
+            scale: 100000,
           }}
-          width={500}
-          height={300}
-          projection="robinson"
+          width={980}
+          height={551}
+          style={{
+            width: "100%",
+            height: "auto",
+          }}
+          projection="mercator"
         >
-          <ZoomableGroup center={this.state.center} zoom={this.state.zoom}>
+          <ZoomableGroup center={[2.3, 48.85]} zoom={this.state.zoom}>
             <Geographies geography={geography}>
               {(geographies, projection) =>
-                geographies.map(geography => (
+                geographies.map((geography, i) => (
                   <Geography
-                    key={geography.properties.commune.concat("-", geography.properties.date)}
+                    key={i}
                     geography={geography}
                     projection={projection}
                     style={{
                       default: {
                         fill: "#000",
-                        stroke: "#000",
+                        stroke: "#fff",
                         strokeWidth: 1,
                         outline: "none",
                       },
                       hover: {
-                        fill: "#000",
+                        fill: "red",
                         stroke: "#000",
                         strokeWidth: 0.3,
                       },
@@ -125,6 +117,8 @@ class MapComponent extends Component {
 
 const MapWrapper = styled.div`
   width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
 `;
 
 export default withRouter(MapComponent);
