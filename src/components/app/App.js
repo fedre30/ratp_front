@@ -1,6 +1,6 @@
 import React, { Component } from "react";
+import { ResetGlobalStyle } from "styles/index";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import "./App.css";
 import HomeContainer from "../../views/home/HomeContainer";
 import MapContainer from "../../views/map/MapContainer";
 
@@ -8,6 +8,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <ResetGlobalStyle />
         <Router>
           <Switch>
             <Route exact path="/" component={HomeContainer} />
