@@ -40,9 +40,18 @@ class MapComponent extends Component {
   }
 
   componentDidMount() {
+    let stations = [];
     for (let i = 0; i < document.querySelectorAll(".rsm-marker").length; i++) {
-      document.querySelectorAll(".rsm-marker")[i].setAttribute("data-id", i);
-      document.querySelectorAll(".rsm-marker")[i].addEventListener("mouseover", e => {
+      if (
+        document.querySelectorAll(".rsm-marker")[i].childNodes[0].getAttribute("class") ===
+        "stationMarker"
+      ) {
+        stations.push(document.querySelectorAll(".rsm-marker")[i]);
+      }
+    }
+    for (let i = 0; i < stations.length; i++) {
+      stations[i].setAttribute("data-id", i);
+      stations[i].addEventListener("mouseover", e => {
         if (e.target.parentNode.getAttribute("class") === "rsm-marker rsm-marker--hover") {
           this.setState({ currentID: e.target.parentNode.getAttribute("data-id") });
           this.showModal(e.target.parentNode.getAttribute("data-id"));
@@ -163,10 +172,11 @@ class MapComponent extends Component {
                     </Marker>
                   ))}
                 </Markers>
+
                 <Markers>
-                  {this.state.stations.map((marker, i) => (
+                  {this.state.stations.map((marker, j) => (
                     <Marker
-                      key={i}
+                      key={j}
                       marker={marker.geometry}
                       style={{
                         default: { fill: colors.tertiary, cursor: "pointer" },
@@ -183,6 +193,7 @@ class MapComponent extends Component {
                           strokeWidth: 3,
                           opacity: 0.9,
                         }}
+                        className={"stationMarker"}
                       />
                     </Marker>
                   ))}
