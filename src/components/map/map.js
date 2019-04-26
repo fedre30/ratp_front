@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 import { colors } from "styles/const";
-
+import Button from "components/button/button";
+import Modal from "components/modal/modal";
 import {
   ComposableMap,
   ZoomableGroup,
@@ -34,7 +35,20 @@ class MapComponent extends Component {
     this.handleZoomOut = this.handleZoomOut.bind(this);
     this.handleCityClick = this.handleCityClick.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.showModal = this.showModal.bind(this);
     this.changePollutionIndex = this.changePollutionIndex.bind(this);
+  }
+
+  componentDidMount() {
+    for (let i = 0; i < document.querySelectorAll(".rsm-marker").length; i++) {
+      document.querySelectorAll(".rsm-marker")[i].setAttribute("data-id", i);
+      document.querySelectorAll(".rsm-marker")[i].addEventListener("mouseover", e => {
+        if (e.target.parentNode.getAttribute("class") === "rsm-marker rsm-marker--hover") {
+          this.setState({ currentID: e.target.parentNode.getAttribute("data-id") });
+          this.showModal(e.target.parentNode.getAttribute("data-id"));
+        }
+      });
+    }
   }
 
   // RENDER
@@ -42,31 +56,32 @@ class MapComponent extends Component {
   render() {
     return (
       <MapWrapper>
-        <button onClick={this.handleZoomIn}>Zoom in</button>
-        <button onClick={this.handleZoomOut}>zoom out</button>
-        <button onClick={this.handleReset}>reset</button>
-
-        <button
-          onClick={() => {
-            this.changePollutionIndex("pm10");
-          }}
-        >
-          Pm10
-        </button>
-        <button
-          onClick={() => {
-            this.changePollutionIndex("no2");
-          }}
-        >
-          No2
-        </button>
-        <button
-          onClick={() => {
-            this.changePollutionIndex("o3");
-          }}
-        >
-          O3
-        </button>
+        <ButtonWrapper>
+          <Button text={"Zoom in"} color={colors.secondary} onClick={this.handleZoomIn} />
+          <Button text={"Zoom out"} onClick={this.handleZoomOut} color={colors.secondary} />
+          <Button text={"Reset"} onClick={this.handleReset} color={colors.secondary} />
+          <Button
+            text={"PM10"}
+            handleClick={() => {
+              this.changePollutionIndex("pm10");
+            }}
+            color={colors.secondary}
+          />
+          <Button
+            text={"NO2"}
+            onClick={() => {
+              this.changePollutionIndex("no2");
+            }}
+            color={colors.secondary}
+          />
+          <Button
+            text={"O3"}
+            onClick={() => {
+              this.changePollutionIndex("o3");
+            }}
+            color={colors.secondary}
+          />
+        </ButtonWrapper>
 
         <Motion
           defaultStyle={{
@@ -176,6 +191,11 @@ class MapComponent extends Component {
             </ComposableMap>
           )}
         </Motion>
+        {this.state.show ? (
+          <Modal title={stations[this.state.currentID].fields.stop_name} />
+        ) : (
+          <div />
+        )}
       </MapWrapper>
     );
   }
@@ -229,7 +249,13 @@ class MapComponent extends Component {
 const MapWrapper = styled.div`
   width: 100%;
   max-width: 980px;
-  margin: 0 auto;
+  margin: 2rem auto;
+`;
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  max-width: 980px;
+  display: flex;
 `;
 
 export default withRouter(MapComponent);
