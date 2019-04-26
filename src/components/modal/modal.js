@@ -7,11 +7,14 @@ const ModalContainer = styled.div`
   width: 300px;
   height: 200px;
   background: ${colors.background};
+  padding: 1rem;
   .Modal-title {
     font-size: 2rem;
     text-align: center;
     margin: 2rem 0;
     font-weight: 900;
+    color: white;
+    text-transform: capitalize;
   }
 `;
 
