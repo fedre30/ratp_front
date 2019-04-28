@@ -12,9 +12,9 @@ import {
   Markers,
   Marker,
 } from "react-simple-maps";
-import geography from "scripts/citeair_april.json";
+import geography from "scripts/citeair.json";
 import { Motion, spring } from "react-motion";
-import stations from "scripts/positions-geographiques-des-stations-du-reseau-ratp";
+import stations from "scripts/emplacement-des-gares-idf.json";
 import pollution from "scripts/citeair_pollution";
 
 class MapComponent extends Component {
@@ -29,6 +29,7 @@ class MapComponent extends Component {
       show: false,
       currentID: undefined,
       currentPollutionIndex: "pm10",
+      coeff: 0.5,
     };
 
     this.handleZoomIn = this.handleZoomIn.bind(this);
@@ -37,27 +38,6 @@ class MapComponent extends Component {
     this.handleReset = this.handleReset.bind(this);
     this.showModal = this.showModal.bind(this);
     this.changePollutionIndex = this.changePollutionIndex.bind(this);
-  }
-
-  componentDidMount() {
-    let stations = [];
-    for (let i = 0; i < document.querySelectorAll(".rsm-marker").length; i++) {
-      if (
-        document.querySelectorAll(".rsm-marker")[i].childNodes[0].getAttribute("class") ===
-        "stationMarker"
-      ) {
-        stations.push(document.querySelectorAll(".rsm-marker")[i]);
-      }
-    }
-    for (let i = 0; i < stations.length; i++) {
-      stations[i].setAttribute("data-id", i);
-      stations[i].addEventListener("mouseover", e => {
-        if (e.target.parentNode.getAttribute("class") === "rsm-marker rsm-marker--hover") {
-          this.setState({ currentID: e.target.parentNode.getAttribute("data-id") });
-          this.showModal(e.target.parentNode.getAttribute("data-id"));
-        }
-      });
-    }
   }
 
   // RENDER
@@ -71,22 +51,22 @@ class MapComponent extends Component {
           <Button text={"Reset"} onClick={this.handleReset} color={colors.secondary} />
           <Button
             text={"PM10"}
-            handleClick={() => {
-              this.changePollutionIndex("pm10");
+            onClick={() => {
+              this.changePollutionIndex("pm10", 0.5);
             }}
             color={colors.secondary}
           />
           <Button
             text={"NO2"}
             onClick={() => {
-              this.changePollutionIndex("no2");
+              this.changePollutionIndex("no2", 0.7);
             }}
             color={colors.secondary}
           />
           <Button
             text={"O3"}
             onClick={() => {
-              this.changePollutionIndex("o3");
+              this.changePollutionIndex("o3", 1);
             }}
             color={colors.secondary}
           />
@@ -162,7 +142,7 @@ class MapComponent extends Component {
                       <circle
                         cx={0}
                         cy={0}
-                        r={marker.fields[this.state.currentPollutionIndex]}
+                        r={marker.fields[this.state.currentPollutionIndex] * this.state.coeff}
                         style={{
                           stroke: colors.text,
                           strokeWidth: 3,
@@ -174,10 +154,10 @@ class MapComponent extends Component {
                 </Markers>
 
                 <Markers>
-                  {this.state.stations.map((marker, j) => (
+                  {this.state.stations.objects.stations.geometries.map((marker, j) => (
                     <Marker
                       key={j}
-                      marker={marker.geometry}
+                      marker={marker}
                       style={{
                         default: { fill: colors.tertiary, cursor: "pointer" },
                         hover: { fill: colors.primary, cursor: "pointer" },
@@ -203,12 +183,42 @@ class MapComponent extends Component {
           )}
         </Motion>
         {this.state.show ? (
-          <Modal title={stations[this.state.currentID].fields.stop_name} />
+          <Modal
+            title={stations.objects.stations.geometries[this.state.currentID].properties.nom_gare}
+          />
         ) : (
           <div />
         )}
       </MapWrapper>
     );
+  }
+
+  // MODAL HANDLER
+
+  componentDidMount() {
+    let stations = [];
+    for (let i = 0; i < document.querySelectorAll(".rsm-marker").length; i++) {
+      if (
+        document.querySelectorAll(".rsm-marker")[i].childNodes[0].getAttribute("class") ===
+        "stationMarker"
+      ) {
+        stations.push(document.querySelectorAll(".rsm-marker")[i]);
+      }
+    }
+    for (let i = 0; i < stations.length; i++) {
+      stations[i].setAttribute("data-id", i);
+      stations[i].addEventListener("mouseover", e => {
+        if (e.target.parentNode.getAttribute("class") === "rsm-marker rsm-marker--hover") {
+          this.setState({ currentID: e.target.parentNode.getAttribute("data-id") });
+          this.showModal(e.target.parentNode.getAttribute("data-id"));
+        }
+      });
+      stations[i].addEventListener("mouseleave", e => {
+        setTimeout(() => {
+          this.hideModal(e.target.parentNode.getAttribute("data-id"));
+        }, 700);
+      });
+    }
   }
 
   // METHODS
@@ -239,9 +249,10 @@ class MapComponent extends Component {
     });
   }
 
-  changePollutionIndex(index) {
+  changePollutionIndex(index, coeff) {
     this.setState({
       currentPollutionIndex: index,
+      coeff: coeff,
     });
   }
 
