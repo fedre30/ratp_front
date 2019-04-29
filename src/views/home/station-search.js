@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { rem } from "polished";
 import { colors } from "styles/const";
 
-import { Icon } from "components/atoms";
+import { Icon, Input, Label } from "components/atoms";
 
 const StationChoice = styled.div`
   background: #fff;
@@ -43,18 +43,7 @@ const SearchBtn = styled.div`
 const InputWrapper = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const Input = styled.input`
-  border: none;
-  font-size: ${rem(20)};
-  font-family: "roboto";
-
-  &:focus {
-    outline: none;
-  }
-  &::placeholder {
-    color: #3a3d60;
+  & > svg {
     opacity: 0.6;
   }
 `;
@@ -70,14 +59,14 @@ class StationSearch extends React.Component {
     return (
       <div style={{ display: "flex" }}>
         <StationChoice>
-          <p style={{ marginBottom: rem(15) }}>STATION</p>
+          <Label>STATION</Label>
           <InputWrapper>
             <Icon icon="search" size={16} style={{ marginRight: rem(4) }} />
             <Input placeholder="Choisissez une station" />
           </InputWrapper>
         </StationChoice>
         <StationChoice>
-          <p style={{ marginBottom: rem(15) }}>STATION</p>
+          <Label>STATION</Label>
           <InputWrapper>
             <Icon icon="search" size={16} style={{ marginRight: rem(4) }} />
             <Input placeholder="Choisissez une station" />
