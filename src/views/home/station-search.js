@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { rem } from "polished";
 import { colors } from "styles/const";
 
-import search from "images/icons/search.svg";
-import plus from "images/icons/plus.svg";
+import { Icon } from "components/atoms";
 
 const StationChoice = styled.div`
   background: #fff;
@@ -73,27 +72,19 @@ class StationSearch extends React.Component {
         <StationChoice>
           <p style={{ marginBottom: rem(15) }}>STATION</p>
           <InputWrapper>
-            <img
-              src={search}
-              alt=""
-              style={{ marginRight: rem(4), width: rem(16), height: rem(16) }}
-            />
+            <Icon icon="search" size={16} style={{ marginRight: rem(4) }} />
             <Input placeholder="Choisissez une station" />
           </InputWrapper>
         </StationChoice>
         <StationChoice>
           <p style={{ marginBottom: rem(15) }}>STATION</p>
           <InputWrapper>
-            <img
-              src={search}
-              alt=""
-              style={{ marginRight: rem(4), width: rem(16), height: rem(16) }}
-            />
+            <Icon icon="search" size={16} style={{ marginRight: rem(4) }} />
             <Input placeholder="Choisissez une station" />
           </InputWrapper>
         </StationChoice>
         <StationPlus>
-          <img src={plus} alt="" />
+          <Icon icon="plus" size={16} color={colors.tertiary} />
         </StationPlus>
         <SearchBtn>
           <p>Rechercher</p>

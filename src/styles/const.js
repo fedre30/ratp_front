@@ -11,7 +11,7 @@ const colors = {
 
 const font = {
   weight: {
-    thin: 200,
+    thin: 300,
     base: 400,
     bold: 600,
     bolder: 700,

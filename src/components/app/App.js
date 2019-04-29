@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { ResetGlobalStyle } from "styles/index";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import HomeContainer from "../../views/home/HomeContainer";
+import HomeContainer from "views/home/homeContainer";
 
 class App extends Component {
   render() {
