@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 import { colors } from "styles/const";
-import Button from "components/button/button";
-import Modal from "components/modal/modal";
+import Button from "components/atoms/button";
+import Modal from "components/molecules/modal";
 import {
   ComposableMap,
   ZoomableGroup,
