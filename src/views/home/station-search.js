@@ -43,9 +43,6 @@ const SearchBtn = styled.div`
 const InputWrapper = styled.div`
   display: flex;
   align-items: center;
-  & > svg {
-    opacity: 0.6;
-  }
 `;
 
 class StationSearch extends React.Component {
@@ -61,14 +58,14 @@ class StationSearch extends React.Component {
         <StationChoice>
           <Label>STATION</Label>
           <InputWrapper>
-            <Icon icon="search" size={16} style={{ marginRight: rem(4) }} />
+            <Icon icon="search" size={16} style={{ marginRight: rem(4), opacity: 0.6 }} />
             <Input placeholder="Choisissez une station" />
           </InputWrapper>
         </StationChoice>
         <StationChoice>
           <Label>STATION</Label>
           <InputWrapper>
-            <Icon icon="search" size={16} style={{ marginRight: rem(4) }} />
+            <Icon icon="search" size={16} style={{ marginRight: rem(4), opacity: 0.6 }} />
             <Input placeholder="Choisissez une station" />
           </InputWrapper>
         </StationChoice>
