@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import Home from "./home";
+import Home from "./Home";
 
 class HomeContainer extends React.Component {
   state = {};
