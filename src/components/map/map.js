@@ -12,10 +12,10 @@ import {
   Markers,
   Marker,
 } from "react-simple-maps";
-import geography from "scripts/citeair.json";
 import { Motion, spring } from "react-motion";
-import stations from "scripts/emplacement-des-gares-idf.json";
-import pollution from "scripts/citeair_pollution";
+import geography from "scripts/geography.json";
+import stations from "scripts/stations.json";
+import pollution from "scripts/pollution";
 
 class MapComponent extends Component {
   constructor(props) {
@@ -89,8 +89,8 @@ class MapComponent extends Component {
               projectionConfig={{
                 scale: 250000,
               }}
-              width={1240}
-              height={700}
+              width={1440}
+              height={900}
               projection="mercator"
             >
               <ZoomableGroup center={[x, y]} zoom={zoom}>
@@ -216,7 +216,7 @@ class MapComponent extends Component {
       stations[i].addEventListener("mouseleave", e => {
         setTimeout(() => {
           this.hideModal(e.target.parentNode.getAttribute("data-id"));
-        }, 700);
+        }, 1000);
       });
     }
   }
@@ -270,14 +270,15 @@ class MapComponent extends Component {
 
 const MapWrapper = styled.div`
   width: 100%;
-  max-width: 980px;
+  max-width: 1240px;
   margin: 2rem auto;
+  position: relative;
 `;
 
 const ButtonWrapper = styled.div`
   width: 100%;
-  max-width: 980px;
   display: flex;
+  margin: 3rem auto;
 `;
 
 export default withRouter(MapComponent);

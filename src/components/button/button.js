@@ -21,7 +21,7 @@ const ButtonContainer = styled.div`
   background: ${colors.secondary};
   border-radius: 0.3rem;
   cursor: pointer;
-  margin: 1rem 1rem;
+  margin: 1rem 1rem 1rem 0;
 
   &:hover {
     background: ${colors.primary};

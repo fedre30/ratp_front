@@ -1,30 +1,44 @@
 import React from "react";
 import styled from "styled-components";
+import { rem } from "polished";
+
 import { colors } from "styles/const";
+import { SubTitle } from "components/atoms";
+import { Header } from "components/molecules";
+
+import background from "images/background.jpg";
+
+import StationSearch from "./station-search";
 
 const HomeContainer = styled.div`
-  width: 100%;
+  width: 100vw;
   height: 100vh;
-  background-color: ${colors.background};
   position: relative;
-  overflow: hidden;
-  .Home-title {
-    font-size: 3rem;
-    color: ${colors.text};
-    text-align: center;
-    margin: 2rem 0;
-    font-weight: 900;
-  }
-  a {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-  }
+  padding: ${rem(55)} ${rem(110)};
+`;
+const Background = styled.img`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  right: 0;
+`;
+
+const Highlight = styled.span`
+  color: ${colors.tertiary};
 `;
 
 const Home = () => (
   <HomeContainer>
-    <h1 className="Home-title">Tube is coming</h1>
+    <Background src={background} alt="" />
+    <Header subTitle />
+
+    <SubTitle size={40} bold style={{ marginBottom: rem(61) }}>
+      Découvrez <Highlight>les stations</Highlight> qui font partie de votre quotidien.
+    </SubTitle>
+    <StationSearch />
   </HomeContainer>
 );
 export default Home;

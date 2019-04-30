@@ -8,6 +8,9 @@ const ModalContainer = styled.div`
   height: 200px;
   background: ${colors.background};
   padding: 1rem;
+  position: absolute;
+  right: 0;
+  bottom: 1rem;
   .Modal-title {
     font-size: 2rem;
     text-align: center;

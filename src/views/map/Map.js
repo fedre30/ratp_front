@@ -22,7 +22,7 @@ const MapContainer = styled.div`
 
 const Map = () => (
   <MapContainer>
-    <h1 className="Map-title">Map</h1>
+    <h1 className="Map-title">Les Stations</h1>
     <MapComponent />
   </MapContainer>
 );
