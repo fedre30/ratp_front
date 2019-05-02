@@ -77,7 +77,7 @@ const SidebarContainer = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  padding: 10vh 1rem 1rem 1rem;
+  padding: 2vh 1rem 1rem 1rem;
 
   .Section-label {
     font-weight: bold;
