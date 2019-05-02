@@ -14,7 +14,6 @@ const HomeContainer = styled.div`
   width: 100vw;
   height: 100vh;
   position: relative;
-  padding: ${rem(55)} ${rem(110)};
 `;
 const Background = styled.img`
   width: 100%;
