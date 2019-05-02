@@ -5,7 +5,7 @@ import { colors } from "styles/const";
 
 const Input = styled.input`
   border: none;
-  font-size: ${rem(20)};
+  font-size: ${rem(16)};
   font-family: "roboto";
 
   &:focus {
