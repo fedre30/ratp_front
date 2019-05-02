@@ -1,0 +1,127 @@
+import React from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
+import { colors, font } from "styles/const";
+import Icon from "components/atoms/icon";
+
+const Sidebar = ({ transports, filters, onClick, active }) => (
+  <SidebarContainer>
+    <TransportsContainer>
+      <h3 className="Section-label">Listes des métro / RER</h3>
+      <div className="Transport-icons-container">
+        {transports.map(transport => (
+          <div
+            key={transport.id}
+            onClick={onClick}
+            className={`Transport-icon ${active ? "" : "disable"}`}
+          >
+            <img src={transport.src} alt="" />
+          </div>
+        ))}
+      </div>
+    </TransportsContainer>
+    <FiltersContainer>
+      <h3 className="Section-label">Filtrer par critères</h3>
+      {filters.map(filter => (
+        <div key={filter.id} className="Filter-wrapper">
+          <div onClick={onClick} className={` Filter-icon ${active ? "" : "disable"}`}>
+            <Icon color={colors.text} icon={filter.icon} alt="" />
+          </div>
+          <div className="Filter-label">{filter.label}</div>
+        </div>
+      ))}
+    </FiltersContainer>
+  </SidebarContainer>
+);
+
+Sidebar.propTypes = {
+  title: PropTypes.string,
+  transport: PropTypes.array,
+  filter: PropTypes.array,
+  onClick: PropTypes.func,
+  active: PropTypes.bool,
+};
+
+const SidebarContainer = styled.div`
+  width: 20%;
+  height: 100vh;
+  background: linear-gradient(197.74deg, #ffffff 1.38%, #d1e5ec 100%);
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 10vh 1rem 1rem 1rem;
+
+  .Section-label {
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: ${colors.primary};
+    margin-bottom: 2rem;
+  }
+`;
+
+const TransportsContainer = styled.div`
+  width: 85%;
+  margin: 3rem auto;
+
+  .Transport-icons-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+  }
+
+  .Transport-icon {
+    width: 3rem;
+    margin: 1rem 2rem 1rem 0;
+    cursor: pointer;
+    img {
+      width: 100%;
+    }
+  }
+
+  .disable {
+    opacity: 0.3;
+  }
+`;
+
+const FiltersContainer = styled.div`
+  width: 90%;
+  margin: 3rem auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  
+  .Filter-wrapper {
+    height: auto;
+    display: flex;
+    align-items: center;
+    
+  }
+  
+  .Filter-label {
+    color: ${colors.primary}
+    font-size: 1.2rem;
+    font-weight: ${font.weight.bolder};
+    margin-bottom: 1rem;
+  
+  }
+ 
+  
+  .Filter-icon {
+    width: 4rem;
+    height: 4rem;
+    padding: 1rem;
+    background: ${colors.primary};
+    border-radius: 0.2rem;
+    margin: 1rem 1.5rem 2rem 0;
+  }
+  
+  .disable {
+    background: ${colors.grey};
+  }
+ 
+`;
+
+export default Sidebar;

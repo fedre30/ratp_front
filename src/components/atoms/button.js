@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { colors } from "styles/const";
 import Icon from "./icon";
 
-const Button = ({ text, onClick, icon, iconColor, mapButton }) => (
+const Button = ({ text, onClick, icon, iconColor, mapButton, active }) => (
   <>
     {mapButton ? (
       <ButtonMap onClick={onClick}>
@@ -14,10 +14,12 @@ const Button = ({ text, onClick, icon, iconColor, mapButton }) => (
       </ButtonMap>
     ) : (
       <ButtonContainer>
-        <h2 className="Button-title" onClick={onClick}>
-          {text}
-        </h2>
-        {icon && <Icon color={iconColor} icon={icon} size={32} />}
+        <div className={active ? "active" : "disable"}>
+          <h2 className="Button-title" onClick={onClick}>
+            {text}
+          </h2>
+          {icon && <Icon color={iconColor} icon={icon} size={32} />}
+        </div>
       </ButtonContainer>
     )}
   </>
@@ -29,6 +31,7 @@ Button.propTypes = {
   onClick: PropTypes.func,
   icon: PropTypes.string,
   iconColor: PropTypes.string,
+  active: PropTypes.bool,
 };
 
 Button.defaultProps = {
