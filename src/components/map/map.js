@@ -46,9 +46,22 @@ class MapComponent extends Component {
     return (
       <MapWrapper>
         <ButtonWrapper>
-          <Button text={"Zoom in"} color={colors.secondary} onClick={this.handleZoomIn} />
-          <Button text={"Zoom out"} onClick={this.handleZoomOut} color={colors.secondary} />
-          <Button text={"Reset"} onClick={this.handleReset} color={colors.secondary} />
+          <Button
+            mapButton={true}
+            icon="zoomIn"
+            iconColor={colors.primary}
+            onClick={this.handleZoomIn}
+          />
+          <Button mapButton={true} icon="zoomOut" iconColor={colors.primary} />
+          <Button
+            mapButton={true}
+            icon="reset"
+            iconColor={colors.primary}
+            onClick={this.handleReset}
+          />
+        </ButtonWrapper>
+        <ButtonFiltersOptions>
+          <h3 className="Button-label">Indices de l'air</h3>
           <Button
             text={"PM10"}
             onClick={() => {
@@ -70,7 +83,7 @@ class MapComponent extends Component {
             }}
             color={colors.secondary}
           />
-        </ButtonWrapper>
+        </ButtonFiltersOptions>
 
         <Motion
           defaultStyle={{
@@ -89,8 +102,8 @@ class MapComponent extends Component {
               projectionConfig={{
                 scale: 250000,
               }}
-              width={1440}
-              height={900}
+              width={2200}
+              height={1250}
               projection="mercator"
             >
               <ZoomableGroup center={[x, y]} zoom={zoom}>
@@ -270,8 +283,6 @@ class MapComponent extends Component {
 
 const MapWrapper = styled.div`
   width: 100%;
-  max-width: 1240px;
-  margin: 2rem auto;
   position: relative;
 `;
 
@@ -279,6 +290,27 @@ const ButtonWrapper = styled.div`
   width: 100%;
   display: flex;
   margin: 3rem auto;
+  position: absolute;
+  right: 2rem;
+  bottom: 3rem;
+  justify-content: flex-end;
+`;
+
+const ButtonFiltersOptions = styled.div`
+  width: 100%;
+  display: flex;
+  margin: 3rem auto;
+  position: absolute;
+  top: 5rem;
+  left: 30%;
+
+  .Button-label {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    color: ${colors.text};
+  }
 `;
 
 export default withRouter(MapComponent);

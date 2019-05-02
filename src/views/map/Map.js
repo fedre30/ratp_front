@@ -5,7 +5,6 @@ import MapComponent from "../../components/map/map";
 const MapContainer = styled.div`
   width: 100%;
   height: 100vh;
-  position: relative;
   overflow: hidden;
   .Map-title {
     font-size: 3rem;
@@ -22,7 +21,6 @@ const MapContainer = styled.div`
 
 const Map = () => (
   <MapContainer>
-    <h1 className="Map-title">Les Stations</h1>
     <MapComponent />
   </MapContainer>
 );
