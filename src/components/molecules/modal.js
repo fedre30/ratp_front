@@ -4,20 +4,21 @@ import PropTypes from "prop-types";
 import { colors } from "styles/const";
 
 const ModalContainer = styled.div`
-  width: 300px;
-  height: 200px;
-  background: ${colors.background};
+  width: 400px;
+  height: 350px;
+  background: ${colors.text};
   padding: 1rem;
   position: absolute;
   left: 30%;
   bottom: 4rem;
+  border-radius: 0.3rem;
   .Modal-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    line-height: 3rem;
     text-align: center;
     margin: 2rem 0;
-    font-weight: 900;
-    color: white;
-    text-transform: capitalize;
+    font-weight: 500;
+    color: ${colors.primary};
   }
 `;
 

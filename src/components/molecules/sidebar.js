@@ -4,35 +4,63 @@ import PropTypes from "prop-types";
 import { colors, font } from "styles/const";
 import Icon from "components/atoms/icon";
 
-const Sidebar = ({ transports, filters, onClick, active }) => (
-  <SidebarContainer>
-    <TransportsContainer>
-      <h3 className="Section-label">Listes des métro / RER</h3>
-      <div className="Transport-icons-container">
-        {transports.map(transport => (
-          <div
-            key={transport.id}
-            onClick={onClick}
-            className={`Transport-icon ${active ? "" : "disable"}`}
-          >
-            <img src={transport.src} alt="" />
+class Sidebar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activatedFilters: [],
+    };
+    this.handleButton = this.handleButton.bind(this);
+  }
+
+  render() {
+    return (
+      <SidebarContainer>
+        <TransportsContainer>
+          <h3 className="Section-label">Listes des métro / RER</h3>
+          <div className="Transport-icons-container">
+            {this.props.transports.map(transport => (
+              <div
+                key={transport.id}
+                onClick={() => {
+                  this.handleButton(transport);
+                }}
+                className={`Transport-icon ${
+                  this.state.activatedFilters.filter(e => e === transport).length > 0
+                    ? ""
+                    : "disable"
+                }`}
+              >
+                <img src={transport.src} alt="" />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </TransportsContainer>
-    <FiltersContainer>
-      <h3 className="Section-label">Filtrer par critères</h3>
-      {filters.map(filter => (
-        <div key={filter.id} className="Filter-wrapper">
-          <div onClick={onClick} className={` Filter-icon ${active ? "" : "disable"}`}>
-            <Icon color={colors.text} icon={filter.icon} alt="" />
-          </div>
-          <div className="Filter-label">{filter.label}</div>
-        </div>
-      ))}
-    </FiltersContainer>
-  </SidebarContainer>
-);
+        </TransportsContainer>
+        <FiltersContainer>
+          <h3 className="Section-label">Filtrer par critères</h3>
+          {this.props.filters.map(filter => (
+            <div key={filter.id} className="Filter-wrapper">
+              <div
+                onClick={() => this.handleButton(filter)}
+                className={` Filter-icon ${
+                  this.state.activatedFilters.filter(e => e === filter).length > 0 ? "" : "disable"
+                }`}
+              >
+                <Icon color={colors.text} icon={filter.icon} alt="" />
+              </div>
+              <div className="Filter-label">{filter.label}</div>
+            </div>
+          ))}
+        </FiltersContainer>
+      </SidebarContainer>
+    );
+  }
+
+  handleButton = obj => {
+    this.state.activatedFilters.push(obj);
+    this.props.test(this.state.activatedFilters);
+  };
+}
 
 Sidebar.propTypes = {
   title: PropTypes.string,

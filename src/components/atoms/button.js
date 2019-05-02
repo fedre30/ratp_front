@@ -14,7 +14,7 @@ const Button = ({ text, onClick, icon, iconColor, mapButton, active }) => (
       </ButtonMap>
     ) : (
       <ButtonContainer>
-        <div className={active ? "active" : "disable"}>
+        <div className={active ? "" : "disable"}>
           <h2 className="Button-title" onClick={onClick}>
             {text}
           </h2>
@@ -39,12 +39,13 @@ Button.defaultProps = {
 };
 
 const ButtonContainer = styled.div`
-  width: 150px;
+  width: 100px;
   height: 50px;
-  background: ${colors.secondary};
+  background: ${colors.button};
   border-radius: 0.3rem;
   cursor: pointer;
   margin: 1rem 1rem 1rem 0;
+  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.25);
 
   &:hover {
     background: ${colors.primary};
@@ -55,6 +56,10 @@ const ButtonContainer = styled.div`
     text-align: center;
     font-weight: 900;
     color: ${props => (props.textColor ? props.color : "white")};
+  }
+
+  .disable {
+    opacity: 0.3;
   }
 `;
 

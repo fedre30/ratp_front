@@ -32,7 +32,6 @@ class MapComponent extends Component {
       show: false,
       currentID: undefined,
       currentPollutionIndex: "pm10",
-      coeff: 0.5,
       underground: underground,
       filters: filters,
       activatedFilters: [],
@@ -45,9 +44,13 @@ class MapComponent extends Component {
     this.handleReset = this.handleReset.bind(this);
     this.showModal = this.showModal.bind(this);
     this.changePollutionIndex = this.changePollutionIndex.bind(this);
+    this.filterStations = this.filterStations.bind(this);
   }
 
   // RENDER
+  getProps = props => {
+    this.setState({ activatedFilters: props });
+  };
 
   render() {
     return (
@@ -55,8 +58,10 @@ class MapComponent extends Component {
         <Sidebar
           transports={this.state.underground}
           filters={this.state.filters}
-          onClick={this.handleFilter}
-          active={this.state.active}
+          onClick={() => {
+            this.handleButton();
+          }}
+          test={this.getProps}
         />
         <ButtonsMap>
           <ButtonWrapper>
@@ -81,21 +86,21 @@ class MapComponent extends Component {
             <Button
               text={"PM10"}
               onClick={() => {
-                this.changePollutionIndex("pm10", 0.5);
+                this.changePollutionIndex("pm10");
               }}
               color={colors.secondary}
             />
             <Button
               text={"NO2"}
               onClick={() => {
-                this.changePollutionIndex("no2", 0.7);
+                this.changePollutionIndex("no2");
               }}
               color={colors.secondary}
             />
             <Button
               text={"O3"}
               onClick={() => {
-                this.changePollutionIndex("o3", 1);
+                this.changePollutionIndex("o3");
               }}
               color={colors.secondary}
             />
@@ -159,7 +164,16 @@ class MapComponent extends Component {
                       key={i}
                       marker={marker.geometry}
                       style={{
-                        default: { fill: colors.text, cursor: "pointer", opacity: 0.1 },
+                        default: {
+                          fill:
+                            (marker.fields["pm10"] + marker.fields["no2"] + marker.fields["o3"]) /
+                              3 >
+                            50
+                              ? "red"
+                              : "blue",
+                          cursor: "pointer",
+                          opacity: 0.1,
+                        },
                         hover: { fill: colors.text, cursor: "pointer", opacity: 0.1 },
                         pressed: {
                           fill: "#FFFFFF",
@@ -172,9 +186,18 @@ class MapComponent extends Component {
                       <circle
                         cx={0}
                         cy={0}
-                        r={marker.fields[this.state.currentPollutionIndex] * this.state.coeff}
+                        r={
+                          ((marker.fields["pm10"] + marker.fields["no2"] + marker.fields["o3"]) /
+                            3) *
+                          2
+                        }
                         style={{
-                          stroke: colors.text,
+                          stroke:
+                            (marker.fields["pm10"] + marker.fields["no2"] + marker.fields["o3"]) /
+                              3 >
+                            50
+                              ? "red"
+                              : "blue",
                           strokeWidth: 3,
                           opacity: 0.3,
                         }}
@@ -190,18 +213,31 @@ class MapComponent extends Component {
                       marker={marker}
                       style={{
                         default: { fill: colors.tertiary, cursor: "pointer" },
-                        hover: { fill: colors.primary, cursor: "pointer" },
+                        hover: { fill: colors.text, cursor: "pointer", outline: "none" },
                         pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                       }}
                     >
                       <circle
                         cx={0}
                         cy={0}
-                        r={3}
+                        r={8}
                         style={{
-                          stroke: colors.tertiary,
-                          strokeWidth: 3,
-                          opacity: 0.9,
+                          default: {
+                            stroke: colors.tertiary,
+                            strokeWidth: 4,
+                            opacity: 0.9,
+                          },
+                          hover: {
+                            stroke: colors.text,
+                            width: 90,
+                            strokeWidth: 9,
+                            opacity: 1,
+                          },
+                          pressed: {
+                            stroke: colors.tertiary,
+                            strokeWidth: 4,
+                            opacity: 0.9,
+                          },
                         }}
                         className={"stationMarker"}
                       />
@@ -279,10 +315,9 @@ class MapComponent extends Component {
     });
   }
 
-  changePollutionIndex(index, coeff) {
+  changePollutionIndex(index) {
     this.setState({
       currentPollutionIndex: index,
-      coeff: coeff,
     });
   }
 
@@ -297,8 +332,16 @@ class MapComponent extends Component {
     console.log(this.state.show);
   };
 
-  handleFilter = obj => {
-    this.setState({ active: true });
+  getAir = () => {
+    stations.filter();
+  };
+
+  filterStations = () => {
+    this.state.stations.objects.stations.geometries.filter(station => {
+      this.state.activatedFilters.map(filter => {
+        return station.mode === filter.type && station.indice_lig === filter.line;
+      });
+    });
   };
 }
 

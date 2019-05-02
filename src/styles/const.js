@@ -3,6 +3,7 @@ const colors = {
   primary: "#3A3D60",
   secondary: "#A4CBD8",
   tertiary: "#00AA91",
+  button: "#464860",
   text: "#FFF",
   red: "#D75A4A",
   yellow: "#FFBE00",
