@@ -22,7 +22,7 @@ class Icon extends React.Component {
         height={this.state.sizeElement}
         viewBox={icons[this.props.icon].viewBox}
       >
-        {icons[this.props.icon].path.map((path, index) => {
+        {icons[this.props.icon].paths.map((path, index) => {
           const style = icons[this.props.icon].style ? icons[this.props.icon].style(index) : {};
           return <path style={style} d={path} key={index} />;
         })}

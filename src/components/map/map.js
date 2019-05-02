@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { colors } from "styles/const";
 import Button from "components/atoms/button";
 import Modal from "components/molecules/modal";
+import Sidebar from "components/molecules/sidebar";
 import {
   ComposableMap,
   ZoomableGroup,
@@ -16,6 +17,8 @@ import { Motion, spring } from "react-motion";
 import geography from "scripts/geography.json";
 import stations from "scripts/stations.json";
 import pollution from "scripts/pollution";
+import underground from "scripts/underground";
+import filters from "scripts/criteria";
 
 class MapComponent extends Component {
   constructor(props) {
@@ -30,6 +33,10 @@ class MapComponent extends Component {
       currentID: undefined,
       currentPollutionIndex: "pm10",
       coeff: 0.5,
+      underground: underground,
+      filters: filters,
+      activatedFilters: [],
+      active: false,
     };
 
     this.handleZoomIn = this.handleZoomIn.bind(this);
@@ -45,44 +52,54 @@ class MapComponent extends Component {
   render() {
     return (
       <MapWrapper>
-        <ButtonWrapper>
-          <Button
-            mapButton={true}
-            icon="zoomIn"
-            iconColor={colors.primary}
-            onClick={this.handleZoomIn}
-          />
-          <Button mapButton={true} icon="zoomOut" iconColor={colors.primary} />
-          <Button
-            mapButton={true}
-            icon="reset"
-            iconColor={colors.primary}
-            onClick={this.handleReset}
-          />
-        </ButtonWrapper>
+        <Sidebar
+          transports={this.state.underground}
+          filters={this.state.filters}
+          onClick={this.handleFilter}
+          active={this.state.active}
+        />
+        <ButtonsMap>
+          <ButtonWrapper>
+            <Button
+              mapButton={true}
+              icon="zoomIn"
+              iconColor={colors.primary}
+              onClick={this.handleZoomIn}
+            />
+            <Button mapButton={true} icon="zoomOut" iconColor={colors.primary} />
+            <Button
+              mapButton={true}
+              icon="reset"
+              iconColor={colors.primary}
+              onClick={this.handleReset}
+            />
+          </ButtonWrapper>
+        </ButtonsMap>
         <ButtonFiltersOptions>
           <h3 className="Button-label">Indices de l'air</h3>
-          <Button
-            text={"PM10"}
-            onClick={() => {
-              this.changePollutionIndex("pm10", 0.5);
-            }}
-            color={colors.secondary}
-          />
-          <Button
-            text={"NO2"}
-            onClick={() => {
-              this.changePollutionIndex("no2", 0.7);
-            }}
-            color={colors.secondary}
-          />
-          <Button
-            text={"O3"}
-            onClick={() => {
-              this.changePollutionIndex("o3", 1);
-            }}
-            color={colors.secondary}
-          />
+          <ButtonWrapper>
+            <Button
+              text={"PM10"}
+              onClick={() => {
+                this.changePollutionIndex("pm10", 0.5);
+              }}
+              color={colors.secondary}
+            />
+            <Button
+              text={"NO2"}
+              onClick={() => {
+                this.changePollutionIndex("no2", 0.7);
+              }}
+              color={colors.secondary}
+            />
+            <Button
+              text={"O3"}
+              onClick={() => {
+                this.changePollutionIndex("o3", 1);
+              }}
+              color={colors.secondary}
+            />
+          </ButtonWrapper>
         </ButtonFiltersOptions>
 
         <Motion
@@ -279,6 +296,10 @@ class MapComponent extends Component {
     this.setState({ show: false });
     console.log(this.state.show);
   };
+
+  handleFilter = obj => {
+    this.setState({ active: true });
+  };
 }
 
 const MapWrapper = styled.div`
@@ -289,7 +310,10 @@ const MapWrapper = styled.div`
 const ButtonWrapper = styled.div`
   width: 100%;
   display: flex;
-  margin: 3rem auto;
+  margin: 1rem auto;
+`;
+
+const ButtonsMap = styled.div`
   position: absolute;
   right: 2rem;
   bottom: 3rem;
@@ -298,16 +322,13 @@ const ButtonWrapper = styled.div`
 
 const ButtonFiltersOptions = styled.div`
   width: 100%;
-  display: flex;
-  margin: 3rem auto;
   position: absolute;
   top: 5rem;
-  left: 30%;
+  left: 25%;
 
   .Button-label {
     font-weight: bold;
     font-size: 1.5rem;
-    margin-bottom: 1rem;
     text-transform: uppercase;
     color: ${colors.text};
   }
