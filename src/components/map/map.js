@@ -32,6 +32,28 @@ class MapComponent extends Component {
       show: false,
       currentID: undefined,
       currentPollutionIndex: "",
+      pollutionButtons: [
+        {
+          index: "pm10",
+          text: "PM10",
+          active: false,
+        },
+        {
+          index: "no2",
+          text: "NO2",
+          active: false,
+        },
+        {
+          index: "o3",
+          text: "O3",
+          active: false,
+        },
+        {
+          index: "",
+          text: "Reset",
+          active: false,
+        },
+      ],
       underground: underground,
       filters: filters,
       activatedFilters: [],
@@ -83,34 +105,17 @@ class MapComponent extends Component {
         <ButtonFiltersOptions>
           <h3 className="Button-label">Indices de l'air</h3>
           <ButtonWrapper>
-            <Button
-              text={"PM10"}
-              onClick={() => {
-                this.changePollutionIndex("pm10");
-              }}
-              color={colors.secondary}
-            />
-            <Button
-              text={"NO2"}
-              onClick={() => {
-                this.changePollutionIndex("no2");
-              }}
-              color={colors.secondary}
-            />
-            <Button
-              text={"O3"}
-              onClick={() => {
-                this.changePollutionIndex("o3");
-              }}
-              color={colors.secondary}
-            />
-            <Button
-              text={"Reset"}
-              onClick={() => {
-                this.changePollutionIndex("");
-              }}
-              color={colors.secondary}
-            />
+            {this.state.pollutionButtons.map(button => (
+              <Button
+                key={button.index}
+                text={button.text}
+                onClick={() => {
+                  this.changePollutionIndex(button, button.index);
+                }}
+                active={button.active}
+                color={colors.secondary}
+              />
+            ))}
           </ButtonWrapper>
         </ButtonFiltersOptions>
 
@@ -312,10 +317,17 @@ class MapComponent extends Component {
     });
   }
 
-  changePollutionIndex(index) {
+  changePollutionIndex(button, index) {
     this.setState({
       currentPollutionIndex: index,
     });
+    button.active === false ? (button.active = true) : (button.active = false);
+    if (button.active === false) {
+      this.setState({ currentPollutionIndex: false });
+    }
+    // Reset other indexes active property
+    const otherIndexes = this.state.pollutionButtons.filter(el => el !== button);
+    return otherIndexes.map(index => (index.active = false));
   }
 
   showModal = id => {
@@ -330,12 +342,13 @@ class MapComponent extends Component {
   };
 
   getAir = marker => {
-    const average =
-      (marker.properties.fields["pm10"] +
-        marker.properties.fields["no2"] +
-        marker.properties.fields["o3"]) /
-      3;
-    console.log(average);
+    const indexes = [
+      marker.properties.fields["pm10"],
+      marker.properties.fields["no2"],
+      marker.properties.fields["o3"],
+    ];
+    const average = indexes.reduce((total, acc) => total + acc) / indexes.length;
+
     if (average > 30 && average < 31) {
       return colors.yellow;
     } else if (average < 30) {
