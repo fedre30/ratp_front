@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import MapComponent from "components/map/map";
-import { Header } from "components/molecules";
 
 const MapContainer = styled.div`
   width: 100%;
@@ -22,7 +21,6 @@ const MapContainer = styled.div`
 
 const Map = () => (
   <MapContainer>
-    <Header subTitle />
     <MapComponent />
   </MapContainer>
 );

@@ -48,19 +48,21 @@ class Autocomplete extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("click", event => {
-      if (event.target === this.inputRef.current) {
-        return;
-      }
-      this.setState({
-        showSuggestions: false,
-      });
-    });
+    window.addEventListener("click", event => this.closeAutocomplete(event));
   }
 
   componentWillUnmount() {
-    window.removeEventListener("click");
+    window.removeEventListener("click", () => this.closeAutocomplete());
   }
+
+  closeAutocomplete = e => {
+    if (e.target === this.inputRef.current) {
+      return;
+    }
+    this.setState({
+      showSuggestions: false,
+    });
+  };
 
   onChange = e => {
     const { suggestions } = this.props;
@@ -97,7 +99,7 @@ class Autocomplete extends Component {
           showSuggestions: false,
           userInput: filteredSuggestions[activeSuggestion],
         },
-        () => console.log(this.props)
+        () => this.props.history.push("station/" + this.state.userInput.split(" ").join("_"))
       );
     } else if (e.keyCode === 27) {
       this.setState({

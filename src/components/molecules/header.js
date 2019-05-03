@@ -24,7 +24,7 @@ const RightContainer = styled.div`
   justify-content: space-between;
 `;
 
-const Header = ({ subTitle, background }) => (
+const Header = ({ subTitle, background, history }) => (
   <WrapperHeader background={background}>
     <div>
       <Title size={24}>Tube.</Title>
@@ -33,6 +33,7 @@ const Header = ({ subTitle, background }) => (
     <RightContainer>
       <div style={{ position: "relative" }}>
         <Autocomplete
+          history={history}
           suggestions={stations.objects.stations.geometries.map(v => v.properties.nom_gare)}
         />
         <span style={{ position: "absolute", right: "20px", top: "11px" }}>
