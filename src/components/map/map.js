@@ -131,8 +131,8 @@ class MapComponent extends Component {
               projectionConfig={{
                 scale: 250000,
               }}
-              width={2440}
-              height={900}
+              width={2200}
+              height={1250}
               projection="mercator"
             >
               <ZoomableGroup center={[x, y]} zoom={zoom}>
