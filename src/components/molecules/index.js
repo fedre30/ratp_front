@@ -1,3 +1,4 @@
 import Header from "./header";
+import Autocomplete from "./autocomplete";
 
-export { Header };
+export { Header, Autocomplete };

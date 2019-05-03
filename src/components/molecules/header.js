@@ -3,7 +3,10 @@ import styled from "styled-components";
 import { rem } from "polished";
 
 import { colors } from "styles/const";
-import { Title, SubTitle, Icon, Input } from "components/atoms";
+import { Title, SubTitle, Icon } from "components/atoms";
+import { Autocomplete } from "components/molecules";
+
+import stations from "scripts/stations.json";
 
 const WrapperHeader = styled.div`
   display: flex;
@@ -29,7 +32,9 @@ const Header = ({ subTitle, background }) => (
     </div>
     <RightContainer>
       <div style={{ position: "relative" }}>
-        <Input placeholder="Auber, Châtelet..." />
+        <Autocomplete
+          suggestions={stations.objects.stations.geometries.map(v => v.properties.nom_gare)}
+        />
         <span style={{ position: "absolute", right: "20px", top: "11px" }}>
           <Icon icon="search" size={20} />
         </span>
