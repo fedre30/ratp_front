@@ -27,7 +27,9 @@ const RightContainer = styled.div`
 const Header = ({ subTitle, background, history }) => (
   <WrapperHeader background={background}>
     <div>
-      <Title size={24}>Tube.</Title>
+      <Title size={24} italic>
+        Tube.
+      </Title>
       {subTitle && <SubTitle italic>Transport urbains pour les besoins environnementaux </SubTitle>}
     </div>
     <RightContainer>
