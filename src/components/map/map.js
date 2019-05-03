@@ -16,7 +16,7 @@ import {
 import { Motion, spring } from "react-motion";
 import geography from "scripts/geography.json";
 import stations from "scripts/stations.json";
-import pollution from "scripts/pollution";
+import pollution from "scripts/average_air";
 import underground from "scripts/underground";
 import filters from "scripts/criteria";
 
@@ -31,7 +31,7 @@ class MapComponent extends Component {
       modal: "",
       show: false,
       currentID: undefined,
-      currentPollutionIndex: "pm10",
+      currentPollutionIndex: "",
       underground: underground,
       filters: filters,
       activatedFilters: [],
@@ -104,6 +104,13 @@ class MapComponent extends Component {
               }}
               color={colors.secondary}
             />
+            <Button
+              text={"Reset"}
+              onClick={() => {
+                this.changePollutionIndex("");
+              }}
+              color={colors.secondary}
+            />
           </ButtonWrapper>
         </ButtonFiltersOptions>
 
@@ -159,24 +166,19 @@ class MapComponent extends Component {
                   }
                 </Geographies>
                 <Markers>
-                  {this.state.pollution.map((marker, i) => (
+                  {this.state.pollution.objects.citeair_average.geometries.map((marker, i) => (
                     <Marker
                       key={i}
-                      marker={marker.geometry}
+                      marker={marker}
                       style={{
                         default: {
-                          fill:
-                            (marker.fields["pm10"] + marker.fields["no2"] + marker.fields["o3"]) /
-                              3 >
-                            50
-                              ? "red"
-                              : "blue",
+                          fill: this.getAir(marker),
                           cursor: "pointer",
-                          opacity: 0.1,
+                          opacity: 1,
                         },
-                        hover: { fill: colors.text, cursor: "pointer", opacity: 0.1 },
+                        hover: { fill: this.getAir(marker), cursor: "pointer", opacity: 1 },
                         pressed: {
-                          fill: "#FFFFFF",
+                          fill: this.getAir(marker),
                           cursor: "pointer",
                           outline: "none",
                           opacity: 0.1,
@@ -187,19 +189,14 @@ class MapComponent extends Component {
                         cx={0}
                         cy={0}
                         r={
-                          ((marker.fields["pm10"] + marker.fields["no2"] + marker.fields["o3"]) /
-                            3) *
-                          2
+                          this.state.currentPollutionIndex
+                            ? marker.properties.fields[this.state.currentPollutionIndex]
+                            : 80
                         }
                         style={{
-                          stroke:
-                            (marker.fields["pm10"] + marker.fields["no2"] + marker.fields["o3"]) /
-                              3 >
-                            50
-                              ? "red"
-                              : "blue",
-                          strokeWidth: 3,
-                          opacity: 0.3,
+                          stroke: this.getAir(marker),
+                          strokeWidth: 1,
+                          opacity: 0.7,
                         }}
                       />
                     </Marker>
@@ -225,7 +222,7 @@ class MapComponent extends Component {
                           default: {
                             stroke: colors.tertiary,
                             strokeWidth: 4,
-                            opacity: 0.9,
+                            opacity: 1,
                           },
                           hover: {
                             stroke: colors.text,
@@ -332,8 +329,20 @@ class MapComponent extends Component {
     console.log(this.state.show);
   };
 
-  getAir = () => {
-    stations.filter();
+  getAir = marker => {
+    const average =
+      (marker.properties.fields["pm10"] +
+        marker.properties.fields["no2"] +
+        marker.properties.fields["o3"]) /
+      3;
+    console.log(average);
+    if (average > 30 && average < 31) {
+      return colors.yellow;
+    } else if (average < 30) {
+      return colors.background;
+    } else {
+      return colors.red;
+    }
   };
 
   filterStations = () => {
@@ -358,8 +367,8 @@ const ButtonWrapper = styled.div`
 
 const ButtonsMap = styled.div`
   position: absolute;
-  right: 2rem;
-  bottom: 3rem;
+  right: 5rem;
+  top: 80vh;
   justify-content: flex-end;
 `;
 
