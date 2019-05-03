@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import styled from "styled-components";
+
 import { colors } from "styles/const";
 import Button from "components/atoms/button";
 import Modal from "components/molecules/modal";
-import Sidebar from "components/molecules/sidebar";
+import Sidebar from "components/molecules/sidebar/sidebar";
 import {
   ComposableMap,
   ZoomableGroup,
@@ -19,7 +19,8 @@ import stations from "scripts/stations.json";
 import pollution from "scripts/average_air";
 import underground from "scripts/underground";
 import filters from "scripts/criteria";
-
+import pollutionButtons from "scripts/pollutionButtons";
+import { MapWrapper, ButtonsMap, ButtonFiltersOptions, ButtonWrapper } from "./style";
 class MapComponent extends Component {
   constructor(props) {
     super(props);
@@ -32,31 +33,11 @@ class MapComponent extends Component {
       show: false,
       currentID: undefined,
       currentPollutionIndex: "",
-      pollutionButtons: [
-        {
-          index: "pm10",
-          text: "PM10",
-          active: false,
-        },
-        {
-          index: "no2",
-          text: "NO2",
-          active: false,
-        },
-        {
-          index: "o3",
-          text: "O3",
-          active: false,
-        },
-        {
-          index: "",
-          text: "Reset",
-          active: false,
-        },
-      ],
+      pollutionButtons: pollutionButtons,
       underground: underground,
       filters: filters,
       activatedFilters: [],
+      filteredStations: [],
       active: false,
     };
 
@@ -64,15 +45,126 @@ class MapComponent extends Component {
     this.handleZoomOut = this.handleZoomOut.bind(this);
     this.handleCityClick = this.handleCityClick.bind(this);
     this.handleReset = this.handleReset.bind(this);
-    this.showModal = this.showModal.bind(this);
-    this.changePollutionIndex = this.changePollutionIndex.bind(this);
-    this.filterStations = this.filterStations.bind(this);
   }
 
-  // RENDER
   getProps = props => {
-    this.setState({ activatedFilters: props });
+    this.setState({ activatedFilters: props }, () => {
+      this.filterStations();
+    });
   };
+
+  // <----------------------------- MODAL HANDLER ------------------------------------>
+
+  componentDidMount() {
+    let stations = [];
+    for (let i = 0; i < document.querySelectorAll(".rsm-marker").length; i++) {
+      if (
+        document.querySelectorAll(".rsm-marker")[i].childNodes[0].getAttribute("class") ===
+        "stationMarker"
+      ) {
+        stations.push(document.querySelectorAll(".rsm-marker")[i]);
+      }
+    }
+    for (let i = 0; i < stations.length; i++) {
+      stations[i].setAttribute("data-id", i);
+      stations[i].addEventListener("mouseover", e => {
+        if (e.target.parentNode.getAttribute("class") === "rsm-marker rsm-marker--hover") {
+          this.setState({ currentID: e.target.parentNode.getAttribute("data-id") });
+          this.showModal(e.target.parentNode.getAttribute("data-id"));
+        }
+      });
+      stations[i].addEventListener("mouseleave", e => {
+        setTimeout(() => {
+          this.hideModal(e.target.parentNode.getAttribute("data-id"));
+        }, 1000);
+      });
+    }
+  }
+
+  // <----------------------------- MAP METHODS ------------------------------------>
+
+  handleZoomIn() {
+    this.setState({
+      zoom: this.state.zoom * 2,
+    });
+  }
+
+  handleZoomOut() {
+    this.setState({
+      zoom: this.state.zoom / 2,
+    });
+  }
+
+  handleCityClick(city) {
+    this.setState({
+      zoom: 5,
+      center: city.coordinates,
+    });
+  }
+
+  handleReset() {
+    this.setState({
+      center: [2.35, 48.85],
+      zoom: 1,
+    });
+  }
+
+  // <----------------------------- FILTERS ------------------------------------>
+
+  changePollutionIndex(button, index) {
+    this.setState({
+      currentPollutionIndex: index,
+    });
+    button.active === false ? (button.active = true) : (button.active = false);
+    if (button.active === false) {
+      this.setState({ currentPollutionIndex: false });
+    }
+    // Reset other indexes active property
+    const otherIndexes = this.state.pollutionButtons.filter(el => el !== button);
+    return otherIndexes.map(index => (index.active = false));
+  }
+
+  showModal = () => {
+    this.setState({ show: true });
+  };
+
+  hideModal = () => {
+    this.setState({ show: false });
+  };
+
+  compareAirAverage = marker => {
+    const average = this.getAirAverage(marker);
+    if (average > 30 && average < 31) {
+      return colors.yellow;
+    } else if (average < 30) {
+      return colors.background;
+    } else {
+      return colors.red;
+    }
+  };
+
+  getAirAverage = marker => {
+    const indexes = [
+      marker.properties.fields["pm10"],
+      marker.properties.fields["no2"],
+      marker.properties.fields["o3"],
+    ];
+    return indexes.reduce((total, acc) => total + acc) / indexes.length;
+  };
+
+  filterStations = () => {
+    const filteredStations = [];
+    this.state.stations.objects.stations.geometries.map(station => {
+      this.state.activatedFilters.filter(filter => {
+        if (station.properties.indice_lig === filter.line) {
+          filteredStations.push(station);
+        }
+      });
+    });
+    this.setState({ filteredStations: filteredStations });
+  };
+
+  // <----------------------------- RENDER ------------------------------------>
 
   render() {
     return (
@@ -80,10 +172,8 @@ class MapComponent extends Component {
         <Sidebar
           transports={this.state.underground}
           filters={this.state.filters}
-          onClick={() => {
-            this.handleButton();
-          }}
-          test={this.getProps}
+          activatedFilters={this.getProps}
+          /* onClick={this.filterStations}*/
         />
         <ButtonsMap>
           <ButtonWrapper>
@@ -93,7 +183,12 @@ class MapComponent extends Component {
               iconColor={colors.primary}
               onClick={this.handleZoomIn}
             />
-            <Button mapButton={true} icon="zoomOut" iconColor={colors.primary} />
+            <Button
+              mapButton={true}
+              icon="zoomOut"
+              iconColor={colors.primary}
+              onClick={this.handleZoomOut}
+            />
             <Button
               mapButton={true}
               icon="reset"
@@ -161,10 +256,7 @@ class MapComponent extends Component {
                             strokeWidth: 0.7,
                             outline: "none",
                           },
-                          pressed: {
-                            fill: colors.secondary,
-                            outline: "none",
-                          },
+                          pressed: { fill: colors.secondary, outline: "none" },
                         }}
                       />
                     ))
@@ -177,13 +269,17 @@ class MapComponent extends Component {
                       marker={marker}
                       style={{
                         default: {
-                          fill: this.getAir(marker),
+                          fill: this.compareAirAverage(marker),
                           cursor: "pointer",
                           opacity: 1,
                         },
-                        hover: { fill: this.getAir(marker), cursor: "pointer", opacity: 1 },
+                        hover: {
+                          fill: this.compareAirAverage(marker),
+                          cursor: "pointer",
+                          opacity: 1,
+                        },
                         pressed: {
-                          fill: this.getAir(marker),
+                          fill: this.compareAirAverage(marker),
                           cursor: "pointer",
                           outline: "none",
                           opacity: 0.1,
@@ -196,10 +292,10 @@ class MapComponent extends Component {
                         r={
                           this.state.currentPollutionIndex
                             ? marker.properties.fields[this.state.currentPollutionIndex]
-                            : 80
+                            : this.getAirAverage(marker)
                         }
                         style={{
-                          stroke: this.getAir(marker),
+                          stroke: this.compareAirAverage(marker),
                           strokeWidth: 1,
                           opacity: 0.7,
                         }}
@@ -209,7 +305,10 @@ class MapComponent extends Component {
                 </Markers>
 
                 <Markers>
-                  {this.state.stations.objects.stations.geometries.map((marker, j) => (
+                  {(this.state.filteredStations.length > 0
+                    ? this.state.filteredStations
+                    : this.state.stations.objects.stations.geometries
+                  ).map((marker, j) => (
                     <Marker
                       key={j}
                       marker={marker}
@@ -224,22 +323,9 @@ class MapComponent extends Component {
                         cy={0}
                         r={8}
                         style={{
-                          default: {
-                            stroke: colors.tertiary,
-                            strokeWidth: 4,
-                            opacity: 1,
-                          },
-                          hover: {
-                            stroke: colors.text,
-                            width: 90,
-                            strokeWidth: 9,
-                            opacity: 1,
-                          },
-                          pressed: {
-                            stroke: colors.tertiary,
-                            strokeWidth: 4,
-                            opacity: 0.9,
-                          },
+                          default: { stroke: colors.tertiary, strokeWidth: 4, opacity: 1 },
+                          hover: { stroke: colors.text, width: 90, strokeWidth: 9, opacity: 1 },
+                          pressed: { stroke: colors.tertiary, strokeWidth: 4, opacity: 0.9 },
                         }}
                         className={"stationMarker"}
                       />
@@ -260,143 +346,6 @@ class MapComponent extends Component {
       </MapWrapper>
     );
   }
-
-  // MODAL HANDLER
-
-  componentDidMount() {
-    let stations = [];
-    for (let i = 0; i < document.querySelectorAll(".rsm-marker").length; i++) {
-      if (
-        document.querySelectorAll(".rsm-marker")[i].childNodes[0].getAttribute("class") ===
-        "stationMarker"
-      ) {
-        stations.push(document.querySelectorAll(".rsm-marker")[i]);
-      }
-    }
-    for (let i = 0; i < stations.length; i++) {
-      stations[i].setAttribute("data-id", i);
-      stations[i].addEventListener("mouseover", e => {
-        if (e.target.parentNode.getAttribute("class") === "rsm-marker rsm-marker--hover") {
-          this.setState({ currentID: e.target.parentNode.getAttribute("data-id") });
-          this.showModal(e.target.parentNode.getAttribute("data-id"));
-        }
-      });
-      stations[i].addEventListener("mouseleave", e => {
-        setTimeout(() => {
-          this.hideModal(e.target.parentNode.getAttribute("data-id"));
-        }, 1000);
-      });
-    }
-  }
-
-  // METHODS
-
-  handleZoomIn() {
-    this.setState({
-      zoom: this.state.zoom * 2,
-    });
-  }
-
-  handleZoomOut() {
-    this.setState({
-      zoom: this.state.zoom / 2,
-    });
-  }
-
-  handleCityClick(city) {
-    this.setState({
-      zoom: 5,
-      center: city.coordinates,
-    });
-  }
-
-  handleReset() {
-    this.setState({
-      center: [2.35, 48.85],
-      zoom: 1,
-    });
-  }
-
-  changePollutionIndex(button, index) {
-    this.setState({
-      currentPollutionIndex: index,
-    });
-    button.active === false ? (button.active = true) : (button.active = false);
-    if (button.active === false) {
-      this.setState({ currentPollutionIndex: false });
-    }
-    // Reset other indexes active property
-    const otherIndexes = this.state.pollutionButtons.filter(el => el !== button);
-    return otherIndexes.map(index => (index.active = false));
-  }
-
-  showModal = id => {
-    console.log(id);
-    this.setState({ show: true });
-    console.log(this.state.show);
-  };
-
-  hideModal = () => {
-    this.setState({ show: false });
-    console.log(this.state.show);
-  };
-
-  getAir = marker => {
-    const indexes = [
-      marker.properties.fields["pm10"],
-      marker.properties.fields["no2"],
-      marker.properties.fields["o3"],
-    ];
-    const average = indexes.reduce((total, acc) => total + acc) / indexes.length;
-
-    if (average > 30 && average < 31) {
-      return colors.yellow;
-    } else if (average < 30) {
-      return colors.background;
-    } else {
-      return colors.red;
-    }
-  };
-
-  filterStations = () => {
-    this.state.stations.objects.stations.geometries.filter(station => {
-      this.state.activatedFilters.map(filter => {
-        return station.mode === filter.type && station.indice_lig === filter.line;
-      });
-    });
-  };
 }
-
-const MapWrapper = styled.div`
-  width: 100%;
-  position: relative;
-`;
-
-const ButtonWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  margin: 1rem auto;
-`;
-
-const ButtonsMap = styled.div`
-  position: absolute;
-  right: 5rem;
-  top: 80vh;
-  justify-content: flex-end;
-`;
-
-const ButtonFiltersOptions = styled.div`
-  width: 100%;
-  position: absolute;
-  top: 5rem;
-  left: 25%;
-
-  .Button-label {
-    font-weight: bold;
-    font-size: 1.5rem;
-    text-transform: uppercase;
-    color: ${colors.text};
-  }
-`;
 
 export default withRouter(MapComponent);
