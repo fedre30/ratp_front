@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-
 import { colors } from "styles/const";
 import Button from "components/atoms/button";
 import Modal from "components/molecules/modal";
@@ -31,7 +30,7 @@ class MapComponent extends Component {
       zoom: 1,
       modal: "",
       show: false,
-      currentID: undefined,
+      stationName: "",
       currentPollutionIndex: "",
       pollutionButtons: pollutionButtons,
       underground: underground,
@@ -55,31 +54,13 @@ class MapComponent extends Component {
 
   // <----------------------------- MODAL HANDLER ------------------------------------>
 
-  componentDidMount() {
-    let stations = [];
-    for (let i = 0; i < document.querySelectorAll(".rsm-marker").length; i++) {
-      if (
-        document.querySelectorAll(".rsm-marker")[i].childNodes[0].getAttribute("class") ===
-        "stationMarker"
-      ) {
-        stations.push(document.querySelectorAll(".rsm-marker")[i]);
-      }
-    }
-    for (let i = 0; i < stations.length; i++) {
-      stations[i].setAttribute("data-id", i);
-      stations[i].addEventListener("mouseover", e => {
-        if (e.target.parentNode.getAttribute("class") === "rsm-marker rsm-marker--hover") {
-          this.setState({ currentID: e.target.parentNode.getAttribute("data-id") });
-          this.showModal(e.target.parentNode.getAttribute("data-id"));
-        }
-      });
-      stations[i].addEventListener("mouseleave", e => {
-        setTimeout(() => {
-          this.hideModal(e.target.parentNode.getAttribute("data-id"));
-        }, 1000);
-      });
-    }
-  }
+  showModal = marker => {
+    this.setState({ show: true, stationName: marker.properties.nom_gare });
+  };
+
+  hideModal = () => {
+    this.setState({ show: false, stationName: "" });
+  };
 
   // <----------------------------- MAP METHODS ------------------------------------>
 
@@ -124,14 +105,6 @@ class MapComponent extends Component {
     return otherIndexes.map(index => (index.active = false));
   }
 
-  showModal = () => {
-    this.setState({ show: true });
-  };
-
-  hideModal = () => {
-    this.setState({ show: false });
-  };
-
   compareAirAverage = marker => {
     const average = this.getAirAverage(marker);
     if (average > 30 && average < 31) {
@@ -156,11 +129,12 @@ class MapComponent extends Component {
     const filteredStations = [];
     this.state.stations.objects.stations.geometries.map(station => {
       this.state.activatedFilters.filter(filter => {
-        if (station.properties.indice_lig === filter.line) {
+        if (station.properties.ligne === filter.line) {
           filteredStations.push(station);
         }
       });
     });
+    console.log(filteredStations);
     this.setState({ filteredStations: filteredStations });
   };
 
@@ -312,6 +286,12 @@ class MapComponent extends Component {
                     <Marker
                       key={j}
                       marker={marker}
+                      onMouseEnter={() => {
+                        this.showModal(marker);
+                      }}
+                      onMouseLeave={() => {
+                        this.hideModal();
+                      }}
                       style={{
                         default: { fill: colors.tertiary, cursor: "pointer" },
                         hover: { fill: colors.text, cursor: "pointer", outline: "none" },
@@ -336,13 +316,8 @@ class MapComponent extends Component {
             </ComposableMap>
           )}
         </Motion>
-        {this.state.show ? (
-          <Modal
-            title={stations.objects.stations.geometries[this.state.currentID].properties.nom_gare}
-          />
-        ) : (
-          <div />
-        )}
+
+        {this.state.show && <Modal title={this.state.stationName} />}
       </MapWrapper>
     );
   }
