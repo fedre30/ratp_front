@@ -134,7 +134,6 @@ class MapComponent extends Component {
         }
       });
     });
-    console.log(filteredStations);
     this.setState({ filteredStations: filteredStations });
   };
 

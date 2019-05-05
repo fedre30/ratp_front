@@ -10,26 +10,21 @@ class Sidebar extends React.Component {
     this.state = {
       activatedFilters: [],
     };
-    this.handleButton = this.handleButton.bind(this);
   }
 
   handleButton = obj => {
     if (obj.active === false) {
-      this.state.activatedFilters.push(obj);
       obj.active = true;
-      console.log(true);
+      const activatedFilters = [...this.state.activatedFilters];
+      activatedFilters.push(obj);
       this.setState(
-        { activatedFilters: [...this.state.activatedFilters] },
-        this.props.activatedFilters(this.state.activatedFilters)
+        { activatedFilters: activatedFilters },
+        this.props.activatedFilters(activatedFilters)
       );
     } else {
       obj.active = false;
-      this.state.activatedFilters.splice(obj, 1);
-      console.log(this.state.activatedFilters);
-      this.setState(
-        { activatedFilters: [...this.state.activatedFilters] },
-        this.props.activatedFilters(this.state.activatedFilters)
-      );
+      const activatedFilters = this.state.activatedFilters.filter(f => f !== obj);
+      this.setState({ activatedFilters }, this.props.activatedFilters(activatedFilters));
     }
   };
 
