@@ -16,9 +16,7 @@ import { Motion, spring } from "react-motion";
 import geography from "scripts/geography.json";
 import stations from "scripts/stations.json";
 import pollution from "scripts/average_air";
-import underground from "scripts/underground";
-import filters from "scripts/criteria";
-import pollutionButtons from "scripts/pollutionButtons";
+import { underground, filters, pollutionButtons, zoomButtons } from "scripts/mapOptions";
 import { MapWrapper, ButtonsMap, ButtonFiltersOptions, ButtonWrapper } from "./style";
 class MapComponent extends Component {
   constructor(props) {
@@ -35,15 +33,11 @@ class MapComponent extends Component {
       pollutionButtons: pollutionButtons,
       underground: underground,
       filters: filters,
+      zoomButtons: zoomButtons,
       activatedFilters: [],
       filteredStations: [],
       active: false,
     };
-
-    this.handleZoomIn = this.handleZoomIn.bind(this);
-    this.handleZoomOut = this.handleZoomOut.bind(this);
-    this.handleCityClick = this.handleCityClick.bind(this);
-    this.handleReset = this.handleReset.bind(this);
   }
 
   getProps = props => {
@@ -64,31 +58,22 @@ class MapComponent extends Component {
 
   // <----------------------------- MAP METHODS ------------------------------------>
 
-  handleZoomIn() {
-    this.setState({
-      zoom: this.state.zoom * 2,
-    });
-  }
-
-  handleZoomOut() {
-    this.setState({
-      zoom: this.state.zoom / 2,
-    });
-  }
-
-  handleCityClick(city) {
-    this.setState({
-      zoom: 5,
-      center: city.coordinates,
-    });
-  }
-
-  handleReset() {
-    this.setState({
-      center: [2.35, 48.85],
-      zoom: 1,
-    });
-  }
+  handleZoom = zoom => {
+    if (zoom === "plus") {
+      this.setState({
+        zoom: this.state.zoom * 2,
+      });
+    } else if (zoom === "minus") {
+      this.setState({
+        zoom: this.state.zoom / 2,
+      });
+    } else {
+      this.setState({
+        center: [2.35, 48.85],
+        zoom: 1,
+      });
+    }
+  };
 
   // <----------------------------- FILTERS ------------------------------------>
 
@@ -146,47 +131,40 @@ class MapComponent extends Component {
           transports={this.state.underground}
           filters={this.state.filters}
           activatedFilters={this.getProps}
-          /* onClick={this.filterStations}*/
         />
         <ButtonsMap>
           <ButtonWrapper>
-            <Button
-              mapButton={true}
-              icon="zoomIn"
-              iconColor={colors.primary}
-              onClick={this.handleZoomIn}
-            />
-            <Button
-              mapButton={true}
-              icon="zoomOut"
-              iconColor={colors.primary}
-              onClick={this.handleZoomOut}
-            />
-            <Button
-              mapButton={true}
-              icon="reset"
-              iconColor={colors.primary}
-              onClick={this.handleReset}
-            />
-          </ButtonWrapper>
-        </ButtonsMap>
-        <ButtonFiltersOptions>
-          <h3 className="Button-label">Indices de l'air</h3>
-          <ButtonWrapper>
-            {this.state.pollutionButtons.map(button => (
+            {this.state.zoomButtons.map(button => (
               <Button
-                key={button.index}
-                text={button.text}
+                key={button.icon}
+                mapButton={true}
+                icon={button.icon}
+                iconColor={button.iconColor}
                 onClick={() => {
-                  this.changePollutionIndex(button, button.index);
+                  this.handleZoom(button.id);
                 }}
-                active={button.active}
-                color={colors.secondary}
               />
             ))}
           </ButtonWrapper>
-        </ButtonFiltersOptions>
-
+        </ButtonsMap>
+        {filters[0].active && (
+          <ButtonFiltersOptions>
+            <h3 className="Button-label">Indices de l'air</h3>
+            <ButtonWrapper>
+              {this.state.pollutionButtons.map(button => (
+                <Button
+                  key={button.index}
+                  text={button.text}
+                  onClick={() => {
+                    this.changePollutionIndex(button, button.index);
+                  }}
+                  active={button.active}
+                  color={colors.secondary}
+                />
+              ))}
+            </ButtonWrapper>
+          </ButtonFiltersOptions>
+        )}
         <Motion
           defaultStyle={{
             zoom: 1,
@@ -229,53 +207,59 @@ class MapComponent extends Component {
                             strokeWidth: 0.7,
                             outline: "none",
                           },
-                          pressed: { fill: colors.secondary, outline: "none" },
+                          pressed: {
+                            fill: colors.primary,
+                            stroke: colors.secondary,
+                            outline: "none",
+                          },
                         }}
                       />
                     ))
                   }
                 </Geographies>
-                <Markers>
-                  {this.state.pollution.objects.citeair_average.geometries.map((marker, i) => (
-                    <Marker
-                      key={i}
-                      marker={marker}
-                      style={{
-                        default: {
-                          fill: this.compareAirAverage(marker),
-                          cursor: "pointer",
-                          opacity: 1,
-                        },
-                        hover: {
-                          fill: this.compareAirAverage(marker),
-                          cursor: "pointer",
-                          opacity: 1,
-                        },
-                        pressed: {
-                          fill: this.compareAirAverage(marker),
-                          cursor: "pointer",
-                          outline: "none",
-                          opacity: 0.1,
-                        },
-                      }}
-                    >
-                      <circle
-                        cx={0}
-                        cy={0}
-                        r={
-                          this.state.currentPollutionIndex
-                            ? marker.properties.fields[this.state.currentPollutionIndex]
-                            : this.getAirAverage(marker)
-                        }
+                {filters[0].active && (
+                  <Markers>
+                    {this.state.pollution.objects.citeair_average.geometries.map((marker, i) => (
+                      <Marker
+                        key={i}
+                        marker={marker}
                         style={{
-                          stroke: this.compareAirAverage(marker),
-                          strokeWidth: 1,
-                          opacity: 0.7,
+                          default: {
+                            fill: this.compareAirAverage(marker),
+                            cursor: "pointer",
+                            opacity: 1,
+                          },
+                          hover: {
+                            fill: this.compareAirAverage(marker),
+                            cursor: "pointer",
+                            opacity: 1,
+                          },
+                          pressed: {
+                            fill: this.compareAirAverage(marker),
+                            cursor: "pointer",
+                            outline: "none",
+                            opacity: 0.1,
+                          },
                         }}
-                      />
-                    </Marker>
-                  ))}
-                </Markers>
+                      >
+                        <circle
+                          cx={0}
+                          cy={0}
+                          r={
+                            this.state.currentPollutionIndex
+                              ? marker.properties.fields[this.state.currentPollutionIndex]
+                              : this.getAirAverage(marker)
+                          }
+                          style={{
+                            stroke: this.compareAirAverage(marker),
+                            strokeWidth: 1,
+                            opacity: 0.7,
+                          }}
+                        />
+                      </Marker>
+                    ))}
+                  </Markers>
+                )}
 
                 <Markers>
                   {(this.state.filteredStations.length > 0

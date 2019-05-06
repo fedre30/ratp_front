@@ -17,7 +17,11 @@ import M14 from "images/lines/M_14.png";
 import rerA from "images/lines/RER_A.png";
 import rerB from "images/lines/RER_B.png";
 
-const underground = [
+import { colors } from "styles/const";
+
+// <---------------------------------- STATIONS ------------------------------------->
+
+export const underground = [
   {
     id: 1,
     src: M1,
@@ -132,4 +136,76 @@ const underground = [
   },
 ];
 
-export default underground;
+// <------------------------- CRITERIA --------------------------->
+
+export const filters = [
+  {
+    id: 1,
+    icon: "air",
+    label: "Qualité de l'air",
+    active: true,
+  },
+  {
+    id: 2,
+    icon: "trafic",
+    label: "Trafic",
+    active: false,
+  },
+  {
+    id: 3,
+    icon: "toilets",
+    label: "Toilettes",
+    active: false,
+  },
+  {
+    id: 4,
+    icon: "wheelchair",
+    label: "Accessibilité",
+    active: false,
+  },
+];
+
+// <------------------------- POLLUTION BUTTONs -------------------------->
+
+export const pollutionButtons = [
+  {
+    index: "pm10",
+    text: "PM10",
+    active: false,
+  },
+  {
+    index: "no2",
+    text: "NO2",
+    active: false,
+  },
+  {
+    index: "o3",
+    text: "O3",
+    active: false,
+  },
+  {
+    index: "",
+    text: "Reset",
+    active: false,
+  },
+];
+
+// <---------------------------------- ZOOM BUTTONS --------------------------------------->
+
+export const zoomButtons = [
+  {
+    id: "plus",
+    icon: "zoomIn",
+    iconColor: colors.primary,
+  },
+  {
+    id: "minus",
+    icon: "zoomOut",
+    iconColor: colors.primary,
+  },
+  {
+    id: "reset",
+    icon: "reset",
+    iconColor: colors.primary,
+  },
+];
