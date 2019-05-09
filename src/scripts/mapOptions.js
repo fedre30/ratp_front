@@ -165,7 +165,7 @@ export const filters = [
   },
 ];
 
-// <------------------------- POLLUTION BUTTONs -------------------------->
+// <------------------------- POLLUTION BUTTONS -------------------------->
 
 export const pollutionButtons = [
   {
@@ -186,6 +186,66 @@ export const pollutionButtons = [
   {
     index: "",
     text: "Reset",
+    active: false,
+  },
+];
+
+// <------------------------- TRAFIC BUTTONS -------------------------->
+
+export const traficButtons = [
+  {
+    index: "average",
+    text: "Trafic Moyen",
+    active: false,
+  },
+  {
+    index: "max",
+    text: "Trafic Maximal",
+    active: false,
+  },
+];
+
+// <------------------------- TOILETS BUTTONS -------------------------->
+
+export const toiletsButtons = [
+  {
+    index: "Gratuit",
+    text: "Gratuit",
+    active: false,
+  },
+  {
+    index: "Payant",
+    text: "Payant",
+    active: false,
+  },
+  {
+    index: "Accès Bouton Poussoir",
+    text: "Accès Bouton Poussoir",
+    active: false,
+  },
+];
+
+// <------------------------- ACCESSIBILITY BUTTONS -------------------------->
+
+export const accessibilityButtons = [
+  {
+    index: "PMR",
+    text: "PMR",
+    active: false,
+  },
+  {
+    index: "UFR",
+    text: "UFR",
+    active: false,
+  },
+  {
+    index: "Signal sonore",
+    text: "Signal sonore",
+    active: false,
+  },
+  {
+    index: "Signal visuel",
+    text: "Signal visuel",
     active: false,
   },
 ];

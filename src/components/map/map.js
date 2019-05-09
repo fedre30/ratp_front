@@ -16,8 +16,22 @@ import { Motion, spring } from "react-motion";
 import geography from "scripts/geography.json";
 import stations from "scripts/stations.json";
 import pollution from "scripts/average_air";
-import { underground, filters, pollutionButtons, zoomButtons } from "scripts/mapOptions";
-import { MapWrapper, ButtonsMap, ButtonFiltersOptions, ButtonWrapper } from "./style";
+import {
+  underground,
+  filters,
+  pollutionButtons,
+  zoomButtons,
+  traficButtons,
+  toiletsButtons,
+  accessibilityButtons,
+} from "scripts/mapOptions";
+import {
+  MapWrapper,
+  ButtonsMap,
+  ButtonFiltersOptions,
+  ButtonWrapper,
+  AllMapOptions,
+} from "./style";
 class MapComponent extends Component {
   constructor(props) {
     super(props);
@@ -31,19 +45,27 @@ class MapComponent extends Component {
       stationName: "",
       currentPollutionIndex: "",
       pollutionButtons: pollutionButtons,
+      traficButtons: traficButtons,
+      toiletsButtons: toiletsButtons,
+      accessibilityButtons: accessibilityButtons,
       underground: underground,
       filters: filters,
       zoomButtons: zoomButtons,
-      activatedFilters: [],
+      activatedFiltersLines: [],
+      activatedFiltersCriteria: [],
       filteredStations: [],
       active: false,
     };
   }
 
-  getProps = props => {
-    this.setState({ activatedFilters: props }, () => {
+  getPropsLines = props => {
+    this.setState({ activatedFiltersLines: props }, () => {
       this.filterStations();
     });
+  };
+
+  getPropsCriteria = props => {
+    this.setState({ activatedFiltersCriteria: props });
   };
 
   // <----------------------------- MODAL HANDLER ------------------------------------>
@@ -113,7 +135,7 @@ class MapComponent extends Component {
   filterStations = () => {
     const filteredStations = [];
     this.state.stations.objects.stations.geometries.map(station => {
-      this.state.activatedFilters.filter(filter => {
+      this.state.activatedFiltersLines.filter(filter => {
         if (station.properties.ligne === filter.line) {
           filteredStations.push(station);
         }
@@ -130,7 +152,8 @@ class MapComponent extends Component {
         <Sidebar
           transports={this.state.underground}
           filters={this.state.filters}
-          activatedFilters={this.getProps}
+          activatedFiltersLines={this.getPropsLines}
+          activatedFiltersCriteria={this.getPropsCriteria}
         />
         <ButtonsMap>
           <ButtonWrapper>
@@ -147,24 +170,74 @@ class MapComponent extends Component {
             ))}
           </ButtonWrapper>
         </ButtonsMap>
-        {filters[0].active && (
-          <ButtonFiltersOptions>
-            <h3 className="Button-label">Indices de l'air</h3>
-            <ButtonWrapper>
-              {this.state.pollutionButtons.map(button => (
-                <Button
-                  key={button.index}
-                  text={button.text}
-                  onClick={() => {
-                    this.changePollutionIndex(button, button.index);
-                  }}
-                  active={button.active}
-                  color={colors.secondary}
-                />
-              ))}
-            </ButtonWrapper>
-          </ButtonFiltersOptions>
-        )}
+        <AllMapOptions>
+          {filters[0].active && (
+            <ButtonFiltersOptions>
+              <h3 className="Button-label">Indices de l'air</h3>
+              <ButtonWrapper>
+                {this.state.pollutionButtons.map(button => (
+                  <Button
+                    key={button.index}
+                    text={button.text}
+                    onClick={() => {
+                      this.changePollutionIndex(button, button.index);
+                    }}
+                    active={button.active}
+                    color={colors.secondary}
+                  />
+                ))}
+              </ButtonWrapper>
+            </ButtonFiltersOptions>
+          )}
+          {filters[1].active && (
+            <ButtonFiltersOptions>
+              <h3 className="Button-label">Trafic</h3>
+              <ButtonWrapper>
+                {this.state.traficButtons.map(button => (
+                  <Button
+                    key={button.index}
+                    text={button.text}
+                    onClick={() => {}}
+                    active={button.active}
+                    color={colors.secondary}
+                  />
+                ))}
+              </ButtonWrapper>
+            </ButtonFiltersOptions>
+          )}
+          {filters[2].active && (
+            <ButtonFiltersOptions>
+              <h3 className="Button-label">Toilettes</h3>
+              <ButtonWrapper>
+                {this.state.toiletsButtons.map(button => (
+                  <Button
+                    key={button.index}
+                    text={button.text}
+                    onClick={() => {}}
+                    active={button.active}
+                    color={colors.secondary}
+                  />
+                ))}
+              </ButtonWrapper>
+            </ButtonFiltersOptions>
+          )}
+          {filters[3].active && (
+            <ButtonFiltersOptions>
+              <h3 className="Button-label">Accessibilité</h3>
+              <ButtonWrapper>
+                {this.state.accessibilityButtons.map(button => (
+                  <Button
+                    key={button.index}
+                    text={button.text}
+                    onClick={() => {}}
+                    active={button.active}
+                    color={colors.secondary}
+                  />
+                ))}
+              </ButtonWrapper>
+            </ButtonFiltersOptions>
+          )}
+        </AllMapOptions>
         <Motion
           defaultStyle={{
             zoom: 1,

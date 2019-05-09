@@ -7,7 +7,12 @@ export const MapWrapper = styled.div`
   width: 100%;
   position: relative;
 `;
-
+export const AllMapOptions = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+`;
 export const ButtonWrapper = styled.div`
   width: 100%;
   display: flex;

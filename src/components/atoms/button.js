@@ -39,8 +39,9 @@ Button.defaultProps = {
 };
 
 const ButtonContainer = styled.div`
-  width: 100px;
+  width: auto;
   height: 50px;
+  padding: 0 1rem;
   background: ${colors.button};
   border-radius: 0.3rem;
   cursor: pointer;
