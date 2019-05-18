@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { colors } from "styles/const";
 import Button from "components/atoms/button";
 import Modal from "components/molecules/modal";
+import Icon from "components/atoms/icon";
 import Sidebar from "components/molecules/sidebar/sidebar";
 import {
   ComposableMap,
@@ -14,7 +15,7 @@ import {
 } from "react-simple-maps";
 import { Motion, spring } from "react-motion";
 import geography from "scripts/geography.json";
-import stations from "scripts/stations.json";
+import stations from "scripts/getAllStation.json";
 import pollution from "scripts/average_air";
 import {
   underground,
@@ -32,6 +33,7 @@ import {
   ButtonWrapper,
   AllMapOptions,
 } from "./style";
+const apiURL = "http://127.0.0.1:8000/api/stations";
 class MapComponent extends Component {
   constructor(props) {
     super(props);
@@ -43,6 +45,8 @@ class MapComponent extends Component {
       modal: "",
       show: false,
       stationName: "",
+      stationLines: [],
+      stationPlace: "",
       currentPollutionIndex: "",
       pollutionButtons: pollutionButtons,
       traficButtons: traficButtons,
@@ -58,6 +62,11 @@ class MapComponent extends Component {
     };
   }
 
+  /* componentDidMount() {
+    this.getAPI();
+  }
+  */
+
   getPropsLines = props => {
     this.setState({ activatedFiltersLines: props }, () => {
       this.filterStations();
@@ -68,14 +77,43 @@ class MapComponent extends Component {
     this.setState({ activatedFiltersCriteria: props });
   };
 
+  /*getAPI = async () => {
+    const stationsResponse = await fetch(apiURL);
+    const { stations } = await stationsResponse.json();
+    console.log(stationsResponse);
+
+    //this.setState({ stations });
+  };*/
+
   // <----------------------------- MODAL HANDLER ------------------------------------>
 
   showModal = marker => {
-    this.setState({ show: true, stationName: marker.properties.nom_gare });
+    const lines = [
+      marker.trafic.correspondance1,
+      marker.trafic.correspondance2,
+      marker.trafic.correspondance3,
+      marker.trafic.correspondance4,
+      marker.trafic.correspondance5,
+    ];
+    const newLines = lines.filter(line => line != "");
+    const linesIcons = newLines.map(line => {
+      if (marker.mode === "Metro") {
+        return `M_${line}`;
+      }
+      if (marker.mode === "RER") {
+        return `RER_${line}`;
+      }
+    });
+    this.setState({
+      show: true,
+      stationName: marker.nomGare,
+      stationLines: linesIcons,
+      stationPlace: marker.trafic.ville,
+    });
   };
 
   hideModal = () => {
-    this.setState({ show: false, stationName: "" });
+    this.setState({ show: false, stationName: "", stationLines: [], stationPlace: "" });
   };
 
   // <----------------------------- MAP METHODS ------------------------------------>
@@ -333,11 +371,36 @@ class MapComponent extends Component {
                     ))}
                   </Markers>
                 )}
+                {filters[2].active && (
+                  <Markers>
+                    {(this.state.filteredStations.length > 0
+                      ? this.state.filteredStations
+                      : this.state.stations.stations
+                    ).map((marker, j) => (
+                      <Marker
+                        key={j}
+                        marker={marker}
+                        style={{
+                          default: { fill: colors.tertiary, cursor: "pointer" },
+                          hover: { fill: colors.text, cursor: "pointer", outline: "none" },
+                          pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
+                        }}
+                      >
+                        {marker.properties.ligne === "8" && (
+                          <Icon color={colors.text} icon="euro" size="25" alt="" />
+                        )}
+                        {marker.properties.ligne === "2" && (
+                          <Icon color={colors.text} icon="wheelchair" size="25" alt="" />
+                        )}
+                      </Marker>
+                    ))}
+                  </Markers>
+                )}
 
                 <Markers>
                   {(this.state.filteredStations.length > 0
                     ? this.state.filteredStations
-                    : this.state.stations.objects.stations.geometries
+                    : this.state.stations.stations
                   ).map((marker, j) => (
                     <Marker
                       key={j}
@@ -373,7 +436,13 @@ class MapComponent extends Component {
           )}
         </Motion>
 
-        {this.state.show && <Modal title={this.state.stationName} />}
+        {this.state.show && (
+          <Modal
+            title={this.state.stationName}
+            lines={this.state.stationLines}
+            place={this.state.stationPlace}
+          />
+        )}
       </MapWrapper>
     );
   }

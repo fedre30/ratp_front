@@ -185,7 +185,7 @@ export const pollutionButtons = [
   },
   {
     index: "",
-    text: "Reset",
+    text: "Moyenne",
     active: false,
   },
 ];
