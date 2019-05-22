@@ -209,17 +209,17 @@ export const traficButtons = [
 
 export const toiletsButtons = [
   {
-    index: "Gratuit",
+    index: "gratuit",
     text: "Gratuit",
     active: false,
   },
   {
-    index: "Payant",
+    index: "payant",
     text: "Payant",
     active: false,
   },
   {
-    index: "Accès Bouton Poussoir",
+    index: "accesBoutonpoussoir",
     text: "Accès Bouton Poussoir",
     active: false,
   },
@@ -229,22 +229,22 @@ export const toiletsButtons = [
 
 export const accessibilityButtons = [
   {
-    index: "PMR",
+    index: "pmr",
     text: "PMR",
     active: false,
   },
   {
-    index: "UFR",
+    index: "ufr",
     text: "UFR",
     active: false,
   },
   {
-    index: "Signal sonore",
+    index: "annonceSonoreProchainPassage",
     text: "Signal sonore",
     active: false,
   },
   {
-    index: "Signal visuel",
+    index: "annonceVisuelleProchainPassage",
     text: "Signal visuel",
     active: false,
   },

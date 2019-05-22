@@ -324,7 +324,7 @@
       "tertrain": 0,
       "reseau": "METRO",
       "codLigf": 4,
-      "coordinates": 48.842,
+      "coordinates": [2.337949777055663, 48.88459420803534],
       "garesId": 2,
       "rer": 0,
       "nomGare": "Abbesses",
@@ -398,24 +398,22 @@
           "accessibiliteQuaiTrain": 0
         }
       ],
-      "trafic": [
-        {
-          "@id": "/api/trafic_annuel_station_reseau_ferres/266",
-          "@type": "TraficAnnuelStationReseauFerre",
-          "id": 266,
-          "rang": 241,
-          "rseau": "Métro",
-          "station": "ABBESSES",
-          "trafic": 2188257,
-          "correspondance1": "12",
-          "correspondance2": "",
-          "correspondance3": "",
-          "correspondance4": "",
-          "correspondance5": "",
-          "ville": "Paris",
-          "arrondissementpourParis": "18"
-        }
-      ]
+      "trafic": {
+        "@id": "/api/trafic_annuel_station_reseau_ferres/266",
+        "@type": "TraficAnnuelStationReseauFerre",
+        "id": 266,
+        "rang": 241,
+        "rseau": "Métro",
+        "station": "ABBESSES",
+        "trafic": 2188257,
+        "correspondance1": "12",
+        "correspondance2": "",
+        "correspondance3": "",
+        "correspondance4": "",
+        "correspondance5": "",
+        "ville": "Paris",
+        "arrondissementpourParis": "18"
+      }
     },
     {
       "@id": "/api/stations/6",
@@ -429,7 +427,7 @@
       "tertrain": 0,
       "reseau": "METRO",
       "codLigf": 6,
-      "coordinates": 2.37021,
+      "coordinates": [2.375748144341913, 48.829990281683564],
       "garesId": 72,
       "rer": 0,
       "nomGare": "Bibliothèque François Mitterrand",
@@ -522,24 +520,22 @@
           "accessibiliteQuaiTrain": 1
         }
       ],
-      "trafic": [
-        {
-          "@id": "/api/trafic_annuel_station_reseau_ferres/145",
-          "@type": "TraficAnnuelStationReseauFerre",
-          "id": 145,
-          "rang": 7,
-          "rseau": "Métro",
-          "station": "BIBLIOTHEQUE",
-          "trafic": 18129727,
-          "correspondance1": "14",
-          "correspondance2": "",
-          "correspondance3": "",
-          "correspondance4": "",
-          "correspondance5": "",
-          "ville": "Paris",
-          "arrondissementpourParis": "13"
-        }
-      ]
+      "trafic": {
+        "@id": "/api/trafic_annuel_station_reseau_ferres/145",
+        "@type": "TraficAnnuelStationReseauFerre",
+        "id": 145,
+        "rang": 7,
+        "rseau": "Métro",
+        "station": "BIBLIOTHEQUE",
+        "trafic": 18129727,
+        "correspondance1": "14",
+        "correspondance2": "",
+        "correspondance3": "",
+        "correspondance4": "",
+        "correspondance5": "",
+        "ville": "Paris",
+        "arrondissementpourParis": "13"
+      }
     },
     {
       "@id": "/api/stations/7",

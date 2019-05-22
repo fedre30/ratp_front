@@ -7,21 +7,20 @@ import demoImage from "images/stations/louvre_rivoli.jpg";
 const Modal = ({ title, lines, place }) => (
   <ModalContainer>
     <div>
-      <h2 className="Modal-title"> {title} </h2>{" "}
-    </div>{" "}
+      <h2 className="Modal-title"> {title} </h2>
+    </div>
     <div className="Modal-image">
       <img src={demoImage} alt="demo" />
-    </div>{" "}
-    <div className="Modal-lines-label"> correspondances </div>{" "}
+    </div>
+    <div className="Modal-lines-label"> correspondances </div>
     <div className="Modal-lines-container">
-      {" "}
       {lines.map(line => (
         <div className="Modal-lines" key={line}>
-          <img src={require(`../../images/lines/${line}.png`)} alt={line} />{" "}
+          <img src={require(`../../images/lines/${line}.png`)} alt={line} />
         </div>
-      ))}{" "}
-    </div>{" "}
-    <div className="Modal-place"> {place} </div>{" "}
+      ))}
+    </div>
+    <div className="Modal-place"> {place} </div>
   </ModalContainer>
 );
 
