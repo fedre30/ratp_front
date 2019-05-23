@@ -3,10 +3,12 @@
 import M1 from "images/lines/M_1.png";
 import M2 from "images/lines/M_2.png";
 import M3 from "images/lines/M_3.png";
+import M3bis from "images/lines/M_3bis.png";
 import M4 from "images/lines/M_4.png";
 import M5 from "images/lines/M_5.png";
 import M6 from "images/lines/M_6.png";
 import M7 from "images/lines/M_7.png";
+import M7bis from "images/lines/M_7bis.png";
 import M8 from "images/lines/M_8.png";
 import M9 from "images/lines/M_9.png";
 import M10 from "images/lines/M_10.png";
@@ -45,90 +47,104 @@ export const underground = [
   },
   {
     id: 4,
+    src: M3bis,
+    type: "metro",
+    line: "M3bis",
+    active: false,
+  },
+  {
+    id: 5,
     src: M4,
     type: "metro",
     line: "4",
     active: false,
   },
   {
-    id: 5,
+    id: 6,
     src: M5,
     type: "metro",
     line: "5",
     active: false,
   },
   {
-    id: 6,
+    id: 7,
     src: M6,
     type: "metro",
     line: "6",
     active: false,
   },
   {
-    id: 7,
+    id: 8,
     src: M7,
     type: "metro",
     line: "7",
     active: false,
   },
   {
-    id: 8,
+    id: 9,
+    src: M7bis,
+    type: "metro",
+    line: "7b",
+    active: false,
+  },
+  {
+    id: 10,
     src: M8,
     type: "metro",
     line: "8",
     active: false,
   },
   {
-    id: 9,
+    id: 11,
     src: M9,
     type: "metro",
     line: "9",
     active: false,
   },
   {
-    id: 10,
+    id: 12,
     src: M10,
     type: "metro",
     line: "10",
     active: false,
   },
   {
-    id: 11,
+    id: 13,
     src: M11,
     type: "metro",
     line: "11",
     active: false,
   },
   {
-    id: 12,
+    id: 14,
     src: M12,
     type: "metro",
     line: "12",
     active: false,
   },
   {
-    id: 13,
+    id: 15,
     src: M13,
     type: "metro",
     line: "13",
     active: false,
   },
   {
-    id: 14,
+    id: 16,
     src: M14,
     type: "metro",
     line: "14",
     active: false,
   },
   {
-    id: 15,
+    id: 17,
     src: rerA,
     type: "rer",
     line: "A",
     active: false,
   },
   {
-    id: 16,
+    id: 18,
     src: rerB,
     type: "rer",
     line: "B",

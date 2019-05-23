@@ -90,28 +90,46 @@ class MapComponent extends Component {
   // <----------------------------- MODAL HANDLER ------------------------------------>
 
   showModal = marker => {
-    const lines = [
-      marker.trafic.correspondance1,
-      marker.trafic.correspondance2,
-      marker.trafic.correspondance3,
-      marker.trafic.correspondance4,
-      marker.trafic.correspondance5,
-    ];
-    const newLines = lines.filter(line => line != "");
-    const linesIcons = newLines.map(line => {
-      if (marker.mode === "Metro") {
-        return `M_${line}`;
-      }
-      if (marker.mode === "RER") {
-        return `RER_${line}`;
-      }
-    });
-    this.setState({
-      show: true,
-      stationName: marker.nomGare,
-      stationLines: linesIcons,
-      stationPlace: marker.trafic.ville,
-    });
+    if (marker.trafic.length > 0) {
+      const lines = [
+        marker.trafic[0].correspondance1,
+        marker.trafic[0].correspondance2,
+        marker.trafic[0].correspondance3,
+        marker.trafic[0].correspondance4,
+        marker.trafic[0].correspondance5,
+      ];
+      const newLines = lines.filter(line => line != "");
+      const linesIcons = newLines.map(line => {
+        if (marker.mode === "Metro") {
+          return `M_${line}`;
+        }
+        if (marker.mode === "RER") {
+          return `RER_${line}`;
+        }
+      });
+      this.setState({
+        show: true,
+        stationName: marker.nomGare,
+        stationLines: linesIcons,
+        stationPlace: marker.trafic[0].ville,
+      });
+    } else {
+      const lines = [marker.indiceLig];
+      const linesIcons = lines.map(line => {
+        if (marker.mode === "Metro") {
+          return `M_${line}`;
+        }
+        if (marker.mode === "RER") {
+          return `RER_${line}`;
+        }
+      });
+      this.setState({
+        show: true,
+        stationName: marker.nomGare,
+        stationLines: linesIcons,
+        stationPlace: "",
+      });
+    }
   };
 
   hideModal = () => {
@@ -396,16 +414,25 @@ class MapComponent extends Component {
                         marker={marker}
                         style={{
                           default: {
-                            fill: marker.trafic.trafic > 4000000 ? colors.red : colors.secondary,
+                            fill:
+                              marker.trafic.length > 0 && marker.trafic[0].trafic > 4000000
+                                ? colors.red
+                                : colors.secondary,
                             cursor: "pointer",
                           },
                           hover: {
-                            fill: marker.trafic.trafic > 4000000 ? colors.red : colors.secondary,
+                            fill:
+                              marker.trafic.length > 0 && marker.trafic[0].trafic > 4000000
+                                ? colors.red
+                                : colors.secondary,
                             cursor: "pointer",
                             outline: "none",
                           },
                           pressed: {
-                            fill: marker.trafic.trafic > 4000000 ? colors.red : colors.secondaryry,
+                            fill:
+                              marker.trafic.length > 0 && marker.trafic[0].trafic > 4000000
+                                ? colors.red
+                                : colors.secondaryry,
                             cursor: "pointer",
                             outline: "none",
                           },
@@ -414,9 +441,12 @@ class MapComponent extends Component {
                         <circle
                           cx={0}
                           cy={0}
-                          r={marker.trafic.trafic / 100000}
+                          r={marker.trafic.length > 0 && marker.trafic[0].trafic / 150000}
                           style={{
-                            stroke: marker.trafic.trafic > 4000000 ? colors.red : colors.secondary,
+                            stroke:
+                              marker.trafic.length > 0 && marker.trafic[0].trafic > 4000000
+                                ? colors.red
+                                : colors.secondary,
                             strokeWidth: 1,
                             opacity: 0.7,
                           }}

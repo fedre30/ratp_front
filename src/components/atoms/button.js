@@ -6,23 +6,20 @@ import Icon from "./icon";
 
 const Button = ({ text, onClick, icon, iconColor, mapButton, active, value }) => (
   <>
-    {" "}
     {mapButton ? (
       <ButtonMap onClick={onClick} value={value}>
         <div className="Button-icon">
-          {" "}
-          {icon && <Icon color={iconColor} icon={icon} size={24} />}{" "}
-        </div>{" "}
+          {icon && <Icon color={iconColor} icon={icon} size={24} />}
+        </div>
       </ButtonMap>
     ) : (
       <ButtonContainer>
         <div className={active ? "" : "disable"}>
           <h2 className="Button-title" onClick={onClick}>
-            {" "}
-            {text}{" "}
-          </h2>{" "}
-          {icon && <Icon color={iconColor} icon={icon} size={32} />}{" "}
-        </div>{" "}
+            {text}
+          </h2>
+          {icon && <Icon color={iconColor} icon={icon} size={32} />}
+        </div>
       </ButtonContainer>
     )}{" "}
   </>
