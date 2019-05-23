@@ -48,8 +48,8 @@ class MapComponent extends Component {
       stationLines: [],
       stationPlace: "",
       currentPollutionIndex: "",
-      currentToiletsFilter: "",
-      currentAccessFilter: "",
+      currentToiletsIndex: "",
+      currentAccessIndex: "",
       pollutionButtons: pollutionButtons,
       traficButtons: traficButtons,
       toiletsButtons: toiletsButtons,
@@ -139,59 +139,17 @@ class MapComponent extends Component {
 
   // <----------------------------- FILTERS ------------------------------------>
 
-  /*
   filterByCategory = (button, index, currentFilter, buttonsOptions) => {
     this.setState({
       [currentFilter]: index,
     });
+
     button.active === false ? (button.active = true) : (button.active = false);
     if (button.active === false) {
       this.setState({ [currentFilter]: false });
     }
-    console.log(currentFilter);
     // Reset other indexes active property
     const otherIndexes = buttonsOptions.filter(el => el !== button);
-    return otherIndexes.map(index => (index.active = false));
-  };
-  */
-
-  changePollutionIndex = (button, index) => {
-    this.setState({
-      currentPollutionIndex: index,
-    });
-    button.active === false ? (button.active = true) : (button.active = false);
-    if (button.active === false) {
-      this.setState({ currentPollutionIndex: false });
-    }
-
-    // Reset other indexes active property
-    const otherIndexes = this.state.pollutionButtons.filter(el => el !== button);
-    return otherIndexes.map(index => (index.active = false));
-  };
-
-  toiletsFilters = (button, index) => {
-    this.setState({
-      currentToiletsFilter: index,
-    });
-    button.active === false ? (button.active = true) : (button.active = false);
-    if (button.active === false) {
-      this.setState({ currentToiletsFilter: false });
-    }
-    // Reset other indexes active property
-    const otherIndexes = this.state.toiletsButtons.filter(el => el !== button);
-    return otherIndexes.map(index => (index.active = false));
-  };
-
-  accessFilters = (button, index) => {
-    this.setState({
-      currentAccessFilter: index,
-    });
-    button.active === false ? (button.active = true) : (button.active = false);
-    if (button.active === false) {
-      this.setState({ currentAccessFilter: false });
-    }
-    // Reset other indexes active property
-    const otherIndexes = this.state.accessibilityButtons.filter(el => el !== button);
     return otherIndexes.map(index => (index.active = false));
   };
 
@@ -217,9 +175,9 @@ class MapComponent extends Component {
 
   filterStations = () => {
     const filteredStations = [];
-    this.state.stations.objects.stations.geometries.map(station => {
+    this.state.stations.stations.map(station => {
       this.state.activatedFiltersLines.filter(filter => {
-        if (station.properties.ligne === filter.line) {
+        if (station.ligne === filter.line) {
           filteredStations.push(station);
         }
       });
@@ -262,8 +220,14 @@ class MapComponent extends Component {
                   <Button
                     key={button.index}
                     text={button.text}
+                    value={"currentPollutionIndex"}
                     onClick={() => {
-                      this.changePollutionIndex(button, button.index);
+                      this.filterByCategory(
+                        button,
+                        button.index,
+                        "currentPollutionIndex",
+                        this.state.pollutionButtons
+                      );
                     }}
                     active={button.active}
                     color={colors.secondary}
@@ -275,17 +239,6 @@ class MapComponent extends Component {
           {filters[1].active && (
             <ButtonFiltersOptions>
               <h3 className="Button-label">Trafic</h3>
-              <ButtonWrapper>
-                {this.state.traficButtons.map(button => (
-                  <Button
-                    key={button.index}
-                    text={button.text}
-                    onClick={() => {}}
-                    active={button.active}
-                    color={colors.secondary}
-                  />
-                ))}
-              </ButtonWrapper>
             </ButtonFiltersOptions>
           )}
           {filters[2].active && (
@@ -296,8 +249,14 @@ class MapComponent extends Component {
                   <Button
                     key={button.index}
                     text={button.text}
+                    value={"currentToiletsIndex"}
                     onClick={() => {
-                      this.toiletsFilters(button, button.index);
+                      this.filterByCategory(
+                        button,
+                        button.index,
+                        "currentToiletsIndex",
+                        this.state.toiletsButtons
+                      );
                     }}
                     active={button.active}
                     color={colors.secondary}
@@ -314,8 +273,14 @@ class MapComponent extends Component {
                   <Button
                     key={button.index}
                     text={button.text}
+                    value={"currentAccessIndex"}
                     onClick={() => {
-                      this.accessFilters(button, button.index);
+                      this.filterByCategory(
+                        button,
+                        button.index,
+                        "currentAccessIndex",
+                        this.state.accessibilityButtons
+                      );
                     }}
                     active={button.active}
                     color={colors.secondary}
@@ -451,7 +416,7 @@ class MapComponent extends Component {
                           cy={0}
                           r={marker.trafic.trafic / 100000}
                           style={{
-                            stroke: colors.primary,
+                            stroke: marker.trafic.trafic > 4000000 ? colors.red : colors.secondary,
                             strokeWidth: 1,
                             opacity: 0.7,
                           }}
@@ -475,18 +440,23 @@ class MapComponent extends Component {
                           pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                         }}
                       >
-                        {marker.sanitaire.length > 0 && !this.state.currentToiletsFilter && (
-                          <Icon color={colors.text} icon="toilets" size={30} alt="" />
+                        {marker.sanitaire.length > 0 && !this.state.currentToiletsIndex && (
+                          <Icon color={colors.text} icon="toilets" size={40} alt="" />
                         )}
                         {marker.sanitaire.length > 0 &&
                           marker.sanitaire[0].tarifGratuitPayant === "gratuit" &&
-                          this.state.currentToiletsFilter === "gratuit" && (
-                            <Icon color={colors.text} icon="free" size={30} alt="" />
+                          this.state.currentToiletsIndex === "gratuit" && (
+                            <Icon color={colors.text} icon="free" size={40} alt="" />
                           )}
                         {marker.sanitaire.length > 0 &&
                           marker.sanitaire[0].tarifGratuitPayant === "payant" &&
-                          this.state.currentToiletsFilter === "payant" && (
-                            <Icon color={colors.text} icon="euro" size={30} alt="" />
+                          this.state.currentToiletsIndex === "payant" && (
+                            <Icon color={colors.text} icon="euro" size={40} alt="" />
+                          )}
+                        {marker.sanitaire.length > 0 &&
+                          marker.sanitaire[0].accesBoutonpoussoir === "oui" &&
+                          this.state.currentToiletsIndex === "accesBoutonpoussoir" && (
+                            <Icon color={colors.text} icon="button" size={40} alt="" />
                           )}
                       </Marker>
                     ))}
@@ -507,28 +477,28 @@ class MapComponent extends Component {
                           pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                         }}
                       >
-                        {marker.access.length > 0 && !this.state.currentAccessFilter && (
-                          <Icon color={colors.text} icon="wheelchair" size={30} alt="" />
+                        {marker.access.length > 0 && !this.state.currentAccessIndex && (
+                          <Icon color={colors.text} icon="wheelchair" size={40} alt="" />
                         )}
                         {marker.access.length > 0 &&
                           marker.access[0].pmr === 1 &&
-                          this.state.currentAccessFilter === "pmr" && (
-                            <Icon color={colors.text} icon="pmr" size={30} alt="" />
+                          this.state.currentAccessIndex === "pmr" && (
+                            <Icon color={colors.text} icon="pmr" size={40} alt="" />
                           )}
                         {marker.access.length > 0 &&
                           marker.access[0].ufr === 1 &&
-                          this.state.currentAccessFilter === "ufr" && (
-                            <Icon color={colors.text} icon="wheelchair" size={30} alt="" />
+                          this.state.currentAccessIndex === "ufr" && (
+                            <Icon color={colors.text} icon="wheelchair" size={40} alt="" />
                           )}
                         {marker.access.length > 0 &&
                           marker.access[0].annonceSonoreProchainPassage === 1 &&
-                          this.state.currentAccessFilter === "annonceSonoreProchainPassage" && (
-                            <Icon color={colors.text} icon="ear" size={30} alt="" />
+                          this.state.currentAccessIndex === "annonceSonoreProchainPassage" && (
+                            <Icon color={colors.text} icon="ear" size={40} alt="" />
                           )}
                         {marker.access.length > 0 &&
                           marker.access[0].annonceVisuelleProchainPassage === 1 &&
-                          this.state.currentAccessFilter === "annonceVisuelleProchainPassage" && (
-                            <Icon color={colors.text} icon="eye" size={30} alt="" />
+                          this.state.currentAccessIndex === "annonceVisuelleProchainPassage" && (
+                            <Icon color={colors.text} icon="eye" size={40} alt="" />
                           )}
                       </Marker>
                     ))}

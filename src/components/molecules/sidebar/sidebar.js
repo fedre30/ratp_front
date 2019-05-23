@@ -19,14 +19,18 @@ class Sidebar extends React.Component {
       const activatedFiltersLines = [...this.state.activatedFiltersLines];
       activatedFiltersLines.push(obj);
       this.setState(
-        { activatedFiltersLines: activatedFiltersLines },
+        {
+          activatedFiltersLines: activatedFiltersLines,
+        },
         this.props.activatedFiltersLines(activatedFiltersLines)
       );
     } else {
       obj.active = false;
       const activatedFiltersLines = this.state.activatedFiltersLines.filter(f => f !== obj);
       this.setState(
-        { activatedFiltersLines },
+        {
+          activatedFiltersLines,
+        },
         this.props.activatedFiltersLines(activatedFiltersLines)
       );
     }
@@ -36,10 +40,11 @@ class Sidebar extends React.Component {
     if (obj.active === false) {
       obj.active = true;
       const otherFilters = this.props.filters.filter(filter => filter !== obj);
-      console.log(otherFilters);
       const finalArray = otherFilters.map(f => (f.active = false));
       this.setState(
-        { activatedFiltersCriteria: finalArray },
+        {
+          activatedFiltersCriteria: finalArray,
+        },
         this.props.activatedFiltersCriteria(finalArray)
       );
     }
@@ -49,8 +54,9 @@ class Sidebar extends React.Component {
     return (
       <SidebarContainer>
         <TransportsContainer>
-          <h3 className="Section-label">Listes des métro / RER</h3>
+          <h3 className="Section-label"> Listes des métro / RER </h3>{" "}
           <div className="Transport-icons-container">
+            {" "}
             {this.props.transports.map(transport => (
               <div
                 key={transport.id}
@@ -61,11 +67,11 @@ class Sidebar extends React.Component {
               >
                 <img src={transport.src} alt="" />
               </div>
-            ))}
-          </div>
-        </TransportsContainer>
+            ))}{" "}
+          </div>{" "}
+        </TransportsContainer>{" "}
         <FiltersContainer>
-          <h3 className="Section-label">Filtrer par critères</h3>
+          <h3 className="Section-label"> Filtrer par critères </h3>{" "}
           {this.props.filters.map(filter => (
             <div key={filter.id} className="Filter-wrapper">
               <div
@@ -73,11 +79,11 @@ class Sidebar extends React.Component {
                 className={` Filter-icon ${filter.active ? "" : "disable"}`}
               >
                 <Icon color={colors.text} icon={filter.icon} alt="" />
-              </div>
-              <div className="Filter-label">{filter.label}</div>
+              </div>{" "}
+              <div className="Filter-label"> {filter.label} </div>{" "}
             </div>
-          ))}
-        </FiltersContainer>
+          ))}{" "}
+        </FiltersContainer>{" "}
       </SidebarContainer>
     );
   }
