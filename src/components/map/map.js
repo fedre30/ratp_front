@@ -15,7 +15,6 @@ import {
 } from "react-simple-maps";
 import { Motion, spring } from "react-motion";
 import geography from "scripts/geography.json";
-import stations from "scripts/getAllStation.json";
 import pollution from "scripts/average_air";
 import ReactTooltip from "react-tooltip";
 import {
@@ -41,7 +40,7 @@ class MapComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stations: stations,
+      stations: [],
       pollution: pollution,
       center: [2.35, 48.85],
       zoom: 1,
@@ -67,9 +66,9 @@ class MapComponent extends Component {
     };
   }
 
-  //  componentDidMount() {
-  //   this.getAPI();
-  // }
+  componentDidMount() {
+    this.getAPI();
+  }
 
   getPropsLines = props => {
     this.setState({ activatedFiltersLines: props }, () => {
@@ -84,8 +83,10 @@ class MapComponent extends Component {
   getAPI = async () => {
     const stationsResponse = await fetch(apiURL);
     const newStations = await stationsResponse.json();
-    console.log(newStations);
-    this.setState({ stations: newStations });
+
+    this.setState({ stations: newStations["hydra:member"] }, () =>
+      console.log("test", this.state.test)
+    );
   };
 
   // <----------------------------- MODAL HANDLER ------------------------------------>
@@ -194,7 +195,7 @@ class MapComponent extends Component {
 
   filterStations = () => {
     const filteredStations = [];
-    this.state.stations.stations.map(station => {
+    this.state.stations.map(station => {
       this.state.activatedFiltersLines.filter(filter => {
         if (station.ligne === filter.line) {
           filteredStations.push(station);
@@ -418,7 +419,7 @@ class MapComponent extends Component {
                   <Markers>
                     {(this.state.filteredStations.length > 0
                       ? this.state.filteredStations
-                      : this.state.stations.stations
+                      : this.state.stations
                     ).map((marker, j) => (
                       <Marker
                         key={j}
@@ -467,7 +468,7 @@ class MapComponent extends Component {
                   <Markers>
                     {(this.state.filteredStations.length > 0
                       ? this.state.filteredStations
-                      : this.state.stations.stations
+                      : this.state.stations
                     ).map((marker, j) => (
                       <Marker
                         key={j}
@@ -504,7 +505,7 @@ class MapComponent extends Component {
                   <Markers>
                     {(this.state.filteredStations.length > 0
                       ? this.state.filteredStations
-                      : this.state.stations.stations
+                      : this.state.stations
                     ).map((marker, j) => (
                       <Marker
                         key={j}
@@ -546,7 +547,7 @@ class MapComponent extends Component {
                 <Markers>
                   {(this.state.filteredStations.length > 0
                     ? this.state.filteredStations
-                    : this.state.stations.stations
+                    : this.state.stations
                   ).map((marker, j) => (
                     <Marker
                       key={j}
