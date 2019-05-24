@@ -13,7 +13,7 @@ const WrapperHeader = styled.div`
   justify-content: space-between;
   padding: ${rem(14)} ${rem(40)};
   border-bottom: 1px black solid;
-  background: ${props => (props.background ? props.background : colors.primary)};
+  background: ${props => (props.noBackground ? "none" : colors.primary)};
   box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.25);
 `;
 
