@@ -17,6 +17,16 @@ export const ButtonWrapper = styled.div`
   width: 100%;
   display: flex;
   margin: 1rem auto;
+  .tooltip-label {
+    font-weight: bold;
+    margin: 1rem 0;
+    font-size: 1.3rem;
+  }
+  .tooltip {
+    width: 200px;
+    font-size: 1rem;
+    text-align: 2rem;
+  }
 `;
 
 export const ButtonsMap = styled.div`

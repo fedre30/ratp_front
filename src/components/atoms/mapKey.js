@@ -6,8 +6,8 @@ import { colors } from "styles/const";
 const MapKey = ({ items }) => (
   <>
     {items.map(item => (
-      <div>
-        <div key={item} style={item.color} />
+      <div key={item}>
+        <div style={item.color} />
         <div>{item.text}</div>
       </div>
     ))}

@@ -17,6 +17,7 @@ import { Motion, spring } from "react-motion";
 import geography from "scripts/geography.json";
 import stations from "scripts/getAllStation.json";
 import pollution from "scripts/average_air";
+import ReactTooltip from "react-tooltip";
 import {
   underground,
   filters,
@@ -33,7 +34,9 @@ import {
   ButtonWrapper,
   AllMapOptions,
 } from "./style";
+import "d3-scale-chromatic";
 const apiURL = "http://127.0.0.1:8000/api/stations";
+
 class MapComponent extends Component {
   constructor(props) {
     super(props);
@@ -64,10 +67,9 @@ class MapComponent extends Component {
     };
   }
 
-  /* componentDidMount() {
-    this.getAPI();
-  }
-  */
+  //  componentDidMount() {
+  //   this.getAPI();
+  // }
 
   getPropsLines = props => {
     this.setState({ activatedFiltersLines: props }, () => {
@@ -79,13 +81,12 @@ class MapComponent extends Component {
     this.setState({ activatedFiltersCriteria: props });
   };
 
-  /*getAPI = async () => {
+  getAPI = async () => {
     const stationsResponse = await fetch(apiURL);
-    const { stations } = await stationsResponse.json();
-    console.log(stationsResponse);
-
-    //this.setState({ stations });
-  };*/
+    const newStations = await stationsResponse.json();
+    console.log(newStations);
+    this.setState({ stations: newStations });
+  };
 
   // <----------------------------- MODAL HANDLER ------------------------------------>
 
@@ -232,24 +233,34 @@ class MapComponent extends Component {
         <AllMapOptions>
           {filters[0].active && (
             <ButtonFiltersOptions>
-              <h3 className="Button-label">Indices de l'air</h3>
+              <h3 className="Button-label" data-tip="React-tooltip">
+                Indices de l'air
+              </h3>
               <ButtonWrapper>
                 {this.state.pollutionButtons.map(button => (
-                  <Button
-                    key={button.index}
-                    text={button.text}
-                    value={"currentPollutionIndex"}
-                    onClick={() => {
-                      this.filterByCategory(
-                        button,
-                        button.index,
-                        "currentPollutionIndex",
-                        this.state.pollutionButtons
-                      );
-                    }}
-                    active={button.active}
-                    color={colors.secondary}
-                  />
+                  <>
+                    <a key={button.index} data-for={button.index} data-tip>
+                      <ReactTooltip place="bottom" type="light" effect="float" id={button.index}>
+                        <div className="tooltip-label">Agent Polluant</div>
+                        <div className="tooltip">{button.tooltip}</div>
+                      </ReactTooltip>
+                      <Button
+                        key={button.index}
+                        text={button.text}
+                        value={"currentPollutionIndex"}
+                        onClick={() => {
+                          this.filterByCategory(
+                            button,
+                            button.index,
+                            "currentPollutionIndex",
+                            this.state.pollutionButtons
+                          );
+                        }}
+                        active={button.active}
+                        color={colors.secondary}
+                      />
+                    </a>
+                  </>
                 ))}
               </ButtonWrapper>
             </ButtonFiltersOptions>
@@ -510,22 +521,22 @@ class MapComponent extends Component {
                         {marker.access.length > 0 &&
                           marker.access[0].pmr === 1 &&
                           this.state.currentAccessIndex === "pmr" && (
-                            <Icon color={colors.text} icon="pmr" size={40} alt="" />
+                            <Icon color={colors.text} icon="pmr" size={30} alt="" />
                           )}
                         {marker.access.length > 0 &&
                           marker.access[0].ufr === 1 &&
                           this.state.currentAccessIndex === "ufr" && (
-                            <Icon color={colors.text} icon="wheelchair" size={40} alt="" />
+                            <Icon color={colors.text} icon="pmr" size={30} alt="" />
                           )}
                         {marker.access.length > 0 &&
                           marker.access[0].annonceSonoreProchainPassage === 1 &&
                           this.state.currentAccessIndex === "annonceSonoreProchainPassage" && (
-                            <Icon color={colors.text} icon="ear" size={40} alt="" />
+                            <Icon color={colors.text} icon="ear" size={30} alt="" />
                           )}
                         {marker.access.length > 0 &&
                           marker.access[0].annonceVisuelleProchainPassage === 1 &&
                           this.state.currentAccessIndex === "annonceVisuelleProchainPassage" && (
-                            <Icon color={colors.text} icon="eye" size={40} alt="" />
+                            <Icon color={colors.text} icon="eye" size={30} alt="" />
                           )}
                       </Marker>
                     ))}

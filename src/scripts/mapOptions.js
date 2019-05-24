@@ -140,14 +140,14 @@ export const underground = [
     id: 17,
     src: rerA,
     type: "rer",
-    line: "A",
+    line: "RER A",
     active: false,
   },
   {
     id: 18,
     src: rerB,
     type: "rer",
-    line: "B",
+    line: "RER B",
     active: false,
   },
 ];
@@ -188,21 +188,28 @@ export const pollutionButtons = [
     index: "pm10",
     text: "PM10",
     active: false,
+    tooltip:
+      "Les PM10 sont des particules en suspension dans l'air dont le diamètre est inférieur à 10 micromètres",
   },
   {
     index: "no2",
     text: "NO2",
     active: false,
+    tooltip:
+      "Le dioxyde d’azote (NO2) se forme dans l’atmosphère à partir du monoxyde d'azote (NO) qui se dégage essentiellement lors de la combustion de combustibles fossiles, dans la circulation routière, par exemple",
   },
   {
     index: "o3",
     text: "O3",
     active: false,
+    tooltip:
+      "Il s'agit d'une variété gazeuse allotropique de l'oxygène (O), plus lourde que l'air. On parle du ''bon'' c'est-à-dire ozone stratosphérique et du ''mauvais'' c'est-à-dire ozone à la surface de la terre, également appelé ozone troposphérique.",
   },
   {
     index: "",
     text: "Moyenne",
     active: false,
+    tooltip: "Moyenne Description",
   },
 ];
 
@@ -249,11 +256,6 @@ export const toiletsButtons = [
 // <------------------------- ACCESSIBILITY BUTTONS -------------------------->
 
 export const accessibilityButtons = [
-  {
-    index: "pmr",
-    text: "PMR",
-    active: false,
-  },
   {
     index: "ufr",
     text: "UFR",

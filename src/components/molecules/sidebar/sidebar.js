@@ -73,11 +73,12 @@ class Sidebar extends React.Component {
         <FiltersContainer>
           <h3 className="Section-label"> Filtrer par critères </h3>{" "}
           {this.props.filters.map(filter => (
-            <div key={filter.id} className="Filter-wrapper">
-              <div
-                onClick={() => this.singleFilter(filter)}
-                className={` Filter-icon ${filter.active ? "" : "disable"}`}
-              >
+            <div
+              key={filter.id}
+              className="Filter-wrapper"
+              onClick={() => this.singleFilter(filter)}
+            >
+              <div className={` Filter-icon ${filter.active ? "" : "disable"}`}>
                 <Icon color={colors.text} icon={filter.icon} alt="" />
               </div>{" "}
               <div className="Filter-label"> {filter.label} </div>{" "}

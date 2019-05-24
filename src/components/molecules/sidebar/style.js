@@ -56,6 +56,7 @@ export const FiltersContainer = styled.div`
     height: auto;
     display: flex;
     align-items: center;
+    cursor: pointer;
     
   }
   
