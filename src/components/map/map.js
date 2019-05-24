@@ -443,12 +443,9 @@ class MapComponent extends Component {
                           cy={0}
                           r={marker.trafic.length > 0 && marker.trafic[0].trafic / 150000}
                           style={{
-                            stroke:
-                              marker.trafic.length > 0 && marker.trafic[0].trafic > 4000000
-                                ? colors.red
-                                : colors.secondary,
-                            strokeWidth: 1,
-                            opacity: 0.7,
+                            stroke: colors.primary,
+                            strokeWidth: 3,
+                            opacity: 0.35,
                           }}
                         />
                       </Marker>
