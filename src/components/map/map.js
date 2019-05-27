@@ -4,6 +4,7 @@ import { colors } from "styles/const";
 import Button from "components/atoms/button";
 import Modal from "components/molecules/modal";
 import Icon from "components/atoms/icon";
+import MapKey from "components/molecules/mapkey";
 import Sidebar from "components/molecules/sidebar/sidebar";
 import {
   ComposableMap,
@@ -25,6 +26,8 @@ import {
   traficButtons,
   toiletsButtons,
   accessibilityButtons,
+  airKeys,
+  traficKeys,
 } from "scripts/mapOptions";
 import {
   MapWrapper,
@@ -49,6 +52,7 @@ class MapComponent extends Component {
       stationName: "",
       stationLines: [],
       stationPlace: "",
+      stationImage: "",
       currentPollutionIndex: "",
       currentToiletsIndex: "",
       currentAccessIndex: "",
@@ -56,6 +60,8 @@ class MapComponent extends Component {
       traficButtons: traficButtons,
       toiletsButtons: toiletsButtons,
       accessibilityButtons: accessibilityButtons,
+      airKeys: airKeys,
+      traficKeys: traficKeys,
       underground: underground,
       filters: filters,
       zoomButtons: zoomButtons,
@@ -85,7 +91,7 @@ class MapComponent extends Component {
     const newStations = await stationsResponse.json();
 
     this.setState({ stations: newStations["hydra:member"] }, () =>
-      console.log("test", this.state.test)
+      console.log("test", this.state.stations)
     );
   };
 
@@ -100,36 +106,28 @@ class MapComponent extends Component {
         marker.trafic[0].correspondance4,
         marker.trafic[0].correspondance5,
       ];
-      const newLines = lines.filter(line => line != "");
+      const newLines = lines.filter(line => line !== "");
       const linesIcons = newLines.map(line => {
-        if (marker.mode === "Metro") {
-          return `M_${line}`;
-        }
-        if (marker.mode === "RER") {
-          return `RER_${line}`;
-        }
+        return `M_${line}`;
       });
       this.setState({
         show: true,
         stationName: marker.nomGare,
         stationLines: linesIcons,
         stationPlace: marker.trafic[0].ville,
+        stationImage: marker.image,
       });
     } else {
       const lines = [marker.indiceLig];
       const linesIcons = lines.map(line => {
-        if (marker.mode === "Metro") {
-          return `M_${line}`;
-        }
-        if (marker.mode === "RER") {
-          return `RER_${line}`;
-        }
+        return `M_${line}`;
       });
       this.setState({
         show: true,
         stationName: marker.nomGare,
         stationLines: linesIcons,
         stationPlace: "",
+        stationImage: marker.image,
       });
     }
   };
@@ -234,89 +232,95 @@ class MapComponent extends Component {
         <AllMapOptions>
           {filters[0].active && (
             <ButtonFiltersOptions>
-              <h3 className="Button-label" data-tip="React-tooltip">
-                Indices de l'air
-              </h3>
-              <ButtonWrapper>
-                {this.state.pollutionButtons.map(button => (
-                  <>
-                    <a key={button.index} data-for={button.index} data-tip>
-                      <ReactTooltip place="bottom" type="light" effect="float" id={button.index}>
-                        <div className="tooltip-label">Agent Polluant</div>
-                        <div className="tooltip">{button.tooltip}</div>
-                      </ReactTooltip>
-                      <Button
-                        key={button.index}
-                        text={button.text}
-                        value={"currentPollutionIndex"}
-                        onClick={() => {
-                          this.filterByCategory(
-                            button,
-                            button.index,
-                            "currentPollutionIndex",
-                            this.state.pollutionButtons
-                          );
-                        }}
-                        active={button.active}
-                        color={colors.secondary}
-                      />
-                    </a>
-                  </>
-                ))}
-              </ButtonWrapper>
+              <div>
+                <h3 className="Button-label">Indices de l'air</h3>
+                <ButtonWrapper>
+                  {this.state.pollutionButtons.map(button => (
+                    <>
+                      <a key={button.index} data-for={button.index} data-tip href="#">
+                        <ReactTooltip place="bottom" type="light" effect="float" id={button.index}>
+                          <div className="tooltip-label">Agent Polluant</div>
+                          <div className="tooltip">{button.tooltip}</div>
+                        </ReactTooltip>
+                        <Button
+                          key={button.index}
+                          text={button.text}
+                          value={"currentPollutionIndex"}
+                          onClick={() => {
+                            this.filterByCategory(
+                              button,
+                              button.index,
+                              "currentPollutionIndex",
+                              this.state.pollutionButtons
+                            );
+                          }}
+                          active={button.active}
+                          color={colors.secondary}
+                        />
+                      </a>
+                    </>
+                  ))}
+                </ButtonWrapper>
+              </div>
+              <MapKey items={this.state.airKeys} />
             </ButtonFiltersOptions>
           )}
           {filters[1].active && (
             <ButtonFiltersOptions>
               <h3 className="Button-label">Trafic</h3>
+              <MapKey items={this.state.traficKeys} />
             </ButtonFiltersOptions>
           )}
           {filters[2].active && (
             <ButtonFiltersOptions>
-              <h3 className="Button-label">Toilettes</h3>
-              <ButtonWrapper>
-                {this.state.toiletsButtons.map(button => (
-                  <Button
-                    key={button.index}
-                    text={button.text}
-                    value={"currentToiletsIndex"}
-                    onClick={() => {
-                      this.filterByCategory(
-                        button,
-                        button.index,
-                        "currentToiletsIndex",
-                        this.state.toiletsButtons
-                      );
-                    }}
-                    active={button.active}
-                    color={colors.secondary}
-                  />
-                ))}
-              </ButtonWrapper>
+              <div>
+                <h3 className="Button-label">Toilettes</h3>
+                <ButtonWrapper>
+                  {this.state.toiletsButtons.map(button => (
+                    <Button
+                      key={button.index}
+                      text={button.text}
+                      value={"currentToiletsIndex"}
+                      onClick={() => {
+                        this.filterByCategory(
+                          button,
+                          button.index,
+                          "currentToiletsIndex",
+                          this.state.toiletsButtons
+                        );
+                      }}
+                      active={button.active}
+                      color={colors.secondary}
+                    />
+                  ))}
+                </ButtonWrapper>
+              </div>
             </ButtonFiltersOptions>
           )}
           {filters[3].active && (
             <ButtonFiltersOptions>
-              <h3 className="Button-label">Accessibilité</h3>
-              <ButtonWrapper>
-                {this.state.accessibilityButtons.map(button => (
-                  <Button
-                    key={button.index}
-                    text={button.text}
-                    value={"currentAccessIndex"}
-                    onClick={() => {
-                      this.filterByCategory(
-                        button,
-                        button.index,
-                        "currentAccessIndex",
-                        this.state.accessibilityButtons
-                      );
-                    }}
-                    active={button.active}
-                    color={colors.secondary}
-                  />
-                ))}
-              </ButtonWrapper>
+              <div>
+                <h3 className="Button-label">Accessibilité</h3>
+                <ButtonWrapper>
+                  {this.state.accessibilityButtons.map(button => (
+                    <Button
+                      key={button.index}
+                      text={button.text}
+                      value={"currentAccessIndex"}
+                      onClick={() => {
+                        this.filterByCategory(
+                          button,
+                          button.index,
+                          "currentAccessIndex",
+                          this.state.accessibilityButtons
+                        );
+                      }}
+                      active={button.active}
+                      color={colors.secondary}
+                    />
+                  ))}
+                </ButtonWrapper>
+              </div>
             </ButtonFiltersOptions>
           )}
         </AllMapOptions>
@@ -474,7 +478,10 @@ class MapComponent extends Component {
                         key={j}
                         marker={marker}
                         style={{
-                          default: { fill: colors.tertiary, cursor: "pointer" },
+                          default: {
+                            fill: colors.tertiary,
+                            cursor: "pointer",
+                          },
                           hover: { fill: colors.text, cursor: "pointer", outline: "none" },
                           pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                         }}

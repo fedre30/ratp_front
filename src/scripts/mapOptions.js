@@ -16,8 +16,8 @@ import M11 from "images/lines/M_11.png";
 import M12 from "images/lines/M_12.png";
 import M13 from "images/lines/M_13.png";
 import M14 from "images/lines/M_14.png";
-import rerA from "images/lines/RER_A.png";
-import rerB from "images/lines/RER_B.png";
+import rerA from "images/lines/M_A.png";
+import rerB from "images/lines/M_B.png";
 
 import { colors } from "styles/const";
 
@@ -295,5 +295,33 @@ export const zoomButtons = [
     id: "reset",
     icon: "reset",
     iconColor: colors.primary,
+  },
+];
+
+// <---------------------------------- MAPKEY OPTIONS --------------------------------------->
+
+export const airKeys = [
+  {
+    color: colors.background,
+    text: "Pollution pas élévée",
+  },
+  {
+    color: colors.yellow,
+    text: "Pollution moyennement élévée",
+  },
+  {
+    color: colors.red,
+    text: "Pollution très élévée",
+  },
+];
+
+export const traficKeys = [
+  {
+    color: colors.secondary,
+    text: " < 4 millions par an",
+  },
+  {
+    color: colors.red,
+    text: "> 4 millions par an",
   },
 ];

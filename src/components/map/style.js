@@ -37,10 +37,12 @@ export const ButtonsMap = styled.div`
 `;
 
 export const ButtonFiltersOptions = styled.div`
-  width: 100%;
+  width: 70%;
   position: absolute;
   top: 5rem;
   left: 25%;
+  display: flex;
+  justify-content: space-between;
 
   .Button-label {
     font-weight: bold;

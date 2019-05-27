@@ -2,15 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { colors } from "styles/const";
-import demoImage from "images/stations/louvre_rivoli.jpg";
 
-const Modal = ({ title, lines, place }) => (
+const Modal = ({ title, lines, place, image }) => (
   <ModalContainer>
     <div>
       <h2 className="Modal-title"> {title} </h2>{" "}
     </div>{" "}
     <div className="Modal-image">
-      <img src={demoImage} alt="demo" />
+      <img src={image} alt="demo" />
     </div>{" "}
     <div className="Modal-lines-label"> correspondances </div>{" "}
     <div className="Modal-lines-container">
@@ -29,6 +28,7 @@ Modal.propTypes = {
   title: PropTypes.string,
   lines: PropTypes.array,
   place: PropTypes.string,
+  image: PropTypes.string,
 };
 
 const ModalContainer = styled.div`
