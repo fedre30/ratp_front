@@ -2,8 +2,11 @@ import React from "react";
 import StationImg from "images/test.jpg";
 import styled from "styled-components";
 import { rem } from "polished";
+// import _ from "lodash";
 
 import { Title, Icon } from "components/atoms";
+// import BarChart from "components/d3/barChart";
+import BubbleChart from "components/d3/bubbleChart";
 import { colors } from "styles/const";
 
 const Hero = styled.div`
@@ -60,18 +63,35 @@ const NavContainer = styled.ul`
 
 const Card = styled.div`
   position: absolute;
-  background: #fff;
-  z-index: 2;
   right: ${rem(117)};
   bottom: ${rem(-40)};
-  width: ${rem(360)};
-  height: ${rem(100)};
-  box-shadow: 6px 0px 30px rgba(0, 0, 0, 0.118065);
-  border-radius: 2px;
   display: flex;
   align-content: center;
   justify-content: space-between;
+  background: #fff;
+  width: ${rem(360)};
+  height: ${rem(100)};
   padding: ${rem(29)} ${rem(40)};
+  border-radius: 2px;
+  box-shadow: 6px 0px 30px rgba(0, 0, 0, 0.118065);
+  z-index: 2;
+`;
+
+const CardContent = styled.div`
+  & > span {
+    color: #3a3d60;
+    &:first-child {
+      text-transform: uppercase;
+      font-size: ${rem(13)};
+      font-weight: 700;
+      line-height: ${rem(25)};
+    }
+  }
+  &:nth-child(2) {
+    background: #3a3d60;
+    width: ${rem(1)};
+    height: ${rem(40)};
+  }
 `;
 
 const CategoryIcon = styled.div`
@@ -101,10 +121,26 @@ const SubjectFilterWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  & > p {
+    color: #3a3d60;
+    font-size: ${rem(10)};
+    font-weight: 700;
+  }
 `;
 
 const LocalisationContainer = styled.div`
   min-width: ${rem(336)};
+  & > :first-child {
+    margin-bottom: ${rem(10)};
+  }
+`;
+
+const CustomTitle = styled(Title)`
+  color: black;
+  text-transform: uppercase;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
 `;
 
 class StationVue extends React.Component {
@@ -156,6 +192,7 @@ class StationVue extends React.Component {
   };
 
   render() {
+    const currentCategoryActiveCopy = this.state.currentCategoryActive;
     return (
       <>
         <Hero>
@@ -171,20 +208,21 @@ class StationVue extends React.Component {
               <a href="/">Accueil</a>
             </li>
             <li>
-              <a href="">A propos</a>
+              <a href="#">A propos</a>
             </li>
           </NavContainer>
           <Card>
-            <div>
+            <CardContent>
               <span>Mise en service</span>
               <br />
               <span>1.09.1900</span>
-            </div>
-            <div>
+            </CardContent>
+            <CardContent />
+            <CardContent>
               <span>Correspondance</span>
               <br />
               <span>ligne de métro</span>
-            </div>
+            </CardContent>
           </Card>
         </Hero>
         <StationContainer>
@@ -226,12 +264,15 @@ class StationVue extends React.Component {
             <LocalisationContainer>
               <p>Localisation</p>
 
-              <Title>Paris</Title>
+              <CustomTitle size={112}>Paris</CustomTitle>
             </LocalisationContainer>
           </div>
           <div>
-            <p>Traffic annuel</p>
+            <p>{this.state.category[currentCategoryActiveCopy].title}</p>
           </div>
+          {/* <BarChart data={[5, 10, 1, 3]} size={[500, 500]} /> */}
+
+          <BubbleChart useLabels data={[{ v: 5 }, { v: 10 }, { v: 100 }]} />
         </StationContainer>
       </>
     );

@@ -99,7 +99,7 @@ class Autocomplete extends Component {
           showSuggestions: false,
           userInput: filteredSuggestions[activeSuggestion],
         },
-        () => this.props.history.push("station/" + this.state.userInput.split(" ").join("_"))
+        () => this.props.history.push("/station/" + this.state.userInput.split(" ").join("_"))
       );
     } else if (e.keyCode === 27) {
       this.setState({
