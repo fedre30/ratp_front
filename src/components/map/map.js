@@ -37,6 +37,7 @@ import {
   AllMapOptions,
 } from "./style";
 import "d3-scale-chromatic";
+import MapFooter from "../molecules/map-footer";
 const apiURL = "http://127.0.0.1:8000/api/stations";
 
 class MapComponent extends Component {
@@ -53,6 +54,7 @@ class MapComponent extends Component {
       stationLines: [],
       stationPlace: "",
       stationImage: "",
+      stationQuality: "",
       currentPollutionIndex: "",
       currentToiletsIndex: "",
       currentAccessIndex: "",
@@ -69,6 +71,8 @@ class MapComponent extends Component {
       activatedFiltersCriteria: [],
       filteredStations: [],
       active: false,
+      bestStations: [],
+      worstStations: [],
     };
   }
 
@@ -90,14 +94,14 @@ class MapComponent extends Component {
     const stationsResponse = await fetch(apiURL);
     const newStations = await stationsResponse.json();
 
-    this.setState({ stations: newStations["hydra:member"] }, () =>
-      console.log("test", this.state.stations)
-    );
+    this.setState({ stations: newStations["hydra:member"] });
+    this.getBestStations();
   };
 
   // <----------------------------- MODAL HANDLER ------------------------------------>
 
   showModal = marker => {
+    const stationQuality = this.getStationQuality(marker);
     if (marker.trafic.length > 0) {
       const lines = [
         marker.trafic[0].correspondance1,
@@ -116,6 +120,7 @@ class MapComponent extends Component {
         stationLines: linesIcons,
         stationPlace: marker.trafic[0].ville,
         stationImage: marker.image,
+        stationQuality: stationQuality,
       });
     } else {
       const lines = [marker.indiceLig];
@@ -128,6 +133,7 @@ class MapComponent extends Component {
         stationLines: linesIcons,
         stationPlace: "",
         stationImage: marker.image,
+        stationQuality: stationQuality,
       });
     }
   };
@@ -200,7 +206,34 @@ class MapComponent extends Component {
         }
       });
     });
-    this.setState({ filteredStations: filteredStations });
+    this.setState({ filteredStations });
+  };
+
+  getStationQuality = marker => {
+    return marker.trafic.length > 0
+      ? Math.round(
+          marker.sanitaire.length + (marker.access.length / marker.trafic[0].trafic) * 50000000
+        )
+      : Math.round(marker.sanitaire.length + marker.access.length * 200);
+  };
+
+  sortDescendingStations = (a, b) => {
+    return a.quality > b.quality ? -1 : b.quality > a.quality ? 1 : 0;
+  };
+  sortAscendingStations = (a, b) => {
+    return a.quality > b.quality ? 1 : b.quality > a.quality ? -1 : 0;
+  };
+  getBestStations = () => {
+    const indexes = this.state.stations.map(station => {
+      return { name: station.nomGare, quality: this.getStationQuality(station) };
+    });
+
+    const descendingStations = indexes.sort(this.sortDescendingStations);
+    this.setState({ bestStations: descendingStations.slice(0, 2) });
+    const ascendingStations = indexes.sort(this.sortAscendingStations);
+    this.setState({
+      worstStations: ascendingStations.slice(0, 2),
+    });
   };
 
   // <----------------------------- RENDER ------------------------------------>
@@ -237,13 +270,13 @@ class MapComponent extends Component {
                 <ButtonWrapper>
                   {this.state.pollutionButtons.map(button => (
                     <>
-                      <a key={button.index} data-for={button.index} data-tip href="#">
+                      <a key={button.text} data-for={button.index} data-tip href="#">
                         <ReactTooltip place="bottom" type="light" effect="float" id={button.index}>
                           <div className="tooltip-label">Agent Polluant</div>
                           <div className="tooltip">{button.tooltip}</div>
                         </ReactTooltip>
                         <Button
-                          key={button.index}
+                          key={button.text}
                           text={button.text}
                           value={"currentPollutionIndex"}
                           onClick={() => {
@@ -278,7 +311,7 @@ class MapComponent extends Component {
                 <ButtonWrapper>
                   {this.state.toiletsButtons.map(button => (
                     <Button
-                      key={button.index}
+                      key={button}
                       text={button.text}
                       value={"currentToiletsIndex"}
                       onClick={() => {
@@ -331,9 +364,9 @@ class MapComponent extends Component {
             y: 20,
           }}
           style={{
-            zoom: spring(this.state.zoom, { stiffness: 310, damping: 30 }),
-            x: spring(this.state.center[0], { stiffness: 310, damping: 30 }),
-            y: spring(this.state.center[1], { stiffness: 310, damping: 30 }),
+            zoom: spring(this.state.zoom, { stiffness: 170, damping: 60 }),
+            x: spring(this.state.center[0], { stiffness: 170, damping: 60 }),
+            y: spring(this.state.center[1], { stiffness: 170, damping: 60 }),
           }}
         >
           {({ zoom, x, y }) => (
@@ -380,7 +413,7 @@ class MapComponent extends Component {
                   <Markers>
                     {this.state.pollution.objects.citeair_average.geometries.map((marker, i) => (
                       <Marker
-                        key={i}
+                        key={i.nomLong}
                         marker={marker}
                         style={{
                           default: {
@@ -419,6 +452,7 @@ class MapComponent extends Component {
                     ))}
                   </Markers>
                 )}
+
                 {filters[1].active && (
                   <Markers>
                     {(this.state.filteredStations.length > 0
@@ -426,7 +460,7 @@ class MapComponent extends Component {
                       : this.state.stations
                     ).map((marker, j) => (
                       <Marker
-                        key={j}
+                        key={j.x}
                         marker={marker}
                         style={{
                           default: {
@@ -475,7 +509,7 @@ class MapComponent extends Component {
                       : this.state.stations
                     ).map((marker, j) => (
                       <Marker
-                        key={j}
+                        key={j.y}
                         marker={marker}
                         style={{
                           default: {
@@ -515,7 +549,7 @@ class MapComponent extends Component {
                       : this.state.stations
                     ).map((marker, j) => (
                       <Marker
-                        key={j}
+                        key={j.idrefliga}
                         marker={marker}
                         style={{
                           default: { fill: colors.tertiary, cursor: "pointer" },
@@ -557,7 +591,7 @@ class MapComponent extends Component {
                     : this.state.stations
                   ).map((marker, j) => (
                     <Marker
-                      key={j}
+                      key={j.coordinates}
                       marker={marker}
                       onMouseEnter={() => {
                         this.showModal(marker);
@@ -589,12 +623,19 @@ class MapComponent extends Component {
             </ComposableMap>
           )}
         </Motion>
+        <MapFooter
+          bestStations={this.state.bestStations}
+          worstStations={this.state.worstStations}
+        />
 
         {this.state.show && (
           <Modal
+            key={this.state.stationName}
             title={this.state.stationName}
             lines={this.state.stationLines}
             place={this.state.stationPlace}
+            quality={this.state.stationQuality}
+            image={this.state.stationImage}
           />
         )}
       </MapWrapper>

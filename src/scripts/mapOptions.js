@@ -246,11 +246,6 @@ export const toiletsButtons = [
     text: "Accès Bouton Poussoir",
     active: false,
   },
-  {
-    index: "",
-    text: "Reset",
-    active: false,
-  },
 ];
 
 // <------------------------- ACCESSIBILITY BUTTONS -------------------------->
@@ -269,11 +264,6 @@ export const accessibilityButtons = [
   {
     index: "annonceVisuelleProchainPassage",
     text: "Signal visuel",
-    active: false,
-  },
-  {
-    index: "",
-    text: "Reset",
     active: false,
   },
 ];

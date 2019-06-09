@@ -3,13 +3,17 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { colors } from "styles/const";
 
-const Modal = ({ title, lines, place, image }) => (
+const Modal = ({ title, lines, place, image, quality }) => (
   <ModalContainer>
     <div>
       <h2 className="Modal-title"> {title} </h2>{" "}
     </div>{" "}
     <div className="Modal-image">
-      <img src={image} alt="demo" />
+      <img src={image} alt={title} />
+    </div>{" "}
+    <div className="Modal-quality">
+      {" "}
+      Taux de qualité de la station: <span className="Modal-quality-index"> {quality} % </span>{" "}
     </div>{" "}
     <div className="Modal-lines-label"> correspondances </div>{" "}
     <div className="Modal-lines-container">
@@ -29,6 +33,7 @@ Modal.propTypes = {
   lines: PropTypes.array,
   place: PropTypes.string,
   image: PropTypes.string,
+  quality: PropTypes.string,
 };
 
 const ModalContainer = styled.div`
@@ -38,7 +43,7 @@ const ModalContainer = styled.div`
   padding: 1rem;
   position: absolute;
   left: 25%;
-  top: 53vh;
+  top: 50vh;
   border-radius: 0.3rem;
   display: flex;
   flex-direction: column;
@@ -55,6 +60,7 @@ const ModalContainer = styled.div`
     display: block;
     img {
       width: 100%;
+      height: 150px;
     }
   }
 
@@ -71,6 +77,20 @@ const ModalContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     margin: 0 0 1rem 0;
+  }
+
+  .Modal-quality,
+  .Modal-quality-index {
+    text-transform: uppercase;
+    color: ${colors.primary};
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 1.5rem 0;
+  }
+
+  .Modal-quality-index {
+    font-size: 1.5rem;
+    color: ${colors.background};
   }
   .Modal-lines {
     width: 2rem;

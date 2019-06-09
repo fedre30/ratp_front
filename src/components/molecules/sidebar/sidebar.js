@@ -54,7 +54,7 @@ class Sidebar extends React.Component {
     return (
       <SidebarContainer>
         <TransportsContainer>
-          <h3 className="Section-label"> Listes des métro / RER </h3>{" "}
+          <h3 className="Section-label"> Filtrer par ligne métro / RER </h3>{" "}
           <div className="Transport-icons-container">
             {" "}
             {this.props.transports.map(transport => (

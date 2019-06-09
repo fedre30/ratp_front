@@ -5,13 +5,17 @@ import { colors } from "styles/const";
 
 const MapKey = ({ items }) => (
   <MapKeyContainer>
-    {" "}
     {items.map(item => (
       <div key={item}>
-        <div className="bar" style={{ backgroundColor: item.color }} />
-        <div className="description"> {item.text} </div>{" "}
+        <div
+          className="bar"
+          style={{
+            backgroundColor: item.color,
+          }}
+        />
+        <div className="description"> {item.text} </div>
       </div>
-    ))}{" "}
+    ))}
   </MapKeyContainer>
 );
 
@@ -21,6 +25,12 @@ MapKey.propTypes = {
 
 const MapKeyContainer = styled.div`
   display: flex;
+  width: auto;
+  height: auto;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 1px solid ${colors.lightgrey};
 
   .bar {
     width: 150px;
@@ -31,7 +41,7 @@ const MapKeyContainer = styled.div`
   .description {
     width: 140px;
     color: ${colors.text};
-    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
     line-height: 1.5rem;
     margin-top: 0.5rem;
   }
