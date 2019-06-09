@@ -229,10 +229,10 @@ class MapComponent extends Component {
     });
 
     const descendingStations = indexes.sort(this.sortDescendingStations);
-    this.setState({ bestStations: descendingStations.slice(0, 2) });
+    this.setState({ bestStations: descendingStations.slice(0, 3) });
     const ascendingStations = indexes.sort(this.sortAscendingStations);
     this.setState({
-      worstStations: ascendingStations.slice(0, 2),
+      worstStations: ascendingStations.slice(0, 3),
     });
   };
 

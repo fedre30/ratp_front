@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { colors, font } from "styles/const";
 
 export const SidebarContainer = styled.div`
+  z-index: 1;
   width: 20%;
   height: 95vh;
   background: linear-gradient(197.74deg, #ffffff 1.38%, #d1e5ec 100%);
