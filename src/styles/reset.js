@@ -49,6 +49,9 @@ code {
 }
 
 }
+*{
+  box-sizing: border-box;
+}
 `;
 
 export default reset;
