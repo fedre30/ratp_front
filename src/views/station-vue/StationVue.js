@@ -1,7 +1,8 @@
 import React from "react";
-import StationImg from "images/test.jpg";
 import styled from "styled-components";
 import { rem } from "polished";
+import { fetchStations } from "services";
+import { slugify } from "utils";
 // import _ from "lodash";
 
 import { Title, Icon } from "components/atoms";
@@ -11,10 +12,13 @@ import { colors } from "styles/const";
 
 const Hero = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 100%;
-  height: 100%;
+  height: ${rem(450)};
   padding: ${rem(200)} ${rem(110)} ${rem(20)};
-  background: url(${StationImg});
+  background: url(${props => props.StationImg});
   background-size: cover;
   background-repeat: no-repeat;
   margin-bottom: ${rem(82)};
@@ -147,6 +151,8 @@ class StationVue extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      stations: null,
+      stationFromUrl: null,
       currentCategoryActive: "trafic",
       category: {
         trafic: {
@@ -191,18 +197,35 @@ class StationVue extends React.Component {
     });
   };
 
+  componentDidMount = () => {
+    const stationFromUrl = window.location.href.substring(
+      window.location.href.lastIndexOf("/") + 1
+    );
+
+    fetchStations().then(stations =>
+      this.setState({ stations: stations["hydra:member"], stationFromUrl: stationFromUrl }, () =>
+        this.getCurrentStation()
+      )
+    );
+  };
+
+  getCurrentStation = () => {
+    const currentStation = this.state.stations.filter(
+      station => slugify(station.nomGare) === this.state.stationFromUrl
+    )[0];
+    this.setState({ currentStation: currentStation });
+  };
+
   render() {
     const currentCategoryActiveCopy = this.state.currentCategoryActive;
-    return (
-      <>
-        <Hero>
-          <Title style={{ marginBottom: rem(16) }}>Charles de Gaulle Etoile</Title>
-          <Text>
-            Charles de Gaulle - Étoile est une station des lignes 1, 2 et 6 du métro de Paris,
-            implantée sous la place Charles-de-Gaulle. Initialement appelée Étoile, elle est située
-            à la limite des 8e, 16e et 17e arrondissements de Paris.
-          </Text>
 
+    const { currentStation } = this.state;
+    return this.state.currentStation ? (
+      <>
+        <Hero StationImg={currentStation.image}>
+          {console.log("hello", currentStation)}
+          <Title style={{ marginBottom: rem(16) }}>{currentStation.nomGare}</Title>
+          <Text>{currentStation.description}</Text>
           <NavContainer>
             <li>
               <a href="/">Accueil</a>
@@ -275,6 +298,8 @@ class StationVue extends React.Component {
           <BubbleChart useLabels data={[{ v: 5 }, { v: 10 }, { v: 100 }]} />
         </StationContainer>
       </>
+    ) : (
+      <div>loading</div>
     );
   }
 }

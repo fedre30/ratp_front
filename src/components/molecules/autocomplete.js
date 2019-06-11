@@ -2,6 +2,8 @@ import React, { Component, Fragment } from "react";
 import styled from "styled-components";
 import { rem } from "polished";
 
+import { slugify } from "utils";
+
 import { Input } from "components/atoms";
 
 const Suggestion = styled.ul`
@@ -99,7 +101,8 @@ class Autocomplete extends Component {
           showSuggestions: false,
           userInput: filteredSuggestions[activeSuggestion],
         },
-        () => this.props.history.push("/station/" + this.state.userInput.split(" ").join("_"))
+        () =>
+          this.props.history.push("/station/" + slugify(this.state.userInput.split(" ").join("_")))
       );
     } else if (e.keyCode === 27) {
       this.setState({
