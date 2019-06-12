@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { rem } from "polished";
 import { fetchStations } from "services";
 import { slugify } from "utils";
+
 // import _ from "lodash";
 import pollution from "scripts/average_air";
-import { Title, Icon } from "components/atoms";
+import { Title, Icon, Loading } from "components/atoms";
 import BarChart from "components/d3/barChart";
 import BubbleChart from "components/d3/bubbleChart";
 import { colors } from "styles/const";
@@ -418,7 +419,7 @@ class StationVue extends React.Component {
         </StationContainer>
       </>
     ) : (
-      <div> loading </div>
+      <Loading />
     );
   }
 }
