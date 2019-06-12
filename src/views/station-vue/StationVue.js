@@ -112,7 +112,7 @@ const CategoryIcon = styled.div`
 `;
 
 const SubjectFilter = styled.div`
-  min-width: ${rem(336)};
+  min-width: ${rem(400)};
   & > p {
     margin-bottom: ${rem(27)};
     font-size: 1.5rem;
