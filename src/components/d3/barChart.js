@@ -5,7 +5,6 @@ import * as d3 from "d3";
 class BarChart extends React.Component {
   constructor(props) {
     super(props);
-    this.createBarChart = this.createBarChart.bind(this);
   }
   componentDidMount() {
     this.createBarChart();
@@ -13,35 +12,50 @@ class BarChart extends React.Component {
   componentDidUpdate() {
     this.createBarChart();
   }
-  createBarChart() {
+  createBarChart = () => {
     const node = this.node;
-    const dataMax = d3.max(this.props.data);
+    const dataMax = d3.max(i => this.props.data[i]);
+
     const xScale = d3
       .scaleLinear()
       .domain([0, dataMax])
       .range([0, this.props.size[1]]);
+
     d3.select(node)
       .selectAll("rect")
-      .data(this.props.data)
+      .data(i => this.props.data[i])
       .enter()
       .append("rect");
 
     d3.select(node)
+      .selectAll("text")
+      .data(i => this.props.data[i])
+      .enter()
+      .append("text");
+
+    d3.select(node)
       .selectAll("rect")
-      .data(this.props.data)
+      .data(i => this.props.data[i])
       .exit()
       .remove();
 
     d3.select(node)
       .selectAll("rect")
-      .data(this.props.data)
-      .style("fill", "#fe9922")
-      .attr("y", (d, i) => i * 25)
-      .attr("x", d => this.props.size[1] - xScale(d))
+      .data(i => this.props.data[i])
+      .style("fill", (d, i) => (d % i === 0 ? "#3B3F6C" : "#A4CBD8  "))
+      .attr("y", (d, i) => i * 50)
+      .attr("x", 0)
       .attr("width", d => xScale(d))
-      .attr("height", 25);
-  }
+      .attr("height", 50);
+
+    d3.select(node)
+      .selectAll("text")
+      .text("hello")
+      .style("fill", "#fff")
+      .attr("dy", (d, i) => (i + 1) * 25);
+  };
   render() {
+    console.log(this.props.data[0].value);
     return <svg ref={node => (this.node = node)} width={500} height={500} />;
   }
 }

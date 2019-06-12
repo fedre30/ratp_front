@@ -389,7 +389,10 @@ class StationVue extends React.Component {
           <DataContainer>
             <p className="title"> {this.state.category[currentCategoryActiveCopy].title} </p>
             {this.state.currentCategoryActive === "trafic" && (
-              <BarChart data={[5, 10, 1, 3]} size={[500, 500]} />
+              <BarChart
+                data={[{ value: 5, text: "bonjour" }, { value: 5, text: "bonjour" }]}
+                size={[500, 500]}
+              />
             )}
             {this.state.currentCategoryActive === "airQuality" && (
               <BubbleChart
