@@ -22,8 +22,8 @@ const Modal = ({ title, lines, place, image, quality }) => (
         <div className="Modal-lines" key={line}>
           <img src={require(`../../images/lines/${line}.png`)} alt={line} />{" "}
         </div>
-      ))}{" "}
-    </div>{" "}
+      ))}
+    </div>
     <div className="Modal-place"> {place} </div>{" "}
   </ModalContainer>
 );

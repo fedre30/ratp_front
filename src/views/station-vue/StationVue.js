@@ -147,11 +147,28 @@ const CustomTitle = styled(Title)`
   -webkit-text-stroke-color: black;
 `;
 
+const StationLinesContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 1rem 0;
+`;
+
+const StationLine = styled.div`
+  width: 2rem;
+  margin: 0 0.5rem 0 0;
+  display: block;
+  img {
+    width: 100%;
+  }
+`;
+
 class StationVue extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       stations: null,
+      stationLines: null,
       stationFromUrl: null,
       currentCategoryActive: "trafic",
       category: {
@@ -213,17 +230,45 @@ class StationVue extends React.Component {
     const currentStation = this.state.stations.filter(
       station => slugify(station.nomGare) === this.state.stationFromUrl
     )[0];
-    this.setState({ currentStation: currentStation });
+    this.setState({ currentStation: currentStation }, () => this.getCorrespondingStation());
+  };
+
+  getCorrespondingStation = () => {
+    const { currentStation } = this.state;
+
+    if (currentStation.trafic.length > 0) {
+      const lines = [
+        currentStation.trafic[0].correspondance1,
+        currentStation.trafic[0].correspondance2,
+        currentStation.trafic[0].correspondance3,
+        currentStation.trafic[0].correspondance4,
+        currentStation.trafic[0].correspondance5,
+      ];
+      const newLines = lines.filter(line => line !== "");
+      const linesIcons = newLines.map(line => {
+        return `M_${line}`;
+      });
+      this.setState({
+        stationLines: linesIcons,
+      });
+    } else {
+      const lines = [currentStation.indiceLig];
+      const linesIcons = lines.map(line => {
+        return `M_${line}`;
+      });
+      this.setState({
+        stationLines: linesIcons,
+      });
+    }
   };
 
   render() {
     const currentCategoryActiveCopy = this.state.currentCategoryActive;
 
-    const { currentStation } = this.state;
-    return this.state.currentStation ? (
+    const { currentStation, stationLines } = this.state;
+    return currentStation && stationLines ? (
       <>
         <Hero StationImg={currentStation.image}>
-          {console.log("hello", currentStation)}
           <Title style={{ marginBottom: rem(16) }}>{currentStation.nomGare}</Title>
           <Text>{currentStation.description}</Text>
           <NavContainer>
@@ -244,7 +289,13 @@ class StationVue extends React.Component {
             <CardContent>
               <span>Correspondance</span>
               <br />
-              <span>ligne de métro</span>
+              <StationLinesContainer>
+                {stationLines.map(line => (
+                  <StationLine key={line}>
+                    <img src={require(`../../images/lines/${line}.png`)} alt={line} />{" "}
+                  </StationLine>
+                ))}
+              </StationLinesContainer>
             </CardContent>
           </Card>
         </Hero>
