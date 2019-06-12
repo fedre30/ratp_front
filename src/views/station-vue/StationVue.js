@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { rem } from "polished";
 import { fetchStations } from "services";
-import {} from "utils";
+import { slugify } from "utils";
 // import _ from "lodash";
 
 import { Title, Icon } from "components/atoms";
