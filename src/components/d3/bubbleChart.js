@@ -64,21 +64,23 @@ class BubbleChart extends React.Component {
       )
       .on("tick", () => {
         if (this.mounted) {
-          this.setState({ data });
+          this.setState({
+            data,
+          });
         }
       });
   };
 
   renderBubbles = data => {
-    const minValue = 40;
+    const minValue = 27;
 
-    const maxValue = 200;
+    const maxValue = 31;
 
     const color = d3
       .scaleLinear()
       .domain([minValue, maxValue])
       .interpolate(d3.interpolateHcl)
-      .range(["red", "pink"]);
+      .range(["pink", "red"]);
 
     const texts = _.map(data, (item, index) => {
       const props = this.props;
@@ -88,10 +90,12 @@ class BubbleChart extends React.Component {
           key={index}
           transform={`translate(${props.width / 2 + item.x}, ${props.height / 2 + item.y})`}
         >
-          <circle r={this.radiusScale(item.v)} fill={color(item.v)} />
+          <circle r={this.radiusScale(item.v)} fill={color(item.v)} />{" "}
           <text dy="6" fill="#fff" textAnchor="middle" fontSize={`${fontSize}px`} fontWeight="bold">
-            {item.v}
-          </text>
+            {" "}
+            {item.v}{" "}
+          </text>{" "}
+          <text>{item.text}</text>
         </g>
       );
     });
@@ -103,12 +107,13 @@ class BubbleChart extends React.Component {
     if (this.state.data.length) {
       return (
         <svg width={this.props.width} height={this.props.height}>
-          {this.renderBubbles(this.state.data)}
+          {" "}
+          {this.renderBubbles(this.state.data)}{" "}
         </svg>
       );
     }
 
-    return <div>Loading</div>;
+    return <div> Loading </div>;
   }
 }
 

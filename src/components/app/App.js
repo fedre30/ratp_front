@@ -16,10 +16,11 @@ class App extends Component {
         <ResetGlobalStyle />
         <Router history={this.history}>
           <Switch>
-            <Route exact path="/" component={MapContainer} />
-            <Route path="/station/:id" component={StationContainer} />
-          </Switch>
-        </Router>
+            <Route exact path="/" component={HomeContainer} />{" "}
+            <Route exact path="/map" component={MapContainer} />{" "}
+            <Route path="/station/:id" component={StationContainer} />{" "}
+          </Switch>{" "}
+        </Router>{" "}
       </div>
     );
   }
