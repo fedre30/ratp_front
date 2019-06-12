@@ -30,7 +30,7 @@ class BubbleChart extends React.Component {
     if (this.props.data.length > 0) {
       this.minValue = 50;
 
-      this.maxValue = 50;
+      this.maxValue = 200;
 
       this.simulatePositions(this.props.data);
     }
@@ -43,8 +43,8 @@ class BubbleChart extends React.Component {
   radiusScale = value => {
     const fx = d3
       .scaleSqrt()
-      .range([1, 50])
-      .domain([this.minValue, this.maxValue]);
+      .domain([this.minValue, this.maxValue])
+      .range([50, 100]);
 
     return fx(value);
   };
@@ -70,9 +70,9 @@ class BubbleChart extends React.Component {
   };
 
   renderBubbles = data => {
-    const minValue = 55;
+    const minValue = 40;
 
-    const maxValue = 60;
+    const maxValue = 200;
 
     const color = d3
       .scaleLinear()
@@ -80,26 +80,6 @@ class BubbleChart extends React.Component {
       .interpolate(d3.interpolateHcl)
       .range(["red", "pink"]);
 
-    // render simple circle element
-    if (!this.props.useLabels) {
-      const circles = _.map(data, (item, index) => {
-        return (
-          <circle
-            key={index}
-            r={this.radiusScale(item.v)}
-            cx={item.x}
-            cy={item.y}
-            fill={color(item.v)}
-          />
-        );
-      });
-
-      return (
-        <g transform={`translate(${this.props.width / 2}, ${this.props.height / 2})`}>{circles}</g>
-      );
-    }
-
-    // render circle and text elements inside a group
     const texts = _.map(data, (item, index) => {
       const props = this.props;
       const fontSize = this.radiusScale(item.v) / 2;
