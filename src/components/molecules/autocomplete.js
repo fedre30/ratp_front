@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { rem } from "polished";
 import { withRouter } from "react-router-dom";
@@ -37,144 +37,122 @@ const Suggestion = styled.ul`
   }
 `;
 
-class Autocomplete extends Component {
-  constructor(props) {
-    super(props);
+const Autocomplete = ({ suggestions }) => {
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [userInput, setUserInput] = useState("");
+  const [onSelect, setOnSelect] = useState("");
 
-    this.state = {
-      activeSuggestion: -1,
-      filteredSuggestions: [],
-      showSuggestions: false,
-      userInput: "",
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    window.addEventListener("click", event => closeAutocomplete(event));
+    return () => {
+      window.removeEventListener("click", () => closeAutocomplete());
     };
-    this.inputRef = React.createRef();
-  }
+  }, []);
 
-  componentDidMount() {
-    console.log(this.props);
+  useEffect(() => {
+    if (onSelect.length) {
+      document.location = "/station/" + slugify(onSelect);
+    }
+  }, [onSelect]);
 
-    window.addEventListener("click", event => this.closeAutocomplete(event));
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("click", () => this.closeAutocomplete());
-  }
-
-  closeAutocomplete = e => {
-    if (e.target === this.inputRef.current) {
+  const closeAutocomplete = e => {
+    if (e.target === inputRef.current) {
       return;
     }
-    this.setState({
-      showSuggestions: false,
-    });
+    setShowSuggestions(false);
   };
 
-  onChange = e => {
-    const { suggestions } = this.props;
+  const onChange = e => {
     const userInput = e.currentTarget.value;
 
     const filteredSuggestions = suggestions.filter(
       suggestion => suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
     );
 
-    this.setState({
-      activeSuggestion: -1,
-      filteredSuggestions,
-      showSuggestions: true,
-      userInput: e.currentTarget.value,
-    });
+    setActiveSuggestion(-1);
+    setFilteredSuggestions(filteredSuggestions);
+    setShowSuggestions(true);
+    setUserInput(e.currentTarget.value);
   };
 
-  onClick = e => {
-    this.setState({
-      activeSuggestion: -1,
-      filteredSuggestions: [],
-      showSuggestions: false,
-      userInput: e.currentTarget.innerText,
-    });
+  const onClick = e => {
+    setActiveSuggestion(-1);
+    setFilteredSuggestions([]);
+    setShowSuggestions(false);
+    setUserInput(e.currentTarget.innerText);
   };
 
-  onKeyDown = e => {
-    const { activeSuggestion, filteredSuggestions } = this.state;
-    console.log(this.state.userInput);
+  const onKeyDown = e => {
     if (e.keyCode === 13 && activeSuggestion > -1) {
-      this.setState(
-        {
-          activeSuggestion: -1,
-          showSuggestions: false,
-          userInput: filteredSuggestions[activeSuggestion],
-        },
-        () => (document.location = "/station/" + slugify(this.state.userInput))
-      );
+      setActiveSuggestion(-1);
+      setShowSuggestions(false);
+      setUserInput(filteredSuggestions[activeSuggestion]);
+      setOnSelect(filteredSuggestions[activeSuggestion]);
     } else if (e.keyCode === 27) {
-      this.setState({
-        showSuggestions: false,
-      });
+      setShowSuggestions(false);
     } else if (e.keyCode === 38) {
       if (activeSuggestion === 0) {
         return;
       }
 
-      this.setState({ activeSuggestion: activeSuggestion - 1 });
+      setActiveSuggestion(-1);
     } else if (e.keyCode === 40) {
       if (activeSuggestion - 1 === filteredSuggestions.length) {
         return;
       }
 
-      this.setState({ activeSuggestion: activeSuggestion + 1 });
+      setActiveSuggestion(activeSuggestion + 1);
     }
   };
 
-  render() {
-    const {
-      state: { activeSuggestion, filteredSuggestions, showSuggestions, userInput },
-    } = this;
+  let suggestionsListComponent;
 
-    let suggestionsListComponent;
+  if (showSuggestions && userInput) {
+    if (filteredSuggestions.length) {
+      suggestionsListComponent = (
+        <Suggestion>
+          {filteredSuggestions.map((suggestion, index) => {
+            let className;
 
-    if (showSuggestions && userInput) {
-      if (filteredSuggestions.length) {
-        suggestionsListComponent = (
-          <Suggestion>
-            {filteredSuggestions.map((suggestion, index) => {
-              let className;
+            if (index === activeSuggestion) {
+              className = "active";
+            }
 
-              if (index === activeSuggestion) {
-                className = "active";
-              }
-
-              return (
-                <li className={className} key={suggestion} onClick={this.onClick}>
-                  {suggestion.charAt(0).toUpperCase() + suggestion.slice(1).toLowerCase()}
-                </li>
-              );
-            })}
-          </Suggestion>
-        );
-      } else {
-        suggestionsListComponent = (
-          <Suggestion>
-            <p className="no-suggestions">Aucune station ne correspond à la recherche</p>
-          </Suggestion>
-        );
-      }
+            return (
+              <li className={className} key={suggestion} onClick={onClick}>
+                {suggestion.charAt(0).toUpperCase() + suggestion.slice(1).toLowerCase()}
+              </li>
+            );
+          })}
+        </Suggestion>
+      );
+    } else {
+      suggestionsListComponent = (
+        <Suggestion>
+          <p className="no-suggestions">Aucune station ne correspond à la recherche</p>
+        </Suggestion>
+      );
     }
-
-    return (
-      <Fragment>
-        <Input
-          ref={this.inputRef}
-          type="text"
-          onChange={this.onChange}
-          onKeyDown={this.onKeyDown}
-          value={userInput}
-          placeholder="Auber, Châtelet... "
-          style={{ marginBottom: rem(10) }}
-        />
-        {suggestionsListComponent}
-      </Fragment>
-    );
   }
-}
+
+  return (
+    <>
+      <Input
+        ref={inputRef}
+        type="text"
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        value={userInput}
+        placeholder="Auber, Châtelet... "
+        style={{ marginBottom: rem(10) }}
+      />
+      {suggestionsListComponent}
+    </>
+  );
+};
 
 export default withRouter(Autocomplete);
