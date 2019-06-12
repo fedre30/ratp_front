@@ -212,9 +212,9 @@ class MapComponent extends Component {
   getStationQuality = marker => {
     return marker.trafic.length > 0
       ? Math.round(
-          marker.sanitaire.length + (marker.access.length / marker.trafic[0].trafic) * 50000000
+          marker.sanitaire.length + (marker.access.length / marker.trafic[0].trafic) * 15000000
         )
-      : Math.round(marker.sanitaire.length + marker.access.length * 200);
+      : Math.round(marker.sanitaire.length + marker.access.length);
   };
 
   sortDescendingStations = (a, b) => {
