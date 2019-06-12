@@ -1,43 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
 import { rem } from "polished";
 import { withRouter } from "react-router-dom";
 
 import { slugify } from "utils";
 
 import { Input } from "components/atoms";
+import Autocomplete from "./autocomplete";
 
-const Suggestion = styled.ul`
-  position: absolute;
-  z-index: 2;
-  width: ${rem(270)};
-  max-height: ${rem(400)};
-  overflow: hidden;
-  overflow-y: scroll;
-
-  .no-suggestions {
-    padding: ${rem(10)};
-    background: #fff;
-  }
-
-  & > li {
-    padding: ${rem(10)};
-    background: #fff;
-    cursor: pointer;
-  }
-
-  .active,
-  & > li:hover {
-    border-left: 3px solid #00aa91;
-    font-weight: 700;
-  }
-
-  .suggestions li:not(:last-of-type) {
-    border-bottom: 1px solid #999;
-  }
-`;
-
-const Autocomplete = ({ suggestions }) => {
+const Search = ({ suggestions }) => {
   const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -109,36 +79,6 @@ const Autocomplete = ({ suggestions }) => {
     }
   };
 
-  let suggestionsListComponent;
-
-  if (showSuggestions && userInput) {
-    if (filteredSuggestions.length) {
-      suggestionsListComponent = (
-        <Suggestion>
-          {filteredSuggestions.map((suggestion, index) => {
-            let className;
-
-            if (index === activeSuggestion) {
-              className = "active";
-            }
-
-            return (
-              <li className={className} key={suggestion} onClick={onClick}>
-                {suggestion.charAt(0).toUpperCase() + suggestion.slice(1).toLowerCase()}
-              </li>
-            );
-          })}
-        </Suggestion>
-      );
-    } else {
-      suggestionsListComponent = (
-        <Suggestion>
-          <p className="no-suggestions">Aucune station ne correspond à la recherche</p>
-        </Suggestion>
-      );
-    }
-  }
-
   return (
     <>
       <Input
@@ -150,9 +90,15 @@ const Autocomplete = ({ suggestions }) => {
         placeholder="Auber, Châtelet... "
         style={{ marginBottom: rem(10) }}
       />
-      {suggestionsListComponent}
+      <Autocomplete
+        activeSuggestion={activeSuggestion}
+        filteredSuggestions={filteredSuggestions}
+        showSuggestions={showSuggestions}
+        userInput={userInput}
+        onClick={onClick}
+      />
     </>
   );
 };
 
-export default withRouter(Autocomplete);
+export default withRouter(Search);
