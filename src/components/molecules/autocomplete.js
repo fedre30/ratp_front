@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react";
 import styled from "styled-components";
 import { rem } from "polished";
+import { withRouter } from "react-router-dom";
+
+import { slugify } from "utils";
 
 import { Input } from "components/atoms";
 
@@ -39,7 +42,7 @@ class Autocomplete extends Component {
     super(props);
 
     this.state = {
-      activeSuggestion: 0,
+      activeSuggestion: -1,
       filteredSuggestions: [],
       showSuggestions: false,
       userInput: "",
@@ -48,6 +51,8 @@ class Autocomplete extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
+
     window.addEventListener("click", event => this.closeAutocomplete(event));
   }
 
@@ -73,7 +78,7 @@ class Autocomplete extends Component {
     );
 
     this.setState({
-      activeSuggestion: 0,
+      activeSuggestion: -1,
       filteredSuggestions,
       showSuggestions: true,
       userInput: e.currentTarget.value,
@@ -82,7 +87,7 @@ class Autocomplete extends Component {
 
   onClick = e => {
     this.setState({
-      activeSuggestion: 0,
+      activeSuggestion: -1,
       filteredSuggestions: [],
       showSuggestions: false,
       userInput: e.currentTarget.innerText,
@@ -91,15 +96,15 @@ class Autocomplete extends Component {
 
   onKeyDown = e => {
     const { activeSuggestion, filteredSuggestions } = this.state;
-
-    if (e.keyCode === 13) {
+    console.log(this.state.userInput);
+    if (e.keyCode === 13 && activeSuggestion > -1) {
       this.setState(
         {
-          activeSuggestion: 0,
+          activeSuggestion: -1,
           showSuggestions: false,
           userInput: filteredSuggestions[activeSuggestion],
         },
-        () => this.props.history.push("/station/" + this.state.userInput.split(" ").join("_"))
+        () => (document.location = "/station/" + slugify(this.state.userInput))
       );
     } else if (e.keyCode === 27) {
       this.setState({
@@ -122,9 +127,6 @@ class Autocomplete extends Component {
 
   render() {
     const {
-      onChange,
-      onClick,
-      onKeyDown,
       state: { activeSuggestion, filteredSuggestions, showSuggestions, userInput },
     } = this;
 
@@ -142,7 +144,7 @@ class Autocomplete extends Component {
               }
 
               return (
-                <li className={className} key={suggestion} onClick={onClick}>
+                <li className={className} key={suggestion} onClick={this.onClick}>
                   {suggestion.charAt(0).toUpperCase() + suggestion.slice(1).toLowerCase()}
                 </li>
               );
@@ -163,8 +165,8 @@ class Autocomplete extends Component {
         <Input
           ref={this.inputRef}
           type="text"
-          onChange={onChange}
-          onKeyDown={onKeyDown}
+          onChange={this.onChange}
+          onKeyDown={this.onKeyDown}
           value={userInput}
           placeholder="Auber, Châtelet... "
           style={{ marginBottom: rem(10) }}
@@ -175,4 +177,4 @@ class Autocomplete extends Component {
   }
 }
 
-export default Autocomplete;
+export default withRouter(Autocomplete);
