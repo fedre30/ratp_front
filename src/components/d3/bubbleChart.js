@@ -72,15 +72,15 @@ class BubbleChart extends React.Component {
   };
 
   renderBubbles = data => {
-    const minValue = 40;
+    const minValue = 27;
 
-    const maxValue = 200;
+    const maxValue = 31;
 
     const color = d3
       .scaleLinear()
       .domain([minValue, maxValue])
       .interpolate(d3.interpolateHcl)
-      .range(["red", "pink", "green"]);
+      .range(["pink", "red"]);
 
     const texts = _.map(data, (item, index) => {
       const props = this.props;
@@ -95,6 +95,7 @@ class BubbleChart extends React.Component {
             {" "}
             {item.v}{" "}
           </text>{" "}
+          <text>{item.text}</text>
         </g>
       );
     });
