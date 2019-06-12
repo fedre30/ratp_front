@@ -180,9 +180,9 @@ class MapComponent extends Component {
   compareAirAverage = marker => {
     const average = this.getAirAverage(marker);
     if (average > 30 && average < 31) {
-      return colors.yellow;
+      return colors.orange;
     } else if (average < 30) {
-      return colors.background;
+      return colors.vanilla;
     } else {
       return colors.red;
     }
@@ -516,13 +516,10 @@ class MapComponent extends Component {
                             fill: colors.tertiary,
                             cursor: "pointer",
                           },
-                          hover: { fill: colors.text, cursor: "pointer", outline: "none" },
+                          hover: { fill: colors.background, cursor: "pointer", outline: "none" },
                           pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                         }}
                       >
-                        {marker.sanitaire.length > 0 && !this.state.currentToiletsIndex && (
-                          <Icon color={colors.text} icon="toilets" size={40} alt="" />
-                        )}
                         {marker.sanitaire.length > 0 &&
                           marker.sanitaire[0].tarifGratuitPayant === "gratuit" &&
                           this.state.currentToiletsIndex === "gratuit" && (
@@ -557,9 +554,6 @@ class MapComponent extends Component {
                           pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                         }}
                       >
-                        {marker.access.length > 0 && !this.state.currentAccessIndex && (
-                          <Icon color={colors.text} icon="wheelchair" size={40} alt="" />
-                        )}
                         {marker.access.length > 0 &&
                           marker.access[0].pmr === 1 &&
                           this.state.currentAccessIndex === "pmr" && (
@@ -600,7 +594,14 @@ class MapComponent extends Component {
                         this.hideModal();
                       }}
                       style={{
-                        default: { fill: colors.tertiary, cursor: "pointer" },
+                        default: {
+                          fill:
+                            (marker.sanitaire.length > 0 && filters[2].active) ||
+                            (marker.access.length > 0 && filters[3].active)
+                              ? colors.yellow
+                              : colors.tertiary,
+                          cursor: "pointer",
+                        },
                         hover: { fill: colors.text, cursor: "pointer", outline: "none" },
                         pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                       }}

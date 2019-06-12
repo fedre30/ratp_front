@@ -292,11 +292,11 @@ export const zoomButtons = [
 
 export const airKeys = [
   {
-    color: colors.background,
+    color: colors.vanilla,
     text: "Pollution pas élévée",
   },
   {
-    color: colors.yellow,
+    color: colors.orange,
     text: "Pollution moyennement élévée",
   },
   {

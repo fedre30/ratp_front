@@ -6,10 +6,12 @@ const colors = {
   button: "#464860",
   text: "#FFF",
   red: "#D75A4A",
-  yellow: "#FFBE00",
+  yellow: "#FDE74C",
+  orange: "#FFBE00",
   grey: "#DCDCDC",
   green: "#78B500",
   lightgrey: "#F0F0F0",
+  vanilla: "#D6D4A0",
 };
 
 const font = {
