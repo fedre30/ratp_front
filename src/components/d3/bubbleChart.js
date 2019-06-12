@@ -6,8 +6,8 @@ class BubbleChart extends React.Component {
   static defaultProps = {
     data: [],
     useLabels: false,
-    width: 300,
-    height: 300,
+    width: 800,
+    height: 550,
   };
 
   constructor(props) {
@@ -30,7 +30,7 @@ class BubbleChart extends React.Component {
     if (this.props.data.length > 0) {
       this.minValue = 50;
 
-      this.maxValue = 50;
+      this.maxValue = 200;
 
       this.simulatePositions(this.props.data);
     }
@@ -43,8 +43,8 @@ class BubbleChart extends React.Component {
   radiusScale = value => {
     const fx = d3
       .scaleSqrt()
-      .range([1, 50])
-      .domain([this.minValue, this.maxValue]);
+      .domain([this.minValue, this.maxValue])
+      .range([150, 250]);
 
     return fx(value);
   };
@@ -64,42 +64,24 @@ class BubbleChart extends React.Component {
       )
       .on("tick", () => {
         if (this.mounted) {
-          this.setState({ data });
+          this.setState({
+            data,
+          });
         }
       });
   };
 
   renderBubbles = data => {
-    const minValue = 55;
+    const minValue = 15;
 
-    const maxValue = 60;
+    const maxValue = 36;
 
     const color = d3
       .scaleLinear()
       .domain([minValue, maxValue])
       .interpolate(d3.interpolateHcl)
-      .range(["red", "pink"]);
+      .range(["pink", "red"]);
 
-    // render simple circle element
-    if (!this.props.useLabels) {
-      const circles = _.map(data, (item, index) => {
-        return (
-          <circle
-            key={index}
-            r={this.radiusScale(item.v)}
-            cx={item.x}
-            cy={item.y}
-            fill={color(item.v)}
-          />
-        );
-      });
-
-      return (
-        <g transform={`translate(${this.props.width / 2}, ${this.props.height / 2})`}>{circles}</g>
-      );
-    }
-
-    // render circle and text elements inside a group
     const texts = _.map(data, (item, index) => {
       const props = this.props;
       const fontSize = this.radiusScale(item.v) / 2;
@@ -110,7 +92,11 @@ class BubbleChart extends React.Component {
         >
           <circle r={this.radiusScale(item.v)} fill={color(item.v)} />
           <text dy="6" fill="#fff" textAnchor="middle" fontSize={`${fontSize}px`} fontWeight="bold">
-            {item.v}
+            {" "}
+            {item.v}{" "}
+          </text>{" "}
+          <text dy="50" dx="-20" fontSize="1.2rem" fill="#fff">
+            {item.text}
           </text>
         </g>
       );
@@ -123,12 +109,13 @@ class BubbleChart extends React.Component {
     if (this.state.data.length) {
       return (
         <svg width={this.props.width} height={this.props.height}>
-          {this.renderBubbles(this.state.data)}
+          {" "}
+          {this.renderBubbles(this.state.data)}{" "}
         </svg>
       );
     }
 
-    return <div>Loading</div>;
+    return <div> Loading </div>;
   }
 }
 

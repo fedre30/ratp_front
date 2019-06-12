@@ -4,7 +4,7 @@ import { rem } from "polished";
 
 import { colors } from "styles/const";
 import { Title, SubTitle, Icon } from "components/atoms";
-import { Autocomplete } from "components/molecules";
+import { Search } from "components/molecules";
 
 import stations from "scripts/stations.json";
 
@@ -24,7 +24,7 @@ const RightContainer = styled.div`
   justify-content: space-between;
 `;
 
-const Header = ({ subTitle, background, history }) => (
+const Header = ({ subTitle, background }) => (
   <WrapperHeader background={background}>
     <div>
       <Title size={24} italic>
@@ -34,8 +34,7 @@ const Header = ({ subTitle, background, history }) => (
     </div>
     <RightContainer>
       <div style={{ position: "relative" }}>
-        <Autocomplete
-          history={history}
+        <Search
           suggestions={stations.objects.stations.geometries.map(v => v.properties.nom_gare)}
         />
         <span style={{ position: "absolute", right: "20px", top: "11px" }}>

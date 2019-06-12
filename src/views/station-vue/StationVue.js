@@ -3,10 +3,11 @@ import styled from "styled-components";
 import { rem } from "polished";
 import { fetchStations } from "services";
 import { slugify } from "utils";
-// import _ from "lodash";
 
-import { Title, Icon } from "components/atoms";
-// import BarChart from "components/d3/barChart";
+// import _ from "lodash";
+import pollution from "scripts/average_air";
+import { Title, Icon, Loading } from "components/atoms";
+import BarChart from "components/d3/barChart";
 import BubbleChart from "components/d3/bubbleChart";
 import { colors } from "styles/const";
 
@@ -111,9 +112,13 @@ const CategoryIcon = styled.div`
 `;
 
 const SubjectFilter = styled.div`
-  min-width: ${rem(336)};
+  min-width: ${rem(400)};
   & > p {
     margin-bottom: ${rem(27)};
+    font-size: 1.5rem;
+    color: ${colors.primary};
+    text-transform: uppercase;
+    font-weight: 400;
   }
   & > div {
     display: flex;
@@ -125,8 +130,14 @@ const SubjectFilterWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  .Category-name {
+    font-size: 1em;
+  }
+
   & > p {
     color: #3a3d60;
+    font-size: 1.9rem;
     font-size: ${rem(10)};
     font-weight: 700;
   }
@@ -134,6 +145,11 @@ const SubjectFilterWrapper = styled.div`
 
 const LocalisationContainer = styled.div`
   min-width: ${rem(336)};
+  & > p {
+    color: ${colors.primary};
+    font-size: 1.5rem;
+    text-transform: uppercase;
+  }
   & > :first-child {
     margin-bottom: ${rem(10)};
   }
@@ -147,13 +163,45 @@ const CustomTitle = styled(Title)`
   -webkit-text-stroke-color: black;
 `;
 
+const DataContainer = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+
+  .title {
+    color: ${colors.primary};
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0 0 2rem 0;
+  }
+`;
+
+const StationLinesContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 1rem 0;
+`;
+
+const StationLine = styled.div`
+  width: 2rem;
+  margin: 0 0.5rem 0 0;
+  display: block;
+  img {
+    width: 100%;
+  }
+`;
+
 class StationVue extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       stations: null,
+      stationLines: null,
       stationFromUrl: null,
       currentCategoryActive: "trafic",
+      pollution: pollution,
+      currentAir: null,
       category: {
         trafic: {
           title: "Traffic",
@@ -190,7 +238,10 @@ class StationVue extends React.Component {
             ...currentState.category[currentActive],
             active: !currentState.category[currentActive].active,
           },
-          [key]: { ...currentState.category[key], active: !currentState.category[key].active },
+          [key]: {
+            ...currentState.category[key],
+            active: !currentState.category[key].active,
+          },
         },
         currentCategoryActive: key,
       };
@@ -203,8 +254,12 @@ class StationVue extends React.Component {
     );
 
     fetchStations().then(stations =>
-      this.setState({ stations: stations["hydra:member"], stationFromUrl: stationFromUrl }, () =>
-        this.getCurrentStation()
+      this.setState(
+        {
+          stations: stations["hydra:member"],
+          stationFromUrl: stationFromUrl,
+        },
+        () => this.getCurrentStation()
       )
     );
   };
@@ -213,93 +268,158 @@ class StationVue extends React.Component {
     const currentStation = this.state.stations.filter(
       station => slugify(station.nomGare) === this.state.stationFromUrl
     )[0];
-    this.setState({ currentStation: currentStation });
+    this.setState({ currentStation: currentStation }, () => {
+      this.getCorrespondingStation();
+      this.getAverageAir();
+    });
+  };
+
+  getAverageAir = () => {
+    const curr = this.state.currentStation;
+    const air = this.state.pollution.objects.citeair_average.geometries.filter(
+      air => curr.access[0].codeInsee === Math.floor(air.properties.fields.ninsee)
+    );
+    this.setState({ currentAir: air });
+  };
+
+  getCorrespondingStation = () => {
+    const { currentStation } = this.state;
+
+    if (currentStation.trafic.length > 0) {
+      const lines = [
+        currentStation.trafic[0].correspondance1,
+        currentStation.trafic[0].correspondance2,
+        currentStation.trafic[0].correspondance3,
+        currentStation.trafic[0].correspondance4,
+        currentStation.trafic[0].correspondance5,
+      ];
+      const newLines = lines.filter(line => line !== "");
+      const linesIcons = newLines.map(line => {
+        return `M_${line}`;
+      });
+      this.setState({
+        stationLines: linesIcons,
+      });
+    } else {
+      const lines = [currentStation.indiceLig];
+      const linesIcons = lines.map(line => {
+        return `M_${line}`;
+      });
+      this.setState({
+        stationLines: linesIcons,
+      });
+    }
   };
 
   render() {
     const currentCategoryActiveCopy = this.state.currentCategoryActive;
 
-    const { currentStation } = this.state;
-    return this.state.currentStation ? (
+    const { currentStation, stationLines, currentAir } = this.state;
+    return currentStation && stationLines ? (
       <>
         <Hero StationImg={currentStation.image}>
-          {console.log("hello", currentStation)}
           <Title style={{ marginBottom: rem(16) }}>{currentStation.nomGare}</Title>
           <Text>{currentStation.description}</Text>
           <NavContainer>
             <li>
-              <a href="/">Accueil</a>
+              <a href="/"> Accueil </a>
             </li>
             <li>
-              <a href="#">A propos</a>
+              <a href="/map"> Map </a>
             </li>
           </NavContainer>
           <Card>
             <CardContent>
-              <span>Mise en service</span>
-              <br />
-              <span>1.09.1900</span>
+              <span> Mise en service </span> <br />
+              <span> 1.09 .1900 </span>
             </CardContent>
             <CardContent />
             <CardContent>
               <span>Correspondance</span>
               <br />
-              <span>ligne de métro</span>
+              <StationLinesContainer>
+                {stationLines.map(line => (
+                  <StationLine key={line}>
+                    <img src={require(`../../images/lines/${line}.png`)} alt={line} />{" "}
+                  </StationLine>
+                ))}
+              </StationLinesContainer>
             </CardContent>
           </Card>
         </Hero>
         <StationContainer>
           <div>
             <SubjectFilter>
-              <p>Les differents sujets</p>
+              <p className="subtitle"> Les differents sujets </p>
               <div>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("trafic")}>
                   <CategoryIcon active={this.state.category.trafic.active}>
                     <Icon icon={this.state.category.trafic.icon} size={30} color="#fff" />
                   </CategoryIcon>
-                  {this.state.category.trafic.active && <p>{this.state.category.trafic.title}</p>}
+                  {this.state.category.trafic.active && (
+                    <p className="Category-name"> {this.state.category.trafic.title} </p>
+                  )}
                 </SubjectFilterWrapper>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("airQuality")}>
                   <CategoryIcon active={this.state.category.airQuality.active}>
                     <Icon icon={this.state.category.airQuality.icon} size={30} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.airQuality.active && (
-                    <p>{this.state.category.airQuality.title}</p>
+                    <p className="Category-name"> {this.state.category.airQuality.title} </p>
                   )}
                 </SubjectFilterWrapper>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("toilets")}>
                   <CategoryIcon active={this.state.category.toilets.active}>
                     <Icon icon={this.state.category.toilets.icon} size={30} color="#fff" />
                   </CategoryIcon>
-                  {this.state.category.toilets.active && <p>{this.state.category.toilets.title}</p>}
+                  {this.state.category.toilets.active && (
+                    <p className="Category-name"> {this.state.category.toilets.title} </p>
+                  )}
                 </SubjectFilterWrapper>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("wheelchair")}>
                   <CategoryIcon active={this.state.category.wheelchair.active}>
                     <Icon icon={this.state.category.wheelchair.icon} size={30} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.wheelchair.active && (
-                    <p>{this.state.category.wheelchair.title}</p>
+                    <p className="Category-name"> {this.state.category.wheelchair.title} </p>
                   )}
                 </SubjectFilterWrapper>
               </div>
             </SubjectFilter>
-
+            <DataContainer>
+              <p className="title"> {this.state.category[currentCategoryActiveCopy].title} </p>
+              {this.state.currentCategoryActive === "trafic" && (
+                <BarChart data={[5, 10, 1]} size={[500, 500]} />
+              )}
+              {this.state.currentCategoryActive === "airQuality" && (
+                <BubbleChart
+                  useLabels
+                  data={[
+                    {
+                      v: currentAir ? currentAir[0].properties.fields["pm10"] : 27.8,
+                      text: "PM10",
+                    },
+                    {
+                      v: currentAir ? currentAir[0].properties.fields["no2"] : 10.3,
+                      text: "NO2",
+                    },
+                    {
+                      v: currentAir ? currentAir[0].properties.fields["o3"] : 31.9,
+                      text: "O3",
+                    },
+                  ]}
+                />
+              )}
+            </DataContainer>
             <LocalisationContainer>
-              <p>Localisation</p>
-
-              <CustomTitle size={112}>Paris</CustomTitle>
+              <p className="subtitle"> Localisation </p>
+              <CustomTitle size={112}> {this.state.currentStation.trafic[0].ville} </CustomTitle>
             </LocalisationContainer>
           </div>
-          <div>
-            <p>{this.state.category[currentCategoryActiveCopy].title}</p>
-          </div>
-          {/* <BarChart data={[5, 10, 1, 3]} size={[500, 500]} /> */}
-
-          <BubbleChart useLabels data={[{ v: 5 }, { v: 10 }, { v: 100 }]} />
         </StationContainer>
       </>
     ) : (
-      <div>loading</div>
+      <Loading />
     );
   }
 }
