@@ -4,7 +4,7 @@ import MapComponent from "components/map/map";
 
 const MapContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 93.5vh;
   overflow: hidden;
   .Map-title {
     font-size: 3rem;
