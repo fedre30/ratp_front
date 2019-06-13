@@ -268,18 +268,25 @@ class StationVue extends React.Component {
     const currentStation = this.state.stations.filter(
       station => slugify(station.nomGare) === this.state.stationFromUrl
     )[0];
-    this.setState({ currentStation: currentStation }, () => {
-      this.getCorrespondingStation();
-      this.getAverageAir();
-    });
+    this.setState(
+      {
+        currentStation: currentStation,
+      },
+      () => {
+        this.getCorrespondingStation();
+        this.getAverageAir();
+      }
+    );
   };
 
   getAverageAir = () => {
     const curr = this.state.currentStation;
     const air = this.state.pollution.objects.citeair_average.geometries.filter(
-      air => curr.access[0].codeInsee === Math.floor(air.properties.fields.ninsee)
+      air => curr.codeInsee === Math.floor(air.properties.fields.ninsee)
     );
-    this.setState({ currentAir: air });
+    this.setState({
+      currentAir: air,
+    });
   };
 
   getCorrespondingStation = () => {
@@ -318,79 +325,86 @@ class StationVue extends React.Component {
     return currentStation && stationLines ? (
       <>
         <Hero StationImg={currentStation.image}>
-          <Title style={{ marginBottom: rem(16) }}>{currentStation.nomGare}</Title>
-          <Text>{currentStation.description}</Text>
+          <Title
+            style={{
+              marginBottom: rem(16),
+            }}
+          >
+            {" "}
+            {currentStation.nomGare}{" "}
+          </Title>{" "}
+          <Text> {currentStation.description} </Text>{" "}
           <NavContainer>
             <li>
-              <a href="/"> Accueil </a>
-            </li>
+              <a href="/"> Accueil </a>{" "}
+            </li>{" "}
             <li>
-              <a href="/map"> Map </a>
-            </li>
-          </NavContainer>
+              <a href="/map"> Map </a>{" "}
+            </li>{" "}
+          </NavContainer>{" "}
           <Card>
             <CardContent>
               <span> Mise en service </span> <br />
-              <span> 1.09 .1900 </span>
-            </CardContent>
+              <span> 1.09 .1900 </span>{" "}
+            </CardContent>{" "}
             <CardContent />
             <CardContent>
-              <span>Correspondance</span>
-              <br />
+              <span> Correspondance </span> <br />
               <StationLinesContainer>
+                {" "}
                 {stationLines.map(line => (
                   <StationLine key={line}>
                     <img src={require(`../../images/lines/${line}.png`)} alt={line} />{" "}
                   </StationLine>
-                ))}
-              </StationLinesContainer>
-            </CardContent>
-          </Card>
-        </Hero>
+                ))}{" "}
+              </StationLinesContainer>{" "}
+            </CardContent>{" "}
+          </Card>{" "}
+        </Hero>{" "}
         <StationContainer>
           <div>
             <SubjectFilter>
-              <p className="subtitle"> Les differents sujets </p>
+              <p className="subtitle"> Les differents sujets </p>{" "}
               <div>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("trafic")}>
                   <CategoryIcon active={this.state.category.trafic.active}>
                     <Icon icon={this.state.category.trafic.icon} size={30} color="#fff" />
-                  </CategoryIcon>
+                  </CategoryIcon>{" "}
                   {this.state.category.trafic.active && (
                     <p className="Category-name"> {this.state.category.trafic.title} </p>
-                  )}
-                </SubjectFilterWrapper>
+                  )}{" "}
+                </SubjectFilterWrapper>{" "}
                 <SubjectFilterWrapper onClick={() => this.changeFilter("airQuality")}>
                   <CategoryIcon active={this.state.category.airQuality.active}>
                     <Icon icon={this.state.category.airQuality.icon} size={30} color="#fff" />
-                  </CategoryIcon>
+                  </CategoryIcon>{" "}
                   {this.state.category.airQuality.active && (
                     <p className="Category-name"> {this.state.category.airQuality.title} </p>
-                  )}
-                </SubjectFilterWrapper>
+                  )}{" "}
+                </SubjectFilterWrapper>{" "}
                 <SubjectFilterWrapper onClick={() => this.changeFilter("toilets")}>
                   <CategoryIcon active={this.state.category.toilets.active}>
                     <Icon icon={this.state.category.toilets.icon} size={30} color="#fff" />
-                  </CategoryIcon>
+                  </CategoryIcon>{" "}
                   {this.state.category.toilets.active && (
                     <p className="Category-name"> {this.state.category.toilets.title} </p>
-                  )}
-                </SubjectFilterWrapper>
+                  )}{" "}
+                </SubjectFilterWrapper>{" "}
                 <SubjectFilterWrapper onClick={() => this.changeFilter("wheelchair")}>
                   <CategoryIcon active={this.state.category.wheelchair.active}>
                     <Icon icon={this.state.category.wheelchair.icon} size={30} color="#fff" />
-                  </CategoryIcon>
+                  </CategoryIcon>{" "}
                   {this.state.category.wheelchair.active && (
                     <p className="Category-name"> {this.state.category.wheelchair.title} </p>
-                  )}
-                </SubjectFilterWrapper>
-              </div>
-            </SubjectFilter>
+                  )}{" "}
+                </SubjectFilterWrapper>{" "}
+              </div>{" "}
+            </SubjectFilter>{" "}
             <DataContainer>
-              <p className="title"> {this.state.category[currentCategoryActiveCopy].title} </p>
+              <p className="title"> {this.state.category[currentCategoryActiveCopy].title} </p>{" "}
               {this.state.currentCategoryActive === "trafic" && (
                 <BarChart data={[5, 10, 1]} size={[500, 500]} />
-              )}
+              )}{" "}
               {this.state.currentCategoryActive === "airQuality" && (
                 <BubbleChart
                   useLabels
@@ -409,14 +423,14 @@ class StationVue extends React.Component {
                     },
                   ]}
                 />
-              )}
-            </DataContainer>
+              )}{" "}
+            </DataContainer>{" "}
             <LocalisationContainer>
-              <p className="subtitle"> Localisation </p>
-              <CustomTitle size={112}> {this.state.currentStation.trafic[0].ville} </CustomTitle>
-            </LocalisationContainer>
-          </div>
-        </StationContainer>
+              <p className="subtitle"> Localisation </p>{" "}
+              <CustomTitle size={112}> {this.state.currentStation.trafic[0].ville} </CustomTitle>{" "}
+            </LocalisationContainer>{" "}
+          </div>{" "}
+        </StationContainer>{" "}
       </>
     ) : (
       <Loading />
