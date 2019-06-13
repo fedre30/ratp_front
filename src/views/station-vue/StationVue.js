@@ -15,9 +15,6 @@ import { colors } from "styles/const";
 
 const Hero = styled.div`
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   width: 100%;
   height: ${rem(650)};
   margin-bottom: ${rem(82)};
