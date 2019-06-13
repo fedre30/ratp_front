@@ -10,6 +10,7 @@ import { Title, Icon, Loading } from "components/atoms";
 import BarChart from "components/station-visu/barChart";
 import BubbleChart from "components/station-visu/bubbleChart";
 import Toilets from "components/station-visu/toilets";
+import Accesibility from "components/station-visu/accesibility";
 import { colors } from "styles/const";
 
 const Hero = styled.div`
@@ -316,7 +317,7 @@ class StationVue extends React.Component {
     const currentCategoryActiveCopy = this.state.currentCategoryActive;
 
     const { currentStation, stationLines, currentAir } = this.state;
-    console.log(currentStation);
+    // console.log(currentStation);
     return currentStation && stationLines ? (
       <>
         <Hero StationImg={currentStation.image}>
@@ -420,6 +421,9 @@ class StationVue extends React.Component {
               )}
               {this.state.currentCategoryActive === "toilets" && (
                 <Toilets toilet={currentStation.sanitaire[0]} />
+              )}
+              {this.state.currentCategoryActive === "wheelchair" && (
+                <Accesibility accesibility={currentStation.access[0]} />
               )}
             </DataContainer>
             <LocalisationContainer>

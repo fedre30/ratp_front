@@ -65,7 +65,6 @@ const ToiletsButton = styled.div`
 
 const Toilets = ({ toilet }) => (
   <>
-    {console.log(toilet)}
     {toilet ? (
       <ToiletsContainer>
         <ToiletsCircle>
