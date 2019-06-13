@@ -201,11 +201,9 @@ class MapComponent extends Component {
   filterStations = () => {
     const filteredStations = [];
     this.state.stations.map(station =>
-      this.state.activatedFiltersLines.filter(filter => {
-        if (station.ligne === filter.line) {
-          filteredStations.push(station);
-        }
-      })
+      this.state.activatedFiltersLines.filter(
+        filter => station.ligne === filter.line && filteredStations.push(station)
+      )
     );
     this.setState({ filteredStations });
   };
