@@ -8,10 +8,7 @@ import cross from "images/icons/cross.svg";
 const AccesibilityContainer = styled.div`
   display: flex;
   justify-content: space-between;
-
   max-width: ${rem(1400)};
-  margin: 0 auto;
-
   flex-wrap: wrap;
 `;
 
@@ -20,15 +17,15 @@ const AccesibilityContent = styled.div`
   align-items: center;
   justify-content: space-between;
   width: ${rem(600)};
-  padding: ${rem(35)};
+  padding: ${rem(35)} 0;
   & p {
     font-size: ${rem(25)};
-    color: ${props => (props.access > 0 ? "green" : "red")};
+    color: ${props => (props.access > 0 ? "#00AA91" : "#D75A4A")};
   }
 `;
 const AccesibilityInfo = styled.div`
   font-size: ${rem(25)};
-  color: ${props => (props.access > 0 ? "green" : "red")};
+  color: ${props => (props.access > 0 ? "#00AA91" : "#D75A4A")};
 `;
 
 const Accessibility = ({ accesibility }) => (
