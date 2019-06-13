@@ -85,19 +85,12 @@ const Card = styled.div`
 `;
 
 const CardContent = styled.div`
-  & > span {
+  & > p {
+    margin-bottom: ${rem(15)};
     color: #3a3d60;
-    &:first-child {
-      text-transform: uppercase;
-      font-size: ${rem(13)};
-      font-weight: 700;
-      line-height: ${rem(25)};
-    }
-  }
-  &:nth-child(2) {
-    background: #3a3d60;
-    width: ${rem(1)};
-    height: ${rem(40)};
+    text-transform: uppercase;
+    font-size: ${rem(13)};
+    font-weight: 700;
   }
 `;
 
@@ -317,7 +310,7 @@ class StationVue extends React.Component {
     const currentCategoryActiveCopy = this.state.currentCategoryActive;
 
     const { currentStation, stationLines, currentAir } = this.state;
-    // console.log(currentStation);
+
     return currentStation && stationLines ? (
       <>
         <Hero StationImg={currentStation.image}>
@@ -333,13 +326,7 @@ class StationVue extends React.Component {
           </NavContainer>
           <Card>
             <CardContent>
-              <span> Mise en service </span> <br />
-              <span> 1.09 .1900 </span>
-            </CardContent>
-            <CardContent />
-            <CardContent>
-              <span>Correspondance</span>
-              <br />
+              <p>Correspondance</p>
               <StationLinesContainer>
                 {stationLines.map(line => (
                   <StationLine key={line}>
