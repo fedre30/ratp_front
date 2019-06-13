@@ -54,6 +54,7 @@ const Search = ({ suggestions }) => {
     setFilteredSuggestions([]);
     setShowSuggestions(false);
     setUserInput(e.currentTarget.innerText);
+    setOnSelect(e.currentTarget.innerText);
   };
 
   const onKeyDown = e => {
@@ -69,9 +70,9 @@ const Search = ({ suggestions }) => {
         return;
       }
 
-      setActiveSuggestion(-1);
+      setActiveSuggestion(activeSuggestion - 1);
     } else if (e.keyCode === 40) {
-      if (activeSuggestion - 1 === filteredSuggestions.length) {
+      if (activeSuggestion + 1 === filteredSuggestions.length) {
         return;
       }
 
