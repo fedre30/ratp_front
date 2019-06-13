@@ -18,8 +18,8 @@ const Modal = ({ title, lines, place, image, quality }) => (
     <div className="Modal-lines-label"> correspondances </div>{" "}
     <div className="Modal-lines-container">
       {" "}
-      {lines.map(line => (
-        <div className="Modal-lines" key={line}>
+      {lines.map((line, i) => (
+        <div className="Modal-lines" key={i}>
           <img src={require(`../../images/lines/${line}.png`)} alt={line} />{" "}
         </div>
       ))}
@@ -33,7 +33,7 @@ Modal.propTypes = {
   lines: PropTypes.array,
   place: PropTypes.string,
   image: PropTypes.string,
-  quality: PropTypes.string,
+  quality: PropTypes.number,
 };
 
 const ModalContainer = styled.div`

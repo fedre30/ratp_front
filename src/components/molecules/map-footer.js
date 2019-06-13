@@ -73,7 +73,7 @@ const MapFooter = ({ bestStations, worstStations }) => (
           <span className="bold">rampe pour l'accessibilité</span> et le{" "}
           <span className="bold">trafic</span>.
         </div>
-        <div div className="tooltip">
+        <div className="tooltip">
           Ex. une station qui a des toilettes, des rampes et pas beaucoup de trafic ou pollution est
           une station de bonne qualité
         </div>

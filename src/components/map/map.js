@@ -6,6 +6,7 @@ import Modal from "components/molecules/modal";
 import Icon from "components/atoms/icon";
 import MapKey from "components/molecules/mapkey";
 import Sidebar from "components/molecules/sidebar/sidebar";
+import { slugify } from "utils";
 import {
   ComposableMap,
   ZoomableGroup,
@@ -199,13 +200,11 @@ class MapComponent extends Component {
 
   filterStations = () => {
     const filteredStations = [];
-    this.state.stations.map(station => {
-      this.state.activatedFiltersLines.filter(filter => {
-        if (station.ligne === filter.line) {
-          filteredStations.push(station);
-        }
-      });
-    });
+    this.state.stations.map(station =>
+      this.state.activatedFiltersLines.filter(
+        filter => station.ligne === filter.line && filteredStations.push(station)
+      )
+    );
     this.setState({ filteredStations });
   };
 
@@ -249,9 +248,9 @@ class MapComponent extends Component {
         />
         <ButtonsMap>
           <ButtonWrapper>
-            {this.state.zoomButtons.map(button => (
+            {this.state.zoomButtons.map((button, i) => (
               <Button
-                key={button.icon}
+                key={i}
                 mapButton={true}
                 icon={button.icon}
                 iconColor={button.iconColor}
@@ -268,9 +267,9 @@ class MapComponent extends Component {
               <div>
                 <h3 className="Button-label">Indices de l'air</h3>
                 <ButtonWrapper>
-                  {this.state.pollutionButtons.map(button => (
-                    <>
-                      <a key={button.text} data-for={button.index} data-tip href="#">
+                  {this.state.pollutionButtons.map((button, i) => (
+                    <React.Fragment key={i}>
+                      <div data-for={button.index} data-tip>
                         <ReactTooltip place="bottom" type="light" effect="float" id={button.index}>
                           <div className="tooltip-label">Agent Polluant</div>
                           <div className="tooltip">{button.tooltip}</div>
@@ -290,8 +289,8 @@ class MapComponent extends Component {
                           active={button.active}
                           color={colors.secondary}
                         />
-                      </a>
-                    </>
+                      </div>
+                    </React.Fragment>
                   ))}
                 </ButtonWrapper>
               </div>
@@ -309,9 +308,9 @@ class MapComponent extends Component {
               <div>
                 <h3 className="Button-label">Toilettes</h3>
                 <ButtonWrapper>
-                  {this.state.toiletsButtons.map(button => (
+                  {this.state.toiletsButtons.map((button, i) => (
                     <Button
-                      key={button}
+                      key={i}
                       text={button.text}
                       value={"currentToiletsIndex"}
                       onClick={() => {
@@ -335,9 +334,9 @@ class MapComponent extends Component {
               <div>
                 <h3 className="Button-label">Accessibilité</h3>
                 <ButtonWrapper>
-                  {this.state.accessibilityButtons.map(button => (
+                  {this.state.accessibilityButtons.map((button, i) => (
                     <Button
-                      key={button.index}
+                      key={i}
                       text={button.text}
                       value={"currentAccessIndex"}
                       onClick={() => {
@@ -413,7 +412,7 @@ class MapComponent extends Component {
                   <Markers>
                     {this.state.pollution.objects.citeair_average.geometries.map((marker, i) => (
                       <Marker
-                        key={i.nomLong}
+                        key={i}
                         marker={marker}
                         style={{
                           default: {
@@ -458,9 +457,9 @@ class MapComponent extends Component {
                     {(this.state.filteredStations.length > 0
                       ? this.state.filteredStations
                       : this.state.stations
-                    ).map((marker, j) => (
+                    ).map((marker, i) => (
                       <Marker
-                        key={j.x}
+                        key={i}
                         marker={marker}
                         style={{
                           default: {
@@ -507,9 +506,9 @@ class MapComponent extends Component {
                     {(this.state.filteredStations.length > 0
                       ? this.state.filteredStations
                       : this.state.stations
-                    ).map((marker, j) => (
+                    ).map((marker, i) => (
                       <Marker
-                        key={j.y}
+                        key={i}
                         marker={marker}
                         style={{
                           default: {
@@ -544,9 +543,9 @@ class MapComponent extends Component {
                     {(this.state.filteredStations.length > 0
                       ? this.state.filteredStations
                       : this.state.stations
-                    ).map((marker, j) => (
+                    ).map((marker, i) => (
                       <Marker
-                        key={j.idrefliga}
+                        key={i}
                         marker={marker}
                         style={{
                           default: { fill: colors.tertiary, cursor: "pointer" },
@@ -583,9 +582,9 @@ class MapComponent extends Component {
                   {(this.state.filteredStations.length > 0
                     ? this.state.filteredStations
                     : this.state.stations
-                  ).map((marker, j) => (
+                  ).map((marker, i) => (
                     <Marker
-                      key={j.coordinates}
+                      key={i}
                       marker={marker}
                       onMouseEnter={() => {
                         this.showModal(marker);
@@ -593,6 +592,7 @@ class MapComponent extends Component {
                       onMouseLeave={() => {
                         this.hideModal();
                       }}
+                      onClick={() => (document.location = "/station/" + slugify(marker.nomGare))}
                       style={{
                         default: {
                           fill:
