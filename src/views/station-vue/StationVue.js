@@ -400,7 +400,6 @@ class StationVue extends React.Component {
                 </SubjectFilterWrapper>
               </div>
             </SubjectFilter>
-
             <LocalisationContainer>
               <p className="subtitle"> Localisation </p>
               <CustomTitle size={112}> {this.state.currentStation.trafic[0].ville} </CustomTitle>
