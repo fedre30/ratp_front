@@ -95,7 +95,10 @@ class BubbleChart extends React.Component {
           <text dy="6" fill="#fff" textAnchor="middle" fontSize={`${fontSize}px`} fontWeight="bold">
             {item.v}
           </text>
-          <text dy="50" dx="-20" fontSize="1.2rem" fill="#fff">
+          <text dy="40" dx="-20" fontSize="0.8rem" fill="#fff">
+            {item.measure}
+          </text>
+          <text dy="80" dx="-20" fontSize="1.2rem" fill="#fff">
             {item.text}
           </text>
         </g>

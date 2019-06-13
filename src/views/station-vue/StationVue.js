@@ -125,6 +125,7 @@ const SubjectFilter = styled.div`
     color: ${colors.primary};
     text-transform: uppercase;
     font-weight: 400;
+    font-weight: bold;
   }
   & > div {
     display: flex;
@@ -155,6 +156,7 @@ const LocalisationContainer = styled.div`
     color: ${colors.primary};
     font-size: 1.5rem;
     text-transform: uppercase;
+    font-weight: bold;
   }
   & > :first-child {
     margin-bottom: ${rem(10)};
@@ -424,14 +426,17 @@ class StationVue extends React.Component {
                 data={[
                   {
                     v: currentAir.lenght ? currentAir[0].properties.fields["pm10"] : 27.8,
+                    measure: "µg/m3",
                     text: "PM10",
                   },
                   {
                     v: currentAir.lenght ? currentAir[0].properties.fields["no2"] : 10.3,
+                    measure: "µg/m3",
                     text: "NO2",
                   },
                   {
                     v: currentAir.lenght ? currentAir[0].properties.fields["o3"] : 31.9,
+                    measure: "µg/m3",
                     text: "O3",
                   },
                 ]}

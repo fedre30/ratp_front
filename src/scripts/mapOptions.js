@@ -319,15 +319,13 @@ export const traficKeys = [
 //<-------------------------- QUALITY COLORS ------------------------------>
 
 export const qualityColors = [
-  "#ffffff",
-  "#e7e7ed",
-  "#cfd0db",
-  "#b7b8c9",
-  "#9fa1b7",
-  "#878aa5",
-  "#6f7293",
-  "#575b81",
-  "#3f436f",
-  "#272c5d",
-  "#10154c",
+  "#cceee9",
+  "#b2e5de",
+  "#99ddd3",
+  "#7fd4c8",
+  "#66ccbd",
+  "#4cc3b2",
+  "#32bba7",
+  "#19b29c",
+  "#00aa91",
 ];
