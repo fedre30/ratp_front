@@ -3,7 +3,7 @@ import { font } from "styles/const";
 import { rem } from "polished";
 
 const SubTitle = styled.h2`
-  max-width: ${rem(640)};
+  max-width: ${props => (props.width ? props.width : rem(640))};
   font-weight: ${font.weight.base};
   line-height: 1.25;
   font-size: ${props => (props.size ? rem(props.size) : rem(13))};

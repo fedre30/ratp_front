@@ -13,9 +13,18 @@ const LoaderContainer = styled.div`
 
 const Loading = () => (
   <LoaderContainer>
-    <div style={{ maxWidth: "590px" }}>
-      <i className="fa fa-refresh fa-spin" style={{ fontSize: rem(100) }} />
-    </div>
+    <div
+      style={{
+        maxWidth: "590px",
+      }}
+    >
+      <i
+        className="fa fa-refresh fa-spin"
+        style={{
+          fontSize: rem(100),
+        }}
+      />{" "}
+    </div>{" "}
   </LoaderContainer>
 );
 
