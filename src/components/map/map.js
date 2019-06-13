@@ -167,8 +167,7 @@ class MapComponent extends Component {
   getQualityColor = marker => {
     const { qualityColors } = this.state;
     const value = this.getStationQuality(marker) / 10;
-    const color = qualityColors.findIndex(color => ~~value == color);
-    console.log(color);
+    const color = qualityColors.filter((_, index) => ~~value == index);
     return color;
   };
 
@@ -609,7 +608,7 @@ class MapComponent extends Component {
                             (marker.sanitaire.length > 0 && filters[2].active) ||
                             (marker.access.length > 0 && filters[3].active)
                               ? colors.yellow
-                              : colors.tertiary,
+                              : this.getQualityColor(marker),
                           cursor: "pointer",
                         },
                         hover: { fill: colors.text, cursor: "pointer", outline: "none" },
