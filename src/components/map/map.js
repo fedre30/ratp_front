@@ -6,6 +6,7 @@ import Modal from "components/molecules/modal";
 import Icon from "components/atoms/icon";
 import MapKey from "components/molecules/mapkey";
 import Sidebar from "components/molecules/sidebar/sidebar";
+import { slugify } from "utils";
 import {
   ComposableMap,
   ZoomableGroup,
@@ -180,9 +181,9 @@ class MapComponent extends Component {
   compareAirAverage = marker => {
     const average = this.getAirAverage(marker);
     if (average > 30 && average < 31) {
-      return colors.yellow;
+      return colors.orange;
     } else if (average < 30) {
-      return colors.background;
+      return colors.vanilla;
     } else {
       return colors.red;
     }
@@ -199,22 +200,20 @@ class MapComponent extends Component {
 
   filterStations = () => {
     const filteredStations = [];
-    this.state.stations.map(station => {
-      this.state.activatedFiltersLines.filter(filter => {
-        if (station.ligne === filter.line) {
-          filteredStations.push(station);
-        }
-      });
-    });
+    this.state.stations.map(station =>
+      this.state.activatedFiltersLines.filter(
+        filter => station.ligne === filter.line && filteredStations.push(station)
+      )
+    );
     this.setState({ filteredStations });
   };
 
   getStationQuality = marker => {
     return marker.trafic.length > 0
       ? Math.round(
-          marker.sanitaire.length + (marker.access.length / marker.trafic[0].trafic) * 50000000
+          marker.sanitaire.length + (marker.access.length / marker.trafic[0].trafic) * 15000000
         )
-      : Math.round(marker.sanitaire.length + marker.access.length * 200);
+      : Math.round(marker.sanitaire.length + marker.access.length);
   };
 
   sortDescendingStations = (a, b) => {
@@ -249,9 +248,9 @@ class MapComponent extends Component {
         />
         <ButtonsMap>
           <ButtonWrapper>
-            {this.state.zoomButtons.map(button => (
+            {this.state.zoomButtons.map((button, i) => (
               <Button
-                key={button.icon}
+                key={i}
                 mapButton={true}
                 icon={button.icon}
                 iconColor={button.iconColor}
@@ -268,9 +267,9 @@ class MapComponent extends Component {
               <div>
                 <h3 className="Button-label">Indices de l'air</h3>
                 <ButtonWrapper>
-                  {this.state.pollutionButtons.map(button => (
-                    <>
-                      <a key={button.text} data-for={button.index} data-tip href="#">
+                  {this.state.pollutionButtons.map((button, i) => (
+                    <React.Fragment key={i}>
+                      <div data-for={button.index} data-tip>
                         <ReactTooltip place="bottom" type="light" effect="float" id={button.index}>
                           <div className="tooltip-label">Agent Polluant</div>
                           <div className="tooltip">{button.tooltip}</div>
@@ -290,8 +289,8 @@ class MapComponent extends Component {
                           active={button.active}
                           color={colors.secondary}
                         />
-                      </a>
-                    </>
+                      </div>
+                    </React.Fragment>
                   ))}
                 </ButtonWrapper>
               </div>
@@ -309,9 +308,9 @@ class MapComponent extends Component {
               <div>
                 <h3 className="Button-label">Toilettes</h3>
                 <ButtonWrapper>
-                  {this.state.toiletsButtons.map(button => (
+                  {this.state.toiletsButtons.map((button, i) => (
                     <Button
-                      key={button}
+                      key={i}
                       text={button.text}
                       value={"currentToiletsIndex"}
                       onClick={() => {
@@ -335,9 +334,9 @@ class MapComponent extends Component {
               <div>
                 <h3 className="Button-label">Accessibilité</h3>
                 <ButtonWrapper>
-                  {this.state.accessibilityButtons.map(button => (
+                  {this.state.accessibilityButtons.map((button, i) => (
                     <Button
-                      key={button.index}
+                      key={i}
                       text={button.text}
                       value={"currentAccessIndex"}
                       onClick={() => {
@@ -413,7 +412,7 @@ class MapComponent extends Component {
                   <Markers>
                     {this.state.pollution.objects.citeair_average.geometries.map((marker, i) => (
                       <Marker
-                        key={i.nomLong}
+                        key={i}
                         marker={marker}
                         style={{
                           default: {
@@ -458,9 +457,9 @@ class MapComponent extends Component {
                     {(this.state.filteredStations.length > 0
                       ? this.state.filteredStations
                       : this.state.stations
-                    ).map((marker, j) => (
+                    ).map((marker, i) => (
                       <Marker
-                        key={j.x}
+                        key={i}
                         marker={marker}
                         style={{
                           default: {
@@ -507,22 +506,19 @@ class MapComponent extends Component {
                     {(this.state.filteredStations.length > 0
                       ? this.state.filteredStations
                       : this.state.stations
-                    ).map((marker, j) => (
+                    ).map((marker, i) => (
                       <Marker
-                        key={j.y}
+                        key={i}
                         marker={marker}
                         style={{
                           default: {
                             fill: colors.tertiary,
                             cursor: "pointer",
                           },
-                          hover: { fill: colors.text, cursor: "pointer", outline: "none" },
+                          hover: { fill: colors.background, cursor: "pointer", outline: "none" },
                           pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                         }}
                       >
-                        {marker.sanitaire.length > 0 && !this.state.currentToiletsIndex && (
-                          <Icon color={colors.text} icon="toilets" size={40} alt="" />
-                        )}
                         {marker.sanitaire.length > 0 &&
                           marker.sanitaire[0].tarifGratuitPayant === "gratuit" &&
                           this.state.currentToiletsIndex === "gratuit" && (
@@ -547,9 +543,9 @@ class MapComponent extends Component {
                     {(this.state.filteredStations.length > 0
                       ? this.state.filteredStations
                       : this.state.stations
-                    ).map((marker, j) => (
+                    ).map((marker, i) => (
                       <Marker
-                        key={j.idrefliga}
+                        key={i}
                         marker={marker}
                         style={{
                           default: { fill: colors.tertiary, cursor: "pointer" },
@@ -557,9 +553,6 @@ class MapComponent extends Component {
                           pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                         }}
                       >
-                        {marker.access.length > 0 && !this.state.currentAccessIndex && (
-                          <Icon color={colors.text} icon="wheelchair" size={40} alt="" />
-                        )}
                         {marker.access.length > 0 &&
                           marker.access[0].pmr === 1 &&
                           this.state.currentAccessIndex === "pmr" && (
@@ -589,9 +582,9 @@ class MapComponent extends Component {
                   {(this.state.filteredStations.length > 0
                     ? this.state.filteredStations
                     : this.state.stations
-                  ).map((marker, j) => (
+                  ).map((marker, i) => (
                     <Marker
-                      key={j.coordinates}
+                      key={i}
                       marker={marker}
                       onMouseEnter={() => {
                         this.showModal(marker);
@@ -599,8 +592,16 @@ class MapComponent extends Component {
                       onMouseLeave={() => {
                         this.hideModal();
                       }}
+                      onClick={() => (document.location = "/station/" + slugify(marker.nomGare))}
                       style={{
-                        default: { fill: colors.tertiary, cursor: "pointer" },
+                        default: {
+                          fill:
+                            (marker.sanitaire.length > 0 && filters[2].active) ||
+                            (marker.access.length > 0 && filters[3].active)
+                              ? colors.yellow
+                              : colors.tertiary,
+                          cursor: "pointer",
+                        },
                         hover: { fill: colors.text, cursor: "pointer", outline: "none" },
                         pressed: { fill: "#FFFFFF", cursor: "pointer", outline: "none" },
                       }}

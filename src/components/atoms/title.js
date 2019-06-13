@@ -5,7 +5,7 @@ import { rem } from "polished";
 const Title = styled.h1`
   font-weight: ${font.weight.boldest};
   font-size: ${props => (props.size ? rem(props.size) : rem(50))};
-  font-style: italic;
+  font-style: ${props => (props.italic ? "italic" : "initial")};
   margin-bottom: ${rem(8)};
   color: #fff;
 `;

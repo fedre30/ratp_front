@@ -1,9 +1,10 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import Map from "./Map";
+
+import StationVue from "./StationVue";
 import { Header } from "components/molecules";
 
-class MapContainer extends React.Component {
+class StationContainer extends React.Component {
   state = {};
   componentDidMount() {}
   render() {
@@ -11,9 +12,9 @@ class MapContainer extends React.Component {
     return (
       <>
         <Header subTitle history={history} />
-        <Map />
+        <StationVue />
       </>
     );
   }
 }
-export default withRouter(MapContainer);
+export default withRouter(StationContainer);

@@ -36,6 +36,7 @@ Button.propTypes = {
   iconColor: PropTypes.string,
   active: PropTypes.bool,
   value: PropTypes.string,
+  background: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -47,7 +48,7 @@ const ButtonContainer = styled.div`
   width: auto;
   height: 50px;
   padding: 0 1rem;
-  background: ${colors.button};
+  background: ${props => (props.background ? props.background : colors.button)};
   border-radius: 0.3rem;
   cursor: pointer;
   margin: 1rem 1rem 1rem 0;
@@ -73,7 +74,7 @@ const ButtonMap = styled.div`
   width: 50px;
   height: 50px;
   border-radius: 2rem;
-  background: ${colors.text};
+  background: ${props => (props.buttonColor ? props.buttonColor : colors.text)};
   cursor: pointer;
   margin: 1rem 1rem 1rem 0;
   padding: 0.5rem 0.8rem;
