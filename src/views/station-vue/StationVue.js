@@ -24,6 +24,7 @@ const Hero = styled.div`
   background: url(${props => props.StationImg});
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   margin-bottom: ${rem(82)};
 `;
 
@@ -100,14 +101,12 @@ const CategoryIcon = styled.div`
   opacity: ${props => (props.active ? "1" : "0.3")};
   border-radius: 4px;
   display: inline-block;
-  padding: ${rem(20)};
+  padding: ${rem(30)};
   margin-bottom: ${rem(12)};
-  .active {
-  }
 `;
 
 const SubjectFilter = styled.div`
-  min-width: ${rem(400)};
+  min-width: ${rem(500)};
   & > p {
     margin-bottom: ${rem(27)};
     font-size: 1.5rem;
@@ -160,12 +159,10 @@ const CustomTitle = styled(Title)`
 
 const DataContainer = styled.div`
   width: 100%;
-  margin: 0 auto;
-  text-align: center;
-
+  margin-top: ${rem(100)};
   .title {
     color: ${colors.primary};
-    font-size: 1.2rem;
+    font-size: ${rem(27)};
     font-weight: bold;
     margin: 0 0 2rem 0;
   }
@@ -344,7 +341,7 @@ class StationVue extends React.Component {
               <div>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("trafic")}>
                   <CategoryIcon active={this.state.category.trafic.active}>
-                    <Icon icon={this.state.category.trafic.icon} size={30} color="#fff" />
+                    <Icon icon={this.state.category.trafic.icon} size={50} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.trafic.active && (
                     <p className="Category-name"> {this.state.category.trafic.title} </p>
@@ -352,7 +349,7 @@ class StationVue extends React.Component {
                 </SubjectFilterWrapper>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("airQuality")}>
                   <CategoryIcon active={this.state.category.airQuality.active}>
-                    <Icon icon={this.state.category.airQuality.icon} size={30} color="#fff" />
+                    <Icon icon={this.state.category.airQuality.icon} size={50} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.airQuality.active && (
                     <p className="Category-name"> {this.state.category.airQuality.title} </p>
@@ -360,7 +357,7 @@ class StationVue extends React.Component {
                 </SubjectFilterWrapper>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("toilets")}>
                   <CategoryIcon active={this.state.category.toilets.active}>
-                    <Icon icon={this.state.category.toilets.icon} size={30} color="#fff" />
+                    <Icon icon={this.state.category.toilets.icon} size={50} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.toilets.active && (
                     <p className="Category-name"> {this.state.category.toilets.title} </p>
@@ -368,7 +365,7 @@ class StationVue extends React.Component {
                 </SubjectFilterWrapper>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("wheelchair")}>
                   <CategoryIcon active={this.state.category.wheelchair.active}>
-                    <Icon icon={this.state.category.wheelchair.icon} size={30} color="#fff" />
+                    <Icon icon={this.state.category.wheelchair.icon} size={50} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.wheelchair.active && (
                     <p className="Category-name"> {this.state.category.wheelchair.title} </p>
@@ -376,48 +373,49 @@ class StationVue extends React.Component {
                 </SubjectFilterWrapper>
               </div>
             </SubjectFilter>
-            <DataContainer>
-              <p className="title"> {this.state.category[currentCategoryActiveCopy].title} </p>
-              {this.state.currentCategoryActive === "trafic" && (
-                <BarChart
-                  data={[
-                    { value: 400000, text: "moyenne voyageurs" },
-                    { value: 5897178, text: "voyageur max" },
-                  ]}
-                  size={[200, 800]}
-                />
-              )}
-              {this.state.currentCategoryActive === "airQuality" && (
-                <BubbleChart
-                  useLabels
-                  data={[
-                    {
-                      v: currentAir.lenght ? currentAir[0].properties.fields["pm10"] : 27.8,
-                      text: "PM10",
-                    },
-                    {
-                      v: currentAir.lenght ? currentAir[0].properties.fields["no2"] : 10.3,
-                      text: "NO2",
-                    },
-                    {
-                      v: currentAir.lenght ? currentAir[0].properties.fields["o3"] : 31.9,
-                      text: "O3",
-                    },
-                  ]}
-                />
-              )}
-              {this.state.currentCategoryActive === "toilets" && (
-                <Toilets toilet={currentStation.sanitaire[0]} />
-              )}
-              {this.state.currentCategoryActive === "wheelchair" && (
-                <Accesibility accesibility={currentStation.access[0]} />
-              )}
-            </DataContainer>
+
             <LocalisationContainer>
               <p className="subtitle"> Localisation </p>
               <CustomTitle size={112}> {this.state.currentStation.trafic[0].ville} </CustomTitle>
             </LocalisationContainer>
           </div>
+          <DataContainer>
+            <p className="title"> {this.state.category[currentCategoryActiveCopy].title} </p>
+            {this.state.currentCategoryActive === "trafic" && (
+              <BarChart
+                data={[
+                  { value: 400000, text: "moyenne voyageurs" },
+                  { value: 5897178, text: "voyageur max" },
+                ]}
+                size={[200, 800]}
+              />
+            )}
+            {this.state.currentCategoryActive === "airQuality" && (
+              <BubbleChart
+                useLabels
+                data={[
+                  {
+                    v: currentAir.lenght ? currentAir[0].properties.fields["pm10"] : 27.8,
+                    text: "PM10",
+                  },
+                  {
+                    v: currentAir.lenght ? currentAir[0].properties.fields["no2"] : 10.3,
+                    text: "NO2",
+                  },
+                  {
+                    v: currentAir.lenght ? currentAir[0].properties.fields["o3"] : 31.9,
+                    text: "O3",
+                  },
+                ]}
+              />
+            )}
+            {this.state.currentCategoryActive === "toilets" && (
+              <Toilets toilet={currentStation.sanitaire[0]} />
+            )}
+            {this.state.currentCategoryActive === "wheelchair" && (
+              <Accesibility accesibility={currentStation.access[0]} />
+            )}
+          </DataContainer>
         </StationContainer>
       </>
     ) : (
