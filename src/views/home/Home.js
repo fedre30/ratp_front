@@ -35,6 +35,10 @@ const Highlight = styled.span`
   color: ${colors.tertiary};
 `;
 
+const CustomLink = styled(Link)`
+  text-decoration: none;
+`;
+
 const Home = () => (
   <HomeContainer>
     <Background src={background} alt="" />
@@ -43,9 +47,9 @@ const Home = () => (
       <SubTitle size={60} bold style={{ marginBottom: rem(61) }} width={500}>
         Découvrez <Highlight>les stations</Highlight> qui font partie de votre quotidien.
       </SubTitle>
-      <Link to="/map">
+      <CustomLink to="/map">
         <Button text="Commencer l'éxpérience" background={colors.tertiary} active="true" />
-      </Link>
+      </CustomLink>
     </MainTitle>
   </HomeContainer>
 );

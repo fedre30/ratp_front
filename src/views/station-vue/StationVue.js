@@ -19,7 +19,7 @@ const Hero = styled.div`
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  height: ${rem(450)};
+  height: ${rem(650)};
   padding: ${rem(200)} ${rem(110)} ${rem(20)};
   background: url(${props => props.StationImg});
   background-size: cover;
