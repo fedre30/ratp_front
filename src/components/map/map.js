@@ -200,13 +200,13 @@ class MapComponent extends Component {
 
   filterStations = () => {
     const filteredStations = [];
-    this.state.stations.map(station => {
+    this.state.stations.map(station =>
       this.state.activatedFiltersLines.filter(filter => {
         if (station.ligne === filter.line) {
           filteredStations.push(station);
         }
-      });
-    });
+      })
+    );
     this.setState({ filteredStations });
   };
 
@@ -270,8 +270,8 @@ class MapComponent extends Component {
                 <h3 className="Button-label">Indices de l'air</h3>
                 <ButtonWrapper>
                   {this.state.pollutionButtons.map((button, i) => (
-                    <>
-                      <a key={i} data-for={button.index} data-tip href="#">
+                    <React.Fragment key={i}>
+                      <div data-for={button.index} data-tip>
                         <ReactTooltip place="bottom" type="light" effect="float" id={button.index}>
                           <div className="tooltip-label">Agent Polluant</div>
                           <div className="tooltip">{button.tooltip}</div>
@@ -291,8 +291,8 @@ class MapComponent extends Component {
                           active={button.active}
                           color={colors.secondary}
                         />
-                      </a>
-                    </>
+                      </div>
+                    </React.Fragment>
                   ))}
                 </ButtonWrapper>
               </div>
