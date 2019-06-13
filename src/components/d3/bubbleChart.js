@@ -6,8 +6,8 @@ class BubbleChart extends React.Component {
   static defaultProps = {
     data: [],
     useLabels: false,
-    width: 300,
-    height: 300,
+    width: 800,
+    height: 550,
   };
 
   constructor(props) {
@@ -44,7 +44,7 @@ class BubbleChart extends React.Component {
     const fx = d3
       .scaleSqrt()
       .domain([this.minValue, this.maxValue])
-      .range([50, 100]);
+      .range([150, 250]);
 
     return fx(value);
   };
@@ -72,9 +72,9 @@ class BubbleChart extends React.Component {
   };
 
   renderBubbles = data => {
-    const minValue = 27;
+    const minValue = 15;
 
-    const maxValue = 31;
+    const maxValue = 36;
 
     const color = d3
       .scaleLinear()
@@ -90,12 +90,14 @@ class BubbleChart extends React.Component {
           key={index}
           transform={`translate(${props.width / 2 + item.x}, ${props.height / 2 + item.y})`}
         >
-          <circle r={this.radiusScale(item.v)} fill={color(item.v)} />{" "}
+          <circle r={this.radiusScale(item.v)} fill={color(item.v)} />
           <text dy="6" fill="#fff" textAnchor="middle" fontSize={`${fontSize}px`} fontWeight="bold">
             {" "}
             {item.v}{" "}
           </text>{" "}
-          <text>{item.text}</text>
+          <text dy="50" dx="-20" fontSize="1.2rem" fill="#fff">
+            {item.text}
+          </text>
         </g>
       );
     });

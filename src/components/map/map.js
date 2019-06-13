@@ -6,6 +6,7 @@ import Modal from "components/molecules/modal";
 import Icon from "components/atoms/icon";
 import MapKey from "components/molecules/mapkey";
 import Sidebar from "components/molecules/sidebar/sidebar";
+import { slugify } from "utils";
 import {
   ComposableMap,
   ZoomableGroup,
@@ -595,10 +596,12 @@ class MapComponent extends Component {
                       marker={marker}
                       onMouseEnter={() => {
                         this.showModal(marker);
+                        console.log(marker);
                       }}
                       onMouseLeave={() => {
                         this.hideModal();
                       }}
+                      onClick={() => (document.location = "/station/" + slugify(marker.nomGare))}
                       style={{
                         default: { fill: colors.tertiary, cursor: "pointer" },
                         hover: { fill: colors.text, cursor: "pointer", outline: "none" },

@@ -14,7 +14,9 @@ class BarChart extends React.Component {
   }
   createBarChart = () => {
     const node = this.node;
-    const dataMax = d3.max(i => this.props.data[i]);
+    const dataValue = this.props.data.map(v => v.value);
+    const dataText = this.props.data.map(v => v.text);
+    const dataMax = d3.max(dataValue);
 
     const xScale = d3
       .scaleLinear()
@@ -23,25 +25,25 @@ class BarChart extends React.Component {
 
     d3.select(node)
       .selectAll("rect")
-      .data(i => this.props.data[i])
+      .data(dataValue)
       .enter()
       .append("rect");
 
     d3.select(node)
       .selectAll("text")
-      .data(i => this.props.data[i])
+      .data(dataValue)
       .enter()
       .append("text");
 
     d3.select(node)
       .selectAll("rect")
-      .data(i => this.props.data[i])
+      .data(dataValue)
       .exit()
       .remove();
 
     d3.select(node)
       .selectAll("rect")
-      .data(i => this.props.data[i])
+      .data(dataValue)
       .style("fill", (d, i) => (d % i === 0 ? "#3B3F6C" : "#A4CBD8  "))
       .attr("y", (d, i) => i * 50)
       .attr("x", 0)
@@ -50,13 +52,13 @@ class BarChart extends React.Component {
 
     d3.select(node)
       .selectAll("text")
-      .text("hello")
+      .text((d, i) => dataValue[i] + " " + dataText[i])
       .style("fill", "#fff")
-      .attr("dy", (d, i) => (i + 1) * 25);
+      .attr("dy", (d, i) => (i + 1) * 40)
+      .attr("dx", d => this.props.size[3] - xScale(d) / 2);
   };
   render() {
-    console.log(this.props.data[0].value);
-    return <svg ref={node => (this.node = node)} width={500} height={500} />;
+    return <svg ref={node => (this.node = node)} width={800} height={200} />;
   }
 }
 export default BarChart;
