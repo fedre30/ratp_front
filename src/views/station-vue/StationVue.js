@@ -113,6 +113,7 @@ const SubjectFilter = styled.div`
     color: ${colors.primary};
     text-transform: uppercase;
     font-weight: 400;
+    font-weight: bold;
   }
   & > div {
     display: flex;
@@ -143,6 +144,7 @@ const LocalisationContainer = styled.div`
     color: ${colors.primary};
     font-size: 1.5rem;
     text-transform: uppercase;
+    font-weight: bold;
   }
   & > :first-child {
     margin-bottom: ${rem(10)};
