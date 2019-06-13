@@ -5,8 +5,8 @@ import { colors } from "styles/const";
 
 const MapKey = ({ items }) => (
   <MapKeyContainer>
-    {items.map(item => (
-      <div key={item}>
+    {items.map((item, i) => (
+      <div key={i}>
         <div
           className="bar"
           style={{
