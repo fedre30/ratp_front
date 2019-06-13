@@ -15,17 +15,26 @@ import { colors } from "styles/const";
 
 const Hero = styled.div`
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   width: 100%;
   height: ${rem(650)};
-  padding: ${rem(200)} ${rem(110)} ${rem(20)};
-  background: url(${props => props.StationImg});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
   margin-bottom: ${rem(82)};
+  & > div {
+    padding: ${rem(260)} ${rem(116)} ${rem(20)};
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    right: 0;
+    left: 0;
+    padding: 0 ${rem(110)} 0;
+    height: 100%;
+    background: url(${props => props.StationImg});
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: grayscale(80%);
+  }
 `;
 
 const StationContainer = styled.div`
@@ -44,7 +53,7 @@ const Text = styled.p`
   width: ${rem(580)};
   line-height: 1.5;
   font-size: ${rem(15)};
-  margin-bottom: ${rem(75)};
+  margin-bottom: ${rem(155)};
 `;
 
 const NavContainer = styled.ul`
@@ -101,7 +110,7 @@ const CategoryIcon = styled.div`
   opacity: ${props => (props.active ? "1" : "0.3")};
   border-radius: 4px;
   display: inline-block;
-  padding: ${rem(30)};
+  padding: ${rem(25)};
   margin-bottom: ${rem(12)};
 `;
 
@@ -161,6 +170,7 @@ const CustomTitle = styled(Title)`
 
 const DataContainer = styled.div`
   width: 100%;
+  min-height: ${rem(500)};
   margin-top: ${rem(100)};
   .title {
     color: ${colors.primary};
@@ -316,38 +326,40 @@ class StationVue extends React.Component {
     const currentCategoryActiveCopy = this.state.currentCategoryActive;
 
     const { currentStation, stationLines, currentAir } = this.state;
-
+    console.log(currentStation);
     return currentStation && stationLines ? (
       <>
         <Hero StationImg={currentStation.image}>
-          <Title
-            style={{
-              marginBottom: rem(16),
-            }}
-          >
-            {currentStation.nomGare}
-          </Title>
-          <Text> {currentStation.description} </Text>
-          <NavContainer>
-            <li>
-              <a href="/"> Accueil </a>
-            </li>
-            <li>
-              <a href="/map"> Map </a>
-            </li>
-          </NavContainer>
-          <Card>
-            <CardContent>
-              <p> Correspondance </p>
-              <StationLinesContainer>
-                {stationLines.map(line => (
-                  <StationLine key={line}>
-                    <img src={require(`../../images/lines/${line}.png`)} alt={line} />
-                  </StationLine>
-                ))}
-              </StationLinesContainer>
-            </CardContent>
-          </Card>
+          <div>
+            <Title
+              style={{
+                marginBottom: rem(32),
+              }}
+            >
+              {currentStation.nomGare}
+            </Title>
+            <Text> {currentStation.description} </Text>
+            <NavContainer>
+              <li>
+                <a href="/"> Accueil </a>
+              </li>
+              <li>
+                <a href="/map"> Map </a>
+              </li>
+            </NavContainer>
+            <Card>
+              <CardContent>
+                <p> Correspondance </p>
+                <StationLinesContainer>
+                  {stationLines.map(line => (
+                    <StationLine key={line}>
+                      <img src={require(`../../images/lines/${line}.png`)} alt={line} />
+                    </StationLine>
+                  ))}
+                </StationLinesContainer>
+              </CardContent>
+            </Card>
+          </div>
         </Hero>
         <StationContainer>
           <div>
@@ -356,7 +368,7 @@ class StationVue extends React.Component {
               <div>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("trafic")}>
                   <CategoryIcon active={this.state.category.trafic.active}>
-                    <Icon icon={this.state.category.trafic.icon} size={50} color="#fff" />
+                    <Icon icon={this.state.category.trafic.icon} size={40} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.trafic.active && (
                     <p className="Category-name"> {this.state.category.trafic.title} </p>
@@ -364,7 +376,7 @@ class StationVue extends React.Component {
                 </SubjectFilterWrapper>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("airQuality")}>
                   <CategoryIcon active={this.state.category.airQuality.active}>
-                    <Icon icon={this.state.category.airQuality.icon} size={50} color="#fff" />
+                    <Icon icon={this.state.category.airQuality.icon} size={40} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.airQuality.active && (
                     <p className="Category-name"> {this.state.category.airQuality.title} </p>
@@ -372,7 +384,7 @@ class StationVue extends React.Component {
                 </SubjectFilterWrapper>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("toilets")}>
                   <CategoryIcon active={this.state.category.toilets.active}>
-                    <Icon icon={this.state.category.toilets.icon} size={50} color="#fff" />
+                    <Icon icon={this.state.category.toilets.icon} size={40} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.toilets.active && (
                     <p className="Category-name"> {this.state.category.toilets.title} </p>
@@ -380,7 +392,7 @@ class StationVue extends React.Component {
                 </SubjectFilterWrapper>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("wheelchair")}>
                   <CategoryIcon active={this.state.category.wheelchair.active}>
-                    <Icon icon={this.state.category.wheelchair.icon} size={50} color="#fff" />
+                    <Icon icon={this.state.category.wheelchair.icon} size={40} color="#fff" />
                   </CategoryIcon>
                   {this.state.category.wheelchair.active && (
                     <p className="Category-name"> {this.state.category.wheelchair.title} </p>
@@ -399,8 +411,8 @@ class StationVue extends React.Component {
             {this.state.currentCategoryActive === "trafic" && (
               <BarChart
                 data={[
-                  { value: 400000, text: "moyenne voyageurs" },
-                  { value: 5897178, text: "voyageur max" },
+                  { value: ~~(currentStation.trafic[0].trafic / 2.2), text: "Moyenne voyageurs" },
+                  { value: currentStation.trafic[0].trafic, text: "Voyageurs max" },
                 ]}
                 size={[200, 800]}
               />

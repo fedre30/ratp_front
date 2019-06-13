@@ -49,10 +49,16 @@ class BarChart extends React.Component {
 
     d3.select(node)
       .selectAll("text")
-      .text((d, i) => dataValue[i] + " " + dataText[i])
+      .text(
+        (d, i) =>
+          dataValue[i].toString().replace(/(?!^)(?=(?:\d{3})+(?:\.|$))/gm, " ") + " " + dataText[i]
+      )
       .style("fill", "#fff")
+      .style("font-size", "20px")
+      .style("font-weight", "bold")
+      .style("font-familly", "roboto")
       .attr("dy", (d, i) => (i + 1) * 40)
-      .attr("dx", d => this.props.size[3] - xScale(d) / 2);
+      .attr("dx", 30);
   };
   render() {
     return <svg ref={node => (this.node = node)} width={800} height={200} />;
