@@ -7,8 +7,10 @@ import { slugify } from "utils";
 // import _ from "lodash";
 import pollution from "scripts/average_air";
 import { Title, Icon, Loading } from "components/atoms";
-import BarChart from "components/d3/barChart";
-import BubbleChart from "components/d3/bubbleChart";
+import BarChart from "components/station-visu/barChart";
+import BubbleChart from "components/station-visu/bubbleChart";
+import Toilets from "components/station-visu/toilets";
+import Accesibility from "components/station-visu/accesibility";
 import { colors } from "styles/const";
 
 const Hero = styled.div`
@@ -48,7 +50,7 @@ const NavContainer = styled.ul`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: ${rem(160)};
+  max-width: ${rem(120)};
   position: relative;
   & > li {
     display: flex;
@@ -83,19 +85,12 @@ const Card = styled.div`
 `;
 
 const CardContent = styled.div`
-  & > span {
+  & > p {
+    margin-bottom: ${rem(15)};
     color: #3a3d60;
-    &:first-child {
-      text-transform: uppercase;
-      font-size: ${rem(13)};
-      font-weight: 700;
-      line-height: ${rem(25)};
-    }
-  }
-  &:nth-child(2) {
-    background: #3a3d60;
-    width: ${rem(1)};
-    height: ${rem(40)};
+    text-transform: uppercase;
+    font-size: ${rem(13)};
+    font-weight: 700;
   }
 `;
 
@@ -315,6 +310,7 @@ class StationVue extends React.Component {
     const currentCategoryActiveCopy = this.state.currentCategoryActive;
 
     const { currentStation, stationLines, currentAir } = this.state;
+
     return currentStation && stationLines ? (
       <>
         <Hero StationImg={currentStation.image}>
@@ -330,13 +326,7 @@ class StationVue extends React.Component {
           </NavContainer>
           <Card>
             <CardContent>
-              <span> Mise en service </span> <br />
-              <span> 1.09 .1900 </span>
-            </CardContent>
-            <CardContent />
-            <CardContent>
-              <span>Correspondance</span>
-              <br />
+              <p>Correspondance</p>
               <StationLinesContainer>
                 {stationLines.map(line => (
                   <StationLine key={line}>
@@ -415,6 +405,12 @@ class StationVue extends React.Component {
                     },
                   ]}
                 />
+              )}
+              {this.state.currentCategoryActive === "toilets" && (
+                <Toilets toilet={currentStation.sanitaire[0]} />
+              )}
+              {this.state.currentCategoryActive === "wheelchair" && (
+                <Accesibility accesibility={currentStation.access[0]} />
               )}
             </DataContainer>
             <LocalisationContainer>
