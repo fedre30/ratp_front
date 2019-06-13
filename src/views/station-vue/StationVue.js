@@ -409,14 +409,17 @@ class StationVue extends React.Component {
                 data={[
                   {
                     v: currentAir.lenght ? currentAir[0].properties.fields["pm10"] : 27.8,
+                    measure: "µg/m3",
                     text: "PM10",
                   },
                   {
                     v: currentAir.lenght ? currentAir[0].properties.fields["no2"] : 10.3,
+                    measure: "µg/m3",
                     text: "NO2",
                   },
                   {
                     v: currentAir.lenght ? currentAir[0].properties.fields["o3"] : 31.9,
+                    measure: "µg/m3",
                     text: "O3",
                   },
                 ]}

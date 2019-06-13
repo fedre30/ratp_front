@@ -90,14 +90,19 @@ class BubbleChart extends React.Component {
           key={index}
           transform={`translate(${props.width / 2 + item.x}, ${props.height / 2 + item.y})`}
         >
-          <circle r={this.radiusScale(item.v)} fill={color(item.v)} />
+          <circle r={this.radiusScale(item.v)} fill={color(item.v)} />{" "}
           <text dy="6" fill="#fff" textAnchor="middle" fontSize={`${fontSize}px`} fontWeight="bold">
             {" "}
             {item.v}{" "}
           </text>{" "}
-          <text dy="50" dx="-20" fontSize="1.2rem" fill="#fff">
-            {item.text}
-          </text>
+          <text dy="40" dx="-20" fontSize="0.8rem" fill="#fff">
+            {" "}
+            {item.measure}{" "}
+          </text>{" "}
+          <text dy="80" dx="-20" fontSize="1.2rem" fill="#fff">
+            {" "}
+            {item.text}{" "}
+          </text>{" "}
         </g>
       );
     });
