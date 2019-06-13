@@ -29,6 +29,7 @@ import {
   accessibilityButtons,
   airKeys,
   traficKeys,
+  qualityColors,
 } from "scripts/mapOptions";
 import {
   MapWrapper,
@@ -65,6 +66,7 @@ class MapComponent extends Component {
       accessibilityButtons: accessibilityButtons,
       airKeys: airKeys,
       traficKeys: traficKeys,
+      qualityColors: qualityColors,
       underground: underground,
       filters: filters,
       zoomButtons: zoomButtons,
@@ -160,6 +162,13 @@ class MapComponent extends Component {
         zoom: 1,
       });
     }
+  };
+
+  getQualityColor = marker => {
+    const { qualityColors } = this.state;
+    const value = this.getStationQuality(marker) / 10;
+    const color = qualityColors.filter((_, index) => ~~value == index);
+    return color;
   };
 
   // <----------------------------- FILTERS ------------------------------------>
@@ -599,7 +608,7 @@ class MapComponent extends Component {
                             (marker.sanitaire.length > 0 && filters[2].active) ||
                             (marker.access.length > 0 && filters[3].active)
                               ? colors.yellow
-                              : colors.tertiary,
+                              : this.getQualityColor(marker),
                           cursor: "pointer",
                         },
                         hover: { fill: colors.text, cursor: "pointer", outline: "none" },

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { rem } from "polished";
+import { Link } from "react-router-dom";
 
 import { colors } from "styles/const";
 import { Title, SubTitle, Icon } from "components/atoms";
@@ -24,12 +25,19 @@ const RightContainer = styled.div`
   justify-content: space-between;
 `;
 
+const CustomLink = styled(Link)`
+  text-decoration: none;
+`;
+
 const Header = ({ subTitle, background }) => (
   <WrapperHeader background={background}>
     <div>
-      <Title size={24} italic>
-        Tube.
-      </Title>
+      <CustomLink to="/">
+        <Title size={24} italic>
+          Tube.
+        </Title>
+      </CustomLink>
+
       {subTitle && <SubTitle italic>Transport urbains pour les besoins environnementaux </SubTitle>}
     </div>
     <RightContainer>

@@ -10,6 +10,8 @@ import toilets from "images/icons/toilets.svg";
 const ToiletsContainer = styled.div`
   position: relative;
   display: inline-block;
+  margin: 0 auto;
+  margin-left: ${rem(300)};
 `;
 
 const ToiletsCircle = styled.div`
@@ -18,6 +20,7 @@ const ToiletsCircle = styled.div`
   background: ${colors.primary};
   border-radius: 50%;
   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.25);
+  font-family: "roboto";
 `;
 
 const ToiletsLocalisation = styled.div`
@@ -35,6 +38,10 @@ const ToiletsLocalisation = styled.div`
   & p:first-child {
     margin-bottom: ${rem(10)};
   }
+  & p {
+    text-align: center;
+    color: ${colors.primary};
+  }
 `;
 
 const ToiletsFree = styled.div`
@@ -44,8 +51,10 @@ const ToiletsFree = styled.div`
   right: ${rem(-190)};
   width: ${rem(220)};
   display: inline-block;
-  padding: ${rem(10)} ${rem(0)};
+  padding: ${rem(15)} ${rem(40)};
   background: ${colors.secondary};
+  font-weight: bold;
+  text-align: center;
   color: #fff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
@@ -54,11 +63,12 @@ const ToiletsButton = styled.div`
   position: absolute;
   z-index: -1;
   bottom: ${rem(70)};
-  left: ${rem(-195)};
+  left: ${rem(-200)};
   width: ${rem(220)};
   display: inline-block;
-  padding: ${rem(10)} ${rem(0)};
+  padding: ${rem(15)} ${rem(20)};
   background: ${colors.secondary};
+  font-weight: bold;
   color: #fff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
