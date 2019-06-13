@@ -89,12 +89,12 @@ class BubbleChart extends React.Component {
         <g
           key={index}
           transform={`translate(${props.width / 2 + item.x}, ${props.height / 2 + item.y})`}
+          style={{ transition: "150ms" }}
         >
           <circle r={this.radiusScale(item.v)} fill={color(item.v)} />
           <text dy="6" fill="#fff" textAnchor="middle" fontSize={`${fontSize}px`} fontWeight="bold">
-            {" "}
-            {item.v}{" "}
-          </text>{" "}
+            {item.v}
+          </text>
           <text dy="50" dx="-20" fontSize="1.2rem" fill="#fff">
             {item.text}
           </text>
@@ -109,8 +109,7 @@ class BubbleChart extends React.Component {
     if (this.state.data.length) {
       return (
         <svg width={this.props.width} height={this.props.height}>
-          {" "}
-          {this.renderBubbles(this.state.data)}{" "}
+          {this.renderBubbles(this.state.data)}
         </svg>
       );
     }
