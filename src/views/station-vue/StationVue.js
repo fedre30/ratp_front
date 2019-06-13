@@ -7,8 +7,9 @@ import { slugify } from "utils";
 // import _ from "lodash";
 import pollution from "scripts/average_air";
 import { Title, Icon, Loading } from "components/atoms";
-import BarChart from "components/d3/barChart";
-import BubbleChart from "components/d3/bubbleChart";
+import BarChart from "components/station-visu/barChart";
+import BubbleChart from "components/station-visu/bubbleChart";
+import Toilets from "components/station-visu/toilets";
 import { colors } from "styles/const";
 
 const Hero = styled.div`
@@ -48,7 +49,7 @@ const NavContainer = styled.ul`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: ${rem(160)};
+  max-width: ${rem(120)};
   position: relative;
   & > li {
     display: flex;
@@ -315,6 +316,7 @@ class StationVue extends React.Component {
     const currentCategoryActiveCopy = this.state.currentCategoryActive;
 
     const { currentStation, stationLines, currentAir } = this.state;
+    console.log(currentStation);
     return currentStation && stationLines ? (
       <>
         <Hero StationImg={currentStation.image}>
@@ -415,6 +417,9 @@ class StationVue extends React.Component {
                     },
                   ]}
                 />
+              )}
+              {this.state.currentCategoryActive === "toilets" && (
+                <Toilets toilet={currentStation.sanitaire[0]} />
               )}
             </DataContainer>
             <LocalisationContainer>
