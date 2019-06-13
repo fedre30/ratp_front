@@ -315,3 +315,19 @@ export const traficKeys = [
     text: "> 4 millions par an",
   },
 ];
+
+//<-------------------------- QUALITY COLORS ------------------------------>
+
+export const qualityColors = [
+  "#ffffff",
+  "#e7e7ed",
+  "#cfd0db",
+  "#b7b8c9",
+  "#9fa1b7",
+  "#878aa5",
+  "#6f7293",
+  "#575b81",
+  "#3f436f",
+  "#272c5d",
+  "#10154c",
+];

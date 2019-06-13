@@ -260,18 +260,25 @@ class StationVue extends React.Component {
     const currentStation = this.state.stations.filter(
       station => slugify(station.nomGare) === this.state.stationFromUrl
     )[0];
-    this.setState({ currentStation: currentStation }, () => {
-      this.getCorrespondingStation();
-      this.getAverageAir();
-    });
+    this.setState(
+      {
+        currentStation: currentStation,
+      },
+      () => {
+        this.getCorrespondingStation();
+        this.getAverageAir();
+      }
+    );
   };
 
   getAverageAir = () => {
     const curr = this.state.currentStation;
     const air = this.state.pollution.objects.citeair_average.geometries.filter(
-      air => curr.access[0].codeInsee === Math.floor(air.properties.fields.ninsee)
+      air => curr.codeInsee === Math.floor(air.properties.fields.ninsee)
     );
-    this.setState({ currentAir: air });
+    this.setState({
+      currentAir: air,
+    });
   };
 
   getCorrespondingStation = () => {
@@ -311,8 +318,14 @@ class StationVue extends React.Component {
     return currentStation && stationLines ? (
       <>
         <Hero StationImg={currentStation.image}>
-          <Title style={{ marginBottom: rem(16) }}>{currentStation.nomGare}</Title>
-          <Text>{currentStation.description}</Text>
+          <Title
+            style={{
+              marginBottom: rem(16),
+            }}
+          >
+            {currentStation.nomGare}
+          </Title>
+          <Text> {currentStation.description} </Text>
           <NavContainer>
             <li>
               <a href="/"> Accueil </a>
@@ -323,11 +336,11 @@ class StationVue extends React.Component {
           </NavContainer>
           <Card>
             <CardContent>
-              <p>Correspondance</p>
+              <p> Correspondance </p>
               <StationLinesContainer>
                 {stationLines.map(line => (
                   <StationLine key={line}>
-                    <img src={require(`../../images/lines/${line}.png`)} alt={line} />{" "}
+                    <img src={require(`../../images/lines/${line}.png`)} alt={line} />
                   </StationLine>
                 ))}
               </StationLinesContainer>
