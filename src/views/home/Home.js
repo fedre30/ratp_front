@@ -29,9 +29,37 @@ const MainTitle = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  animation: focus-in-expand 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 
   .margin {
     margin: 2rem 0;
+  }
+
+  @-webkit-keyframes focus-in-expand {
+    0% {
+      letter-spacing: -0.5em;
+      -webkit-filter: blur(12px);
+      filter: blur(12px);
+      opacity: 0;
+    }
+    100% {
+      -webkit-filter: blur(0px);
+      filter: blur(0px);
+      opacity: 1;
+    }
+  }
+  @keyframes focus-in-expand {
+    0% {
+      letter-spacing: -0.5em;
+      -webkit-filter: blur(12px);
+      filter: blur(12px);
+      opacity: 0;
+    }
+    100% {
+      -webkit-filter: blur(0px);
+      filter: blur(0px);
+      opacity: 1;
+    }
   }
 `;
 
@@ -44,7 +72,13 @@ const CustomLink = styled(Link)`
 `;
 
 const Source = styled.div`
-  margin-top: 4rem;
+  margin-top: 10rem;
+  color: ${colors.text};
+  font-family: "Roboto";
+  a {
+    color: ${colors.secondary};
+    text-decoration: none;
+  }
 `;
 
 const Home = () => (
@@ -70,7 +104,8 @@ const Home = () => (
         <Button text="Commencer l'éxpérience" background={colors.tertiary} active="true" />
       </CustomLink>
       <Source>
-        Source: <CustomLink>Open Data RATP</CustomLink>
+        Source:
+        <a href="https://data.ratp.fr/explore/?sort=modified"> Open Data RATP</a>
       </Source>
     </MainTitle>
   </HomeContainer>

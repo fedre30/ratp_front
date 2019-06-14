@@ -14,11 +14,8 @@ const Button = ({ text, onClick, icon, iconColor, mapButton, active, value }) =>
       </ButtonMap>
     ) : (
       <ButtonContainer>
-        <div className={active ? "flex" : "disable flex"}>
-          <div className="Button-title" onClick={onClick}>
-            {" "}
-            {text}{" "}
-          </div>{" "}
+        <div className={active ? "flex" : "disable flex"} onClick={onClick}>
+          <div className="Button-title"> {text} </div>{" "}
           {icon && (
             <div className="Button-icon">
               <Icon color={iconColor} icon={icon} size={32} />{" "}
