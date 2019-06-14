@@ -336,87 +336,93 @@ class StationVue extends React.Component {
                 marginBottom: rem(32),
               }}
             >
-              {currentStation.nomGare}
-            </Title>
-            <Text> {currentStation.description} </Text>
+              {currentStation.nomGare}{" "}
+            </Title>{" "}
+            <Text> {currentStation.description} </Text>{" "}
             <NavContainer>
               <li>
-                <a href="/"> Accueil </a>
-              </li>
+                <a href="/"> Accueil </a>{" "}
+              </li>{" "}
               <li>
-                <a href="/map"> Map </a>
-              </li>
-            </NavContainer>
+                <a href="/map"> Map </a>{" "}
+              </li>{" "}
+            </NavContainer>{" "}
             <Card>
               <CardContent>
-                <p> Correspondance </p>
+                <p> Correspondance </p>{" "}
                 <StationLinesContainer>
+                  {" "}
                   {stationLines.map(line => (
                     <StationLine key={line}>
-                      <img src={require(`../../images/lines/${line}.png`)} alt={line} />
+                      <img src={require(`../../images/lines/${line}.png`)} alt={line} />{" "}
                     </StationLine>
-                  ))}
-                </StationLinesContainer>
-              </CardContent>
-            </Card>
-          </div>
-        </Hero>
+                  ))}{" "}
+                </StationLinesContainer>{" "}
+              </CardContent>{" "}
+            </Card>{" "}
+          </div>{" "}
+        </Hero>{" "}
         <StationContainer>
           <div>
             <SubjectFilter>
-              <p className="subtitle"> Les differents sujets </p>
+              <p className="subtitle"> Les differents sujets </p>{" "}
               <div>
                 <SubjectFilterWrapper onClick={() => this.changeFilter("trafic")}>
                   <CategoryIcon active={this.state.category.trafic.active}>
                     <Icon icon={this.state.category.trafic.icon} size={40} color="#fff" />
-                  </CategoryIcon>
+                  </CategoryIcon>{" "}
                   {this.state.category.trafic.active && (
                     <p className="Category-name"> {this.state.category.trafic.title} </p>
-                  )}
-                </SubjectFilterWrapper>
+                  )}{" "}
+                </SubjectFilterWrapper>{" "}
                 <SubjectFilterWrapper onClick={() => this.changeFilter("airQuality")}>
                   <CategoryIcon active={this.state.category.airQuality.active}>
                     <Icon icon={this.state.category.airQuality.icon} size={40} color="#fff" />
-                  </CategoryIcon>
+                  </CategoryIcon>{" "}
                   {this.state.category.airQuality.active && (
                     <p className="Category-name"> {this.state.category.airQuality.title} </p>
-                  )}
-                </SubjectFilterWrapper>
+                  )}{" "}
+                </SubjectFilterWrapper>{" "}
                 <SubjectFilterWrapper onClick={() => this.changeFilter("toilets")}>
                   <CategoryIcon active={this.state.category.toilets.active}>
                     <Icon icon={this.state.category.toilets.icon} size={40} color="#fff" />
-                  </CategoryIcon>
+                  </CategoryIcon>{" "}
                   {this.state.category.toilets.active && (
                     <p className="Category-name"> {this.state.category.toilets.title} </p>
-                  )}
-                </SubjectFilterWrapper>
+                  )}{" "}
+                </SubjectFilterWrapper>{" "}
                 <SubjectFilterWrapper onClick={() => this.changeFilter("wheelchair")}>
                   <CategoryIcon active={this.state.category.wheelchair.active}>
                     <Icon icon={this.state.category.wheelchair.icon} size={40} color="#fff" />
-                  </CategoryIcon>
+                  </CategoryIcon>{" "}
                   {this.state.category.wheelchair.active && (
                     <p className="Category-name"> {this.state.category.wheelchair.title} </p>
-                  )}
-                </SubjectFilterWrapper>
-              </div>
-            </SubjectFilter>
-
+                  )}{" "}
+                </SubjectFilterWrapper>{" "}
+              </div>{" "}
+            </SubjectFilter>{" "}
             <LocalisationContainer>
-              <p className="subtitle"> Localisation </p>
-              <CustomTitle size={112}> {this.state.currentStation.trafic[0].ville} </CustomTitle>
-            </LocalisationContainer>
-          </div>
+              <p className="subtitle"> Localisation </p>{" "}
+              <CustomTitle size={112}> {this.state.currentStation.trafic[0].ville} </CustomTitle>{" "}
+            </LocalisationContainer>{" "}
+          </div>{" "}
           <DataContainer>
-            <p className="title"> {this.state.category[currentCategoryActiveCopy].title} </p>
+            <p className="title"> {this.state.category[currentCategoryActiveCopy].title} </p>{" "}
             {this.state.currentCategoryActive === "trafic" && (
               <BarChart
                 data={[
-                  { value: ~~(currentStation.trafic[0].trafic / 2.2), text: "Moyenne voyageurs" },
-                  { value: currentStation.trafic[0].trafic, text: "Voyageurs max" },
+                  {
+                    value: ~~(currentStation.trafic[0].trafic / 2.2),
+                    text: "Moyenne voyageurs",
+                  },
+                  {
+                    value: currentStation.trafic[0].trafic,
+                    text: "Voyageurs max",
+                  },
                 ]}
                 size={[200, 800]}
               />
-            )}
+            )}{" "}
             {this.state.currentCategoryActive === "airQuality" && (
               <BubbleChart
                 useLabels
@@ -438,15 +444,15 @@ class StationVue extends React.Component {
                   },
                 ]}
               />
-            )}
+            )}{" "}
             {this.state.currentCategoryActive === "toilets" && (
               <Toilets toilet={currentStation.sanitaire[0]} />
-            )}
+            )}{" "}
             {this.state.currentCategoryActive === "wheelchair" && (
               <Accesibility accesibility={currentStation.access[0]} />
-            )}
-          </DataContainer>
-        </StationContainer>
+            )}{" "}
+          </DataContainer>{" "}
+        </StationContainer>{" "}
       </>
     ) : (
       <Loading />

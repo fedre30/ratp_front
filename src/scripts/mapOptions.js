@@ -235,16 +235,19 @@ export const toiletsButtons = [
     index: "gratuit",
     text: "Gratuit",
     active: false,
+    icon: "free",
   },
   {
     index: "payant",
     text: "Payant",
     active: false,
+    icon: "euro",
   },
   {
     index: "accesBoutonpoussoir",
     text: "Accès Bouton Poussoir",
     active: false,
+    icon: "button",
   },
 ];
 
@@ -255,16 +258,19 @@ export const accessibilityButtons = [
     index: "ufr",
     text: "UFR",
     active: false,
+    icon: "pmr",
   },
   {
     index: "annonceSonoreProchainPassage",
     text: "Signal sonore",
     active: false,
+    icon: "ear",
   },
   {
     index: "annonceVisuelleProchainPassage",
     text: "Signal visuel",
     active: false,
+    icon: "eye",
   },
 ];
 
@@ -319,13 +325,13 @@ export const traficKeys = [
 //<-------------------------- QUALITY COLORS ------------------------------>
 
 export const qualityColors = [
-  "#cceee9",
-  "#b2e5de",
   "#99ddd3",
-  "#7fd4c8",
   "#66ccbd",
-  "#4cc3b2",
   "#32bba7",
-  "#19b29c",
   "#00aa91",
+  "#008874",
+  "#006657",
+  "#00443a",
+  "#00221d",
+  "#000000",
 ];

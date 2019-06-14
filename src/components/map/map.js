@@ -322,6 +322,8 @@ class MapComponent extends Component {
                       key={i}
                       text={button.text}
                       value={"currentToiletsIndex"}
+                      icon={button.icon}
+                      iconColor={colors.text}
                       onClick={() => {
                         this.filterByCategory(
                           button,
@@ -347,6 +349,8 @@ class MapComponent extends Component {
                     <Button
                       key={i}
                       text={button.text}
+                      icon={button.icon}
+                      iconColor={colors.text}
                       value={"currentAccessIndex"}
                       onClick={() => {
                         this.filterByCategory(

@@ -43,21 +43,35 @@ const CustomLink = styled(Link)`
   text-decoration: none;
 `;
 
+const Source = styled.div`
+  margin-top: 4rem;
+`;
+
 const Home = () => (
   <HomeContainer>
     <Background src={background} alt="" />
     <Header subTitle />
     <MainTitle>
       <Title size={80} italic>
-        Tube.{" "}
-      </Title>{" "}
+        Tube.
+      </Title>
       <div className="margin" />
-      <SubTitle size={60} bold style={{ marginBottom: rem(61) }} width={500}>
-        Découvrez <Highlight>les stations</Highlight> qui font partie de votre quotidien.
+      <SubTitle
+        size={40}
+        bold
+        style={{
+          marginBottom: rem(61),
+        }}
+        width={500}
+      >
+        Découvrez <Highlight> les stations </Highlight> qui font partie de votre quotidien.
       </SubTitle>
       <CustomLink to="/map">
         <Button text="Commencer l'éxpérience" background={colors.tertiary} active="true" />
       </CustomLink>
+      <Source>
+        Source: <CustomLink>Open Data RATP</CustomLink>
+      </Source>
     </MainTitle>
   </HomeContainer>
 );
